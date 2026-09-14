@@ -3,9 +3,9 @@ import {
   AlertTriangle,
   ArrowLeftRight,
   Award,
+  BadgeCheck,
   Banknote,
   Bell,
-  Certificate,
   ClipboardList,
   Coins,
   DollarSign,
@@ -50,7 +50,7 @@ import { useAuthActions } from '@/auth/AuthProvider';
 import { NAV_BY_ROLE } from './navConfig';
 
 const ICONS: Record<string, ComponentType<{ className?: string }>> = {
-  Activity, AlertTriangle, ArrowLeftRight, Award, Banknote, Certificate, ClipboardList,
+  Activity, AlertTriangle, ArrowLeftRight, Award, BadgeCheck, Banknote, ClipboardList,
   Coins, DollarSign, Eye, FileText, Gavel, GraduationCap, HandCoins, LayoutDashboard, Lock,
   Package, PieChart, Receipt, RefreshCw, Search, Settings, Shield, ShieldCheck, ShoppingCart,
   TrendingUp, Truck, User, UserCheck, Users, Wallet, Wheat,
