@@ -40,7 +40,13 @@ export class AuthController {
   });
 
   refresh = asyncHandler(async (req: Request, res: Response) => {
-    const { refreshToken } = refreshTokenSchema.parse(req.body);
+    // Get refresh token from httpOnly cookie
+    const refreshToken = req.cookies?.refreshToken;
+    
+    if (!refreshToken) {
+      throw new Error('Refresh token is required');
+    }
+    
     const tokens = await authService.refresh(refreshToken);
     
     res.cookie('refreshToken', tokens.refreshToken, {
