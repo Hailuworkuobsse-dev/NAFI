@@ -2,18 +2,14 @@
 # Dependencies
 node_modules/
 
-# Build outputs
+# Environment variables
+.env.local
+
+# TypeScript build output
 dist/
 build/
-target/
-
-# Prisma
-prisma/migrations/
-
-# Environment
-.env
-.env.local
-.env.*
+*.js.map
+*.tsbuildinfo
 
 # Logs
 *.log
@@ -22,30 +18,47 @@ prisma/migrations/
 *.tmp
 *.swp
 
-# IDE
+# IDE files
 .vscode/
 .idea/
 
-# OS
+# OS generated files
 .DS_Store
 Thumbs.db
 
-# Python
+# Coverage reports
+coverage/
+htmlcov/
+*.coverage
+
+# Distribution / packaging
+*.tar.gz
+*.zip
+
+# Environment specific files
+.env
+.env.*
+
+# Python related (if any Python in project)
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-
-# Coverage
-coverage/
-htmlcov/
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
 .coverage
-
-# Docker
-.dockerignore
-Dockerfile
-docker-compose.yml
-
-# Fly
-fly.toml
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git*
+!README.md
+!.gitignore
 ```

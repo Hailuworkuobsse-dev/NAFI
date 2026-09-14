@@ -1,102 +1,102 @@
-import prisma from '../../config/prisma';
+import { prisma } from '../../config/prisma';
 import { ApiError } from '../../utils/ApiError';
-import { generateContractHash, generateRef } from '../../utils/nafiId';
+import { TenantScope } from '../../middleware/tenantScope';
+import { generateContractHash } from '../../utils/nafiId';
+
+export interface ContractFilter {
+  status?: string;
+  type?: string;
+  investorId?: string;
+  opportunityId?: string;
+}
 
 export class ContractsService {
-  async findAll(userId: string, institutionId?: string | null, scope = 'OWN') {
+  async findAll(
+    userId: string,
+    institutionId: string | null,
+    scope: TenantScope,
+    filter: ContractFilter = {},
+    page = 1,
+    limit = 20
+  ) {
     const where: Record<string, unknown> = {};
-    
-    if (scope === 'OWN') {
-      where.borrowerId = userId;
-    } else if (scope === 'INSTITUTION' && institutionId) {
-      where.institutionId = institutionId;
+
+    switch (scope) {
+      case 'OWN':
+        where.investorId = userId;
+        break;
+      case 'INSTITUTION':
+        if (institutionId) {
+          where.institutionId = institutionId;
+        }
+        break;
     }
-    
-    return prisma.contract.findMany({
-      where,
-      include: {
-        borrower: { select: { id: true, firstName: true, lastName: true, email: true } },
-        institution: { select: { id: true, name: true, code: true } },
-        _count: { select: { investments: true, escrows: true, settlements: true } },
-      },
-      orderBy: { createdAt: 'desc' },
-    });
+
+    if (filter.status) where.status = filter.status;
+    if (filter.type) where.type = filter.type;
+    if (filter.investorId) where.investorId = filter.investorId;
+    if (filter.opportunityId) where.opportunityId = filter.opportunityId;
+
+    const [contracts, total] = await Promise.all([
+      prisma.contract.findMany({
+        where,
+        include: {
+          investor: { select: { id: true, firstName: true, lastName: true, email: true } },
+          opportunity: { select: { id: true, title: true } },
+          escrow: { select: { id: true, status: true } },
+        },
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.contract.count({ where }),
+    ]);
+
+    return {
+      data: contracts,
+      pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
+    };
   }
 
-  async findById(id: string, userId: string, institutionId?: string | null) {
+  async findById(id: string) {
     const contract = await prisma.contract.findUnique({
       where: { id },
       include: {
-        borrower: { select: { id: true, firstName: true, lastName: true, email: true } },
-        institution: { select: { id: true, name: true, code: true } },
-        escrows: true,
+        investor: true,
+        opportunity: true,
+        escrow: true,
         investments: true,
         settlements: true,
-        collateral: true,
-        inputs: true,
       },
     });
-
-    if (!contract) {
-      throw ApiError.notFound('Contract not found');
-    }
-
+    if (!contract) throw ApiError.notFound('Contract not found');
     return contract;
   }
 
   async create(data: any, userId: string) {
-    const contractHash = generateContractHash(`${userId}-${Date.now()}`);
-    const nafiContractId = generateRef('CNT');
-
+    const contractHash = generateContractHash(data);
     return prisma.contract.create({
-      data: {
-        ...data,
-        contractHash,
-        nafiContractId,
-      },
-      include: {
-        borrower: { select: { id: true, firstName: true, lastName: true } },
-      },
+      data: { ...data, contractHash, investorId: userId },
+      include: { investor: true, opportunity: true },
     });
   }
 
   async update(id: string, data: any) {
-    const existing = await prisma.contract.findUnique({ where: { id } });
-    if (!existing) {
-      throw ApiError.notFound('Contract not found');
+    try {
+      return await prisma.contract.update({ where: { id }, data });
+    } catch (e) {
+      if ((e as any).code === 'P2025') throw ApiError.notFound('Contract not found');
+      throw e;
     }
-
-    return prisma.contract.update({
-      where: { id },
-      data,
-    });
-  }
-
-  async approve(id: string, notes?: string) {
-    return prisma.contract.update({
-      where: { id },
-      data: { status: 'APPROVED' },
-    });
-  }
-
-  async reject(id: string, reason: string) {
-    return prisma.contract.update({
-      where: { id },
-      data: { status: 'REJECTED' },
-    });
   }
 
   async delete(id: string) {
-    const existing = await prisma.contract.findUnique({ where: { id } });
-    if (!existing) {
-      throw ApiError.notFound('Contract not found');
+    try {
+      await prisma.contract.delete({ where: { id } });
+    } catch (e) {
+      if ((e as any).code === 'P2025') throw ApiError.notFound('Contract not found');
+      throw e;
     }
-
-    if (existing.status !== 'DRAFT') {
-      throw ApiError.badRequest('Can only delete draft contracts');
-    }
-
-    return prisma.contract.delete({ where: { id } });
   }
 }
 

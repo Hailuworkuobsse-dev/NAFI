@@ -1,0 +1,421 @@
+openapi: 3.0.3
+info:
+  title: NAFI API
+  description: |
+    National Agricultural Finance Infrastructure API
+    
+    ## Authentication
+    All protected endpoints require a Bearer token in the Authorization header.
+    
+    ## Tenant Scoping
+    Use the `X-Tenant-Scope` header to specify data access level:
+    - `OWN`: User's own data only
+    - `INSTITUTION`: Institution-level data
+    - `NATIONAL`: National-level data
+    - `ALL`: Full access (admin only)
+  version: 1.0.0
+  contact:
+    name: NAFI Support
+    email: support@nafi.africa
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Development server
+  - url: https://api.nafi.africa/api/v1
+    description: Production server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  
+  schemas:
+    User:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        email: { type: string, format: email }
+        firstName: { type: string }
+        lastName: { type: string }
+        phone: { type: string }
+        role: { $ref: '#/components/schemas/Role' }
+        institutionId: { type: string, nullable: true }
+        isActive: { type: boolean }
+        isVerified: { type: boolean }
+        nafiId: { type: string }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    
+    Role:
+      type: string
+      enum: [SUPER_ADMIN, NATIONAL_ADMIN, INSTITUTION_ADMIN, MANAGER, OFFICER, AUDITOR, COMPLIANCE_OFFICER, DISPUTE_RESOLVER, INPUT_PROVIDER, INVESTOR, FARMER, USER]
+    
+    Contract:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        contractHash: { type: string }
+        investorId: { type: string, format: uuid }
+        opportunityId: { type: string, format: uuid }
+        status: { type: string }
+        principalAmount: { type: number }
+        expectedReturn: { type: number }
+        durationMonths: { type: integer }
+        createdAt: { type: string, format: date-time }
+    
+    Investment:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        contractId: { type: string, format: uuid }
+        investorId: { type: string, format: uuid }
+        amount: { type: number }
+        shares: { type: number }
+        status: { type: string }
+        createdAt: { type: string, format: date-time }
+    
+    Opportunity:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        title: { type: string }
+        description: { type: string }
+        type: { type: string }
+        targetAmount: { type: number }
+        raisedAmount: { type: number }
+        status: { type: string }
+        createdAt: { type: string, format: date-time }
+    
+    Error:
+      type: object
+      properties:
+        success: { type: boolean, example: false }
+        error:
+          type: object
+          properties:
+            code: { type: string }
+            message: { type: string }
+    
+    PaginatedResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data: { type: array }
+        pagination:
+          type: object
+          properties:
+            page: { type: integer }
+            limit: { type: integer }
+            total: { type: integer }
+            totalPages: { type: integer }
+
+  parameters:
+    pageParam:
+      name: page
+      in: query
+      schema: { type: integer, default: 1 }
+    limitParam:
+      name: limit
+      in: query
+      schema: { type: integer, default: 20 }
+
+security:
+  - bearerAuth: []
+
+paths:
+  /health/liveness:
+    get:
+      summary: Liveness check
+      tags: [Health]
+      security: []
+      responses:
+        '200':
+          description: Service is alive
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:
+                    type: object
+                    properties:
+                      status: { type: string }
+                      uptime: { type: number }
+
+  /health/readiness:
+    get:
+      summary: Readiness check
+      tags: [Health]
+      security: []
+      responses:
+        '200':
+          description: Service is ready
+        '503':
+          description: Service not ready
+
+  /health/db:
+    get:
+      summary: Database health check
+      tags: [Health]
+      security: []
+      responses:
+        '200':
+          description: Database connection healthy
+
+  /public/stats:
+    get:
+      summary: Get public statistics
+      tags: [Public]
+      security: []
+      responses:
+        '200':
+          description: Public statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:
+                    type: object
+                    properties:
+                      totalUsers: { type: integer }
+                      activeContracts: { type: integer }
+                      totalInvestments: { type: integer }
+                      totalOpportunities: { type: integer }
+
+  /opportunities:
+    get:
+      summary: List investment opportunities
+      tags: [Opportunities]
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - name: type
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: List of opportunities
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResponse'
+
+  /opportunities/{id}:
+    get:
+      summary: Get opportunity by ID
+      tags: [Opportunities]
+      security: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Opportunity details
+        '404':
+          description: Not found
+
+  /auth/register:
+    post:
+      summary: Register new user
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, firstName, lastName]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, minLength: 8 }
+                firstName: { type: string }
+                lastName: { type: string }
+                phone: { type: string }
+      responses:
+        '201':
+          description: User registered successfully
+        '400':
+          description: Validation error
+
+  /auth/login:
+    post:
+      summary: Login user
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string }
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:
+                    type: object
+                    properties:
+                      accessToken: { type: string }
+                      refreshToken: { type: string }
+                      user: { $ref: '#/components/schemas/User' }
+
+  /auth/refresh:
+    post:
+      summary: Refresh access token
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken: { type: string }
+      responses:
+        '200':
+          description: Token refreshed
+
+  /auth/me:
+    get:
+      summary: Get current user
+      tags: [Auth]
+      responses:
+        '200':
+          description: Current user profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data: { $ref: '#/components/schemas/User' }
+
+  /users:
+    get:
+      summary: List users
+      tags: [Users]
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - name: search
+          in: query
+          schema: { type: string }
+        - name: role
+          in: query
+          schema: { type: string }
+        - name: X-Tenant-Scope
+          in: header
+          schema: { type: string, enum: [OWN, INSTITUTION, NATIONAL, ALL] }
+      responses:
+        '200':
+          description: List of users
+        '403':
+          description: Forbidden
+
+  /contracts:
+    get:
+      summary: List contracts
+      tags: [Contracts]
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - name: status
+          in: query
+          schema: { type: string }
+        - name: X-Tenant-Scope
+          in: header
+          schema: { type: string }
+      responses:
+        '200':
+          description: List of contracts
+
+    post:
+      summary: Create contract
+      tags: [Contracts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                opportunityId: { type: string, format: uuid }
+                principalAmount: { type: number }
+                expectedReturn: { type: number }
+                durationMonths: { type: integer }
+      responses:
+        '201':
+          description: Contract created
+
+  /investments:
+    get:
+      summary: List investments
+      tags: [Investments]
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - name: X-Tenant-Scope
+          in: header
+          schema: { type: string }
+      responses:
+        '200':
+          description: List of investments
+
+    post:
+      summary: Create investment
+      tags: [Investments]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contractId: { type: string, format: uuid }
+                amount: { type: number }
+      responses:
+        '201':
+          description: Investment created
+
+  /notifications:
+    get:
+      summary: List user notifications
+      tags: [Notifications]
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+      responses:
+        '200':
+          description: List of notifications
+
+  /audit/logs:
+    get:
+      summary: List audit logs
+      tags: [Audit]
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - name: action
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: List of audit logs

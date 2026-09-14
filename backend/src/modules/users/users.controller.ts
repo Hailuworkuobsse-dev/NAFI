@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { usersService } from './users.service';
+import { usersService, UserFilter } from './users.service';
 import { asyncHandler } from '../../utils/asyncHandler';
 import { ok, created, list } from '../../utils/apiResponse';
 
@@ -7,23 +7,35 @@ export class UsersController {
   findAll = asyncHandler(async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
-    const items = await usersService.findAll(req.user!.userId, req.user!.institutionId, req.tenantScope);
-    ok(res, items);
+    const filter: UserFilter = {
+      search: req.query.search as string,
+      role: req.query.role as string,
+      institutionId: req.query.institutionId as string,
+    };
+    const result = await usersService.findAll(
+      req.user!.userId,
+      req.user!.institutionId,
+      req.tenantScope,
+      filter,
+      page,
+      limit
+    );
+    list(res, result.data, result.pagination);
   });
 
   findById = asyncHandler(async (req: Request, res: Response) => {
-    const item = await usersService.findById(req.params.id);
-    ok(res, item);
+    const user = await usersService.findById(req.params.id);
+    ok(res, user);
   });
 
   create = asyncHandler(async (req: Request, res: Response) => {
-    const item = await usersService.create(req.body, req.user!.userId);
-    created(res, item, 'Users created successfully');
+    const user = await usersService.create(req.body, req.user!.userId);
+    created(res, user, 'User created successfully');
   });
 
   update = asyncHandler(async (req: Request, res: Response) => {
-    const item = await usersService.update(req.params.id, req.body);
-    ok(res, item, 'Users updated successfully');
+    const user = await usersService.update(req.params.id, req.body, req.user!.userId);
+    ok(res, user, 'User updated successfully');
   });
 
   delete = asyncHandler(async (req: Request, res: Response) => {
