@@ -23,20 +23,20 @@ async function main() {
 
   console.log(`✅ Institution created: ${institution.name}`);
 
-  // Define 12 test users with different roles
+  // Define 12 test users with different roles (aligned with frontend)
   const roles: Role[] = [
-    'SUPER_ADMIN',
-    'NATIONAL_ADMIN',
-    'INSTITUTION_ADMIN',
+    'DIASPORA_INVESTOR',
+    'COMMERCIAL_BANK',
+    'DBE_OFFICER',
+    'NAFA_OFFICER',
+    'INPUT_SUPPLIER',
+    'COMMERCIAL_FARMER',
+    'OFF_TAKER',
+    'GOVERNMENT_REGULATOR',
+    'DONOR',
+    'NAFI_ADMIN',
     'COMPLIANCE_OFFICER',
-    'RISK_MANAGER',
-    'INVESTOR_RELATIONS',
-    'FIELD_AGENT',
-    'BORROWER',
-    'INVESTOR',
-    'GUARANTOR',
-    'AUDITOR',
-    'SYSTEM',
+    'ARBITRATOR',
   ];
 
   const passwordHash = await hashPassword('Password123!');
@@ -55,7 +55,7 @@ async function main() {
         firstName: role.split('_')[0],
         lastName: `User ${i + 1}`,
         role,
-        institutionId: role === 'INSTITUTION_ADMIN' || role === 'FIELD_AGENT' ? institution.id : null,
+        institutionId: role === 'COMMERCIAL_BANK' || role === 'DBE_OFFICER' || role === 'NAFA_OFFICER' ? institution.id : null,
         isVerified: true,
         isActive: true,
       },
@@ -66,7 +66,7 @@ async function main() {
 
   // Create a demo contract
   const borrower = await prisma.user.findFirst({
-    where: { role: 'BORROWER' },
+    where: { role: 'COMMERCIAL_FARMER' },
   });
 
   if (borrower) {

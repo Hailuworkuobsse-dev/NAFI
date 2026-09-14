@@ -9,24 +9,24 @@ import { corsOptions } from './config/cors.js';
 import { logger } from './config/logger.js';
 import { requestIdMiddleware } from './middleware/requestId.js';
 import { errorHandler } from './middleware/errorHandler.js';
-import { rateLimiter } from './middleware/rateLimiter.js';
+import { defaultLimiter } from './middleware/rateLimiter.js';
 
-// Import routes
-import { authRoutes } from './modules/auth/auth.routes.js';
-import { usersRoutes } from './modules/users/users.routes.js';
-import { contractsRoutes } from './modules/contracts/contracts.routes.js';
-import { escrowsRoutes } from './modules/escrows/escrows.routes.js';
-import { investmentsRoutes } from './modules/investments/investments.routes.js';
-import { opportunitiesRoutes } from './modules/opportunities/opportunities.routes.js';
-import { inputsRoutes } from './modules/inputs/inputs.routes.js';
-import { settlementsRoutes } from './modules/settlements/settlements.routes.js';
-import { collateralRoutes } from './modules/collateral/collateral.routes.js';
-import { disputesRoutes } from './modules/disputes/disputes.routes.js';
-import { reportsRoutes } from './modules/reports/reports.routes.js';
-import { notificationsRoutes } from './modules/notifications/notifications.routes.js';
-import { auditRoutes } from './modules/audit/audit.routes.js';
-import { publicRoutes } from './modules/public/public.routes.js';
-import { healthRoutes } from './modules/health/health.routes.js';
+// Import routes (default exports)
+import authRoutes from './modules/auth/auth.routes.js';
+import usersRoutes from './modules/users/users.routes.js';
+import contractsRoutes from './modules/contracts/contracts.routes.js';
+import escrowsRoutes from './modules/escrows/escrows.routes.js';
+import investmentsRoutes from './modules/investments/investments.routes.js';
+import opportunitiesRoutes from './modules/opportunities/opportunities.routes.js';
+import inputsRoutes from './modules/inputs/inputs.routes.js';
+import settlementsRoutes from './modules/settlements/settlements.routes.js';
+import collateralRoutes from './modules/collateral/collateral.routes.js';
+import disputesRoutes from './modules/disputes/disputes.routes.js';
+import reportsRoutes from './modules/reports/reports.routes.js';
+import notificationsRoutes from './modules/notifications/notifications.routes.js';
+import auditRoutes from './modules/audit/audit.routes.js';
+import publicRoutes from './modules/public/public.routes.js';
+import healthRoutes from './modules/health/health.routes.js';
 
 export function createApp(): Express {
   const app: Express = express();
@@ -55,7 +55,7 @@ export function createApp(): Express {
   }
   
   // Rate limiting
-  app.use(rateLimiter);
+  app.use(defaultLimiter);
   
   // Health check endpoint (no auth required)
   app.use('/api/v1/health', healthRoutes);

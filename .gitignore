@@ -2,63 +2,35 @@
 # Dependencies
 node_modules/
 
-# Environment variables
-.env.local
-
-# TypeScript build output
+# Build outputs
 dist/
 build/
-*.js.map
+target/
+
+# TypeScript
 *.tsbuildinfo
+*.js.map
+
+# Environment
+.env
+.env.local
+*.env.*
 
 # Logs
 *.log
-
-# Temporary files
-*.tmp
-*.swp
-
-# IDE files
-.vscode/
-.idea/
 
 # OS generated files
 .DS_Store
 Thumbs.db
 
-# Coverage reports
-coverage/
-htmlcov/
-*.coverage
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
 
-# Distribution / packaging
-*.tar.gz
-*.zip
-
-# Environment specific files
-.env
-.env.*
-
-# Python related (if any Python in project)
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
-.venv/
-pip-log.txt
-pip-delete-this-directory.txt
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-.git*
-!README.md
-!.gitignore
+# Prisma
+prisma/migrations/
+prisma/generated/
 ```

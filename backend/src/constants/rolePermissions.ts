@@ -2,109 +2,182 @@ import { Role } from './roles';
 import * as permissions from './permissions';
 
 /**
- * Role → Permissions matrix
+ * Complete permission matrix per role.
+ * '*' is a super-permission granted only to NAFI_ADMIN.
+ * Aligned with frontend rbac-core package
  */
-export const rolePermissions: Record<Role, string[]> = {
-  [Role.SUPER_ADMIN]: Object.values(permissions).filter(p => typeof p === 'string'),
-  
-  [Role.NATIONAL_ADMIN]: [
-    permissions.USER_READ, permissions.USER_LIST,
-    permissions.CONTRACT_READ, permissions.CONTRACT_LIST, permissions.CONTRACT_APPROVE, permissions.CONTRACT_REJECT,
-    permissions.INVESTMENT_READ, permissions.INVESTMENT_LIST,
-    permissions.OPPORTUNITY_READ, permissions.OPPORTUNITY_PUBLISH,
-    permissions.REPORT_READ, permissions.REPORT_EXPORT,
-    permissions.AUDIT_READ, permissions.AUDIT_EXPORT,
-    permissions.ADMIN_SETTINGS,
+export const rolePermissions: Record<Role, readonly string[] | readonly ['*']> = {
+  [Role.DIASPORA_INVESTOR]: [
+    permissions.CONTRACT_READ_OWN,
+    permissions.ESCROW_READ_OWN,
+    permissions.ESCROW_FUND,
+    permissions.INVESTMENT_CREATE,
+    permissions.INVESTMENT_READ_OWN,
+    permissions.SETTLEMENT_READ,
+    permissions.DISPUTE_FLAG,
+    permissions.REPORT_READ_OWN,
+    permissions.REPORT_EXPORT,
+    permissions.USER_MANAGE_OWN,
   ],
-  
-  [Role.INSTITUTION_ADMIN]: [
-    permissions.USER_CREATE, permissions.USER_READ, permissions.USER_UPDATE, permissions.USER_LIST,
-    permissions.CONTRACT_CREATE, permissions.CONTRACT_READ, permissions.CONTRACT_UPDATE, permissions.CONTRACT_LIST,
-    permissions.INVESTMENT_READ, permissions.INVESTMENT_LIST,
-    permissions.OPPORTUNITY_CREATE, permissions.OPPORTUNITY_READ, permissions.OPPORTUNITY_UPDATE, permissions.OPPORTUNITY_PUBLISH,
-    permissions.ESCROW_READ, permissions.ESCROW_FUND, permissions.ESCROW_DISBURSE,
-    permissions.SETTLEMENT_READ, permissions.SETTLEMENT_PROCESS,
-    permissions.COLLATERAL_READ, permissions.COLLATERAL_VERIFY,
-    permissions.INPUT_READ, permissions.INPUT_VERIFY,
-    permissions.REPORT_READ, permissions.REPORT_CREATE,
-    permissions.NOTIFICATION_READ, permissions.NOTIFICATION_SEND,
+
+  [Role.COMMERCIAL_BANK]: [
+    permissions.CONTRACT_READ_OWN,
+    permissions.CONTRACT_READ_ALL,
+    permissions.CONTRACT_APPROVE,
+    permissions.ESCROW_READ_OWN,
+    permissions.ESCROW_FUND,
+    permissions.ESCROW_RELEASE,
+    permissions.ESCROW_FREEZE,
+    permissions.INPUT_DISBURSE,
+    permissions.SETTLEMENT_SIMULATE,
+    permissions.SETTLEMENT_EXECUTE,
+    permissions.SETTLEMENT_READ,
+    permissions.COLLATERAL_REGISTER,
+    permissions.COLLATERAL_LIQUIDATE,
+    permissions.DISPUTE_FLAG,
+    permissions.REPORT_READ_OWN,
+    permissions.REPORT_GENERATE,
+    permissions.REPORT_EXPORT,
+    permissions.USER_INVITE,
+    permissions.USER_MANAGE_OWN,
+    permissions.TAX_READ,
   ],
-  
+
+  [Role.DBE_OFFICER]: [
+    permissions.CONTRACT_READ_OWN,
+    permissions.CONTRACT_READ_ALL,
+    permissions.CONTRACT_APPROVE,
+    permissions.ESCROW_READ_OWN,
+    permissions.ESCROW_FUND,
+    permissions.ESCROW_RELEASE,
+    permissions.ESCROW_FREEZE,
+    permissions.INPUT_DISBURSE,
+    permissions.SETTLEMENT_SIMULATE,
+    permissions.SETTLEMENT_EXECUTE,
+    permissions.SETTLEMENT_READ,
+    permissions.COLLATERAL_REGISTER,
+    permissions.COLLATERAL_LIQUIDATE,
+    permissions.DISPUTE_FLAG,
+    permissions.REPORT_READ_OWN,
+    permissions.REPORT_GENERATE,
+    permissions.REPORT_EXPORT,
+    permissions.USER_MANAGE_OWN,
+    permissions.TAX_READ,
+  ],
+
+  [Role.NAFA_OFFICER]: [
+    permissions.CONTRACT_READ_OWN,
+    permissions.CONTRACT_READ_ALL,
+    permissions.CONTRACT_APPROVE,
+    permissions.ESCROW_READ_OWN,
+    permissions.ESCROW_FUND,
+    permissions.SETTLEMENT_SIMULATE,
+    permissions.SETTLEMENT_READ,
+    permissions.DISPUTE_FLAG,
+    permissions.REPORT_READ_OWN,
+    permissions.REPORT_GENERATE,
+    permissions.REPORT_EXPORT,
+    permissions.USER_MANAGE_OWN,
+  ],
+
+  [Role.INPUT_SUPPLIER]: [
+    permissions.CONTRACT_READ_OWN,
+    permissions.INPUT_CREATE,
+    permissions.ESCROW_READ_OWN,
+    permissions.SETTLEMENT_READ,
+    permissions.DISPUTE_FLAG,
+    permissions.REPORT_READ_OWN,
+    permissions.REPORT_EXPORT,
+    permissions.USER_MANAGE_OWN,
+    permissions.TAX_READ,
+  ],
+
+  [Role.COMMERCIAL_FARMER]: [
+    permissions.CONTRACT_CREATE,
+    permissions.CONTRACT_READ_OWN,
+    permissions.CONTRACT_UPDATE,
+    permissions.ESCROW_READ_OWN,
+    permissions.INPUT_VERIFY,
+    permissions.SETTLEMENT_READ,
+    permissions.COLLATERAL_REGISTER,
+    permissions.DISPUTE_FLAG,
+    permissions.REPORT_READ_OWN,
+    permissions.REPORT_EXPORT,
+    permissions.USER_MANAGE_OWN,
+    permissions.TAX_READ,
+  ],
+
+  [Role.OFF_TAKER]: [
+    permissions.CONTRACT_READ_OWN,
+    permissions.ESCROW_READ_OWN,
+    permissions.INPUT_VERIFY,
+    permissions.SETTLEMENT_READ,
+    permissions.DISPUTE_FLAG,
+    permissions.REPORT_READ_OWN,
+    permissions.REPORT_EXPORT,
+    permissions.USER_MANAGE_OWN,
+    permissions.TAX_READ,
+  ],
+
+  [Role.GOVERNMENT_REGULATOR]: [
+    permissions.CONTRACT_READ_OWN,
+    permissions.CONTRACT_READ_ALL,
+    permissions.CONTRACT_APPROVE,
+    permissions.CONTRACT_FREEZE,
+    permissions.ESCROW_FREEZE,
+    permissions.COLLATERAL_LIQUIDATE,
+    permissions.DISPUTE_FLAG,
+    permissions.REPORT_READ_OWN,
+    permissions.REPORT_GENERATE,
+    permissions.REPORT_EXPORT,
+    permissions.AUDIT_READ,
+    permissions.USER_MANAGE_OWN,
+    permissions.TAX_READ,
+  ],
+
+  [Role.DONOR]: [
+    permissions.CONTRACT_READ_OWN,
+    permissions.ESCROW_FUND,
+    permissions.INVESTMENT_READ_ALL,
+    permissions.SETTLEMENT_READ,
+    permissions.REPORT_READ_OWN,
+    permissions.REPORT_GENERATE,
+    permissions.REPORT_EXPORT,
+    permissions.AUDIT_READ,
+    permissions.USER_MANAGE_OWN,
+  ],
+
+  [Role.NAFI_ADMIN]: ['*'],
+
   [Role.COMPLIANCE_OFFICER]: [
-    permissions.USER_READ, permissions.USER_LIST,
-    permissions.CONTRACT_READ, permissions.CONTRACT_LIST, permissions.CONTRACT_APPROVE, permissions.CONTRACT_REJECT,
-    permissions.INVESTMENT_READ, permissions.INVESTMENT_LIST,
-    permissions.ESCROW_READ,
-    permissions.COLLATERAL_READ, permissions.COLLATERAL_VERIFY,
-    permissions.DISPUTE_READ, permissions.DISPUTE_RESOLVE,
-    permissions.AUDIT_READ, permissions.AUDIT_EXPORT,
-    permissions.REPORT_READ,
-  ],
-  
-  [Role.RISK_MANAGER]: [
-    permissions.CONTRACT_READ, permissions.CONTRACT_LIST, permissions.CONTRACT_APPROVE, permissions.CONTRACT_REJECT,
-    permissions.INVESTMENT_READ, permissions.INVESTMENT_LIST,
-    permissions.ESCROW_READ,
-    permissions.COLLATERAL_READ, permissions.COLLATERAL_VERIFY,
-    permissions.DISPUTE_READ,
-    permissions.REPORT_READ, permissions.REPORT_CREATE,
-  ],
-  
-  [Role.INVESTOR_RELATIONS]: [
-    permissions.USER_READ,
-    permissions.INVESTMENT_READ, permissions.INVESTMENT_LIST,
-    permissions.OPPORTUNITY_READ, permissions.OPPORTUNITY_PUBLISH,
-    permissions.NOTIFICATION_READ, permissions.NOTIFICATION_SEND,
-    permissions.REPORT_READ,
-  ],
-  
-  [Role.FIELD_AGENT]: [
-    permissions.USER_READ,
-    permissions.CONTRACT_READ, permissions.CONTRACT_CREATE, permissions.CONTRACT_UPDATE,
-    permissions.INPUT_CREATE, permissions.INPUT_READ, permissions.INPUT_UPDATE, permissions.INPUT_VERIFY,
-    permissions.COLLATERAL_CREATE, permissions.COLLATERAL_READ, permissions.COLLATERAL_UPDATE,
-    permissions.DISPUTE_CREATE, permissions.DISPUTE_READ,
-    permissions.NOTIFICATION_READ,
-  ],
-  
-  [Role.BORROWER]: [
-    permissions.CONTRACT_READ, permissions.CONTRACT_CREATE,
-    permissions.INPUT_READ,
+    permissions.CONTRACT_READ_OWN,
+    permissions.CONTRACT_READ_ALL,
+    permissions.CONTRACT_APPROVE,
+    permissions.CONTRACT_FREEZE,
+    permissions.ESCROW_READ_OWN,
+    permissions.ESCROW_FREEZE,
+    permissions.INVESTMENT_READ_ALL,
     permissions.SETTLEMENT_READ,
-    permissions.COLLATERAL_READ, permissions.COLLATERAL_CREATE,
-    permissions.DISPUTE_CREATE, permissions.DISPUTE_READ,
-    permissions.NOTIFICATION_READ,
+    permissions.DISPUTE_FLAG,
+    permissions.REPORT_READ_OWN,
+    permissions.REPORT_GENERATE,
+    permissions.REPORT_EXPORT,
+    permissions.AUDIT_READ,
+    permissions.TAX_READ,
   ],
-  
-  [Role.INVESTOR]: [
-    permissions.OPPORTUNITY_READ, permissions.OPPORTUNITY_LIST,
-    permissions.INVESTMENT_CREATE, permissions.INVESTMENT_READ, permissions.INVESTMENT_LIST,
-    permissions.CONTRACT_READ,
-    permissions.NOTIFICATION_READ,
-    permissions.REPORT_READ,
-  ],
-  
-  [Role.GUARANTOR]: [
-    permissions.CONTRACT_READ,
-    permissions.COLLATERAL_READ, permissions.COLLATERAL_CREATE,
-    permissions.DISPUTE_READ,
-    permissions.NOTIFICATION_READ,
-  ],
-  
-  [Role.AUDITOR]: [
-    permissions.USER_READ, permissions.USER_LIST,
-    permissions.CONTRACT_READ, permissions.CONTRACT_LIST,
-    permissions.INVESTMENT_READ, permissions.INVESTMENT_LIST,
-    permissions.ESCROW_READ,
+
+  [Role.ARBITRATOR]: [
+    permissions.CONTRACT_READ_OWN,
+    permissions.CONTRACT_READ_ALL,
+    permissions.CONTRACT_FREEZE,
+    permissions.ESCROW_READ_OWN,
+    permissions.ESCROW_FREEZE,
     permissions.SETTLEMENT_READ,
-    permissions.AUDIT_READ, permissions.AUDIT_EXPORT,
-    permissions.REPORT_READ, permissions.REPORT_EXPORT,
-  ],
-  
-  [Role.SYSTEM]: [
-    permissions.ADMIN_SYSTEM,
-    permissions.AUDIT_READ, permissions.AUDIT_EXPORT,
-    permissions.NOTIFICATION_SEND,
+    permissions.DISPUTE_FLAG,
+    permissions.DISPUTE_ARBITRATE,
+    permissions.REPORT_READ_OWN,
+    permissions.REPORT_EXPORT,
+    permissions.AUDIT_READ,
   ],
 };
 
@@ -114,6 +187,8 @@ export const rolePermissions: Record<Role, string[]> = {
 export function can(role: Role, permission: string): boolean {
   const rolePerms = rolePermissions[role];
   if (!rolePerms) return false;
+  // Super admin has all permissions
+  if (rolePerms.includes('*')) return true;
   return rolePerms.includes(permission);
 }
 
