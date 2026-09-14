@@ -1,1 +1,1 @@
-Nothing needs to be added to the .gitignore file based on the provided changes. The only modified file is a TypeScript React component file (`DashboardLayout.tsx`), which is source code and should not be ignored.
+(frontend/apps/web/src/auth/AuthProvider.tsx is a source file, and there are no build artifacts, dependencies, or temporary files in the changes)

@@ -1,6 +1,6 @@
 import { AuthProvider as UIAuthProvider, type AuthContextValue } from '@nafi/ui-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useMemo, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, type ReactNode } from 'react';
 
 import { clearUser, identifyUser } from '@/observability/sentry';
 import { authApi } from './api';
@@ -14,35 +14,86 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const queryClient = useQueryClient();
   const { user, setUser, isLoading, setLoading } = useAuthStore();
+  const hasAttemptedRefresh = useRef(false);
 
   useQuery({
     queryKey: ['auth', 'me'],
     queryFn: async () => {
-      try {
-        const res = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL ?? '/api/v1'}/auth/refresh`,
-          {
-            method: 'POST',
-            credentials: 'include',
-            headers: { Accept: 'application/json' },
-          },
-        );
-        if (res.ok) {
-          const json = (await res.json()) as { data: { accessToken: string } };
-          tokenStore.set(json.data.accessToken);
+      // Only attempt refresh once on initial load if no access token exists
+      const hasAccessToken = tokenStore.get() !== null;
+      
+      if (!hasAccessToken && !hasAttemptedRefresh.current) {
+        hasAttemptedRefresh.current = true;
+        try {
+          const res = await fetch(
+            `${import.meta.env.VITE_API_BASE_URL ?? '/api/v1'}/auth/refresh`,
+            {
+              method: 'POST',
+              credentials: 'include',
+              headers: { Accept: 'application/json' },
+            },
+          );
+          if (res.ok) {
+            const json = (await res.json()) as { data: { accessToken: string } };
+            tokenStore.set(json.data.accessToken);
+          } else if (res.status === 429) {
+            // Rate limited - wait and retry once
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            const retryRes = await fetch(
+              `${import.meta.env.VITE_API_BASE_URL ?? '/api/v1'}/auth/refresh`,
+              {
+                method: 'POST',
+                credentials: 'include',
+                headers: { Accept: 'application/json' },
+              },
+            );
+            if (retryRes.ok) {
+              const json = (await retryRes.json()) as { data: { accessToken: string } };
+              tokenStore.set(json.data.accessToken);
+            }
+          }
+        } catch {
+          /* ignore — user just isn't logged in */
         }
-      } catch {
-        /* ignore — user just isn't logged in */
       }
 
-      const me = await authApi.me();
-      setUser(me);
-      return me;
+      // If still no token after refresh attempt, return null (not authenticated)
+      if (!tokenStore.get()) {
+        return null;
+      }
+
+      try {
+        const me = await authApi.me();
+        setUser(me);
+        return me;
+      } catch (error: any) {
+        // Handle 429 specifically
+        if (error?.response?.status === 429) {
+          console.warn('Rate limited when fetching user profile. Please wait.');
+          return null;
+        }
+        // For auth errors (401/403), clear tokens and return null
+        if (error?.response?.status === 401 || error?.response?.status === 403) {
+          tokenStore.clear();
+          return null;
+        }
+        throw error;
+      }
     },
-    retry: false,
+    retry: (failureCount, error: any) => {
+      // Don't retry on auth errors or rate limits
+      if (error?.response?.status === 401 || error?.response?.status === 403) {
+        return false;
+      }
+      if (error?.response?.status === 429) {
+        return false;
+      }
+      return failureCount < 2;
+    },
     staleTime: Infinity,
-    enabled: !user,
+    enabled: !user && !isLoading,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   useEffect(() => {
