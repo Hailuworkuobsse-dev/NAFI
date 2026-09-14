@@ -2,13 +2,32 @@ import { PERMISSIONS } from '@nafi/rbac-core';
 import { ProtectedRoute } from '@nafi/ui-react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 
+import { RouteErrorBoundary } from '@/components/RouteErrorBoundary';
 import { AuthLayout } from '@/features/auth/layouts/AuthLayout';
 import { ForgotPasswordPage } from '@/features/auth/pages/ForgotPasswordPage';
 import { LoginPage } from '@/features/auth/pages/LoginPage';
 import { RegisterPage } from '@/features/auth/pages/RegisterPage';
 import { ResetPasswordPage } from '@/features/auth/pages/ResetPasswordPage';
+import { FarmContractDetailPage } from '@/features/farmer/pages/ContractDetailPage';
+import { FarmCollateralPage } from '@/features/farmer/pages/CollateralPage';
+import { FarmContractsPage } from '@/features/farmer/pages/ContractsPage';
+import { FarmEscrowPage } from '@/features/farmer/pages/EscrowPage';
+import { FarmHarvestPage } from '@/features/farmer/pages/HarvestPage';
+import { FarmInputsPage } from '@/features/farmer/pages/InputsPage';
+import { FarmPaymentsPage } from '@/features/farmer/pages/PaymentsPage';
+import { InvestorBondsPage } from '@/features/investor/pages/BondsPage';
+import { InvestorInvestmentsPage } from '@/features/investor/pages/InvestmentsPage';
+import { OpportunityBrowserPage } from '@/features/investor/pages/OpportunityBrowserPage';
+import { OpportunityInvestPage } from '@/features/investor/pages/OpportunityInvestPage';
+import { InvestorOverviewPage } from '@/features/investor/pages/OverviewPage';
+import { InvestorReturnsPage } from '@/features/investor/pages/ReturnsPage';
+import { InvestorStatementsPage } from '@/features/investor/pages/StatementsPage';
+import { SupplierDeliveriesPage } from '@/features/supplier/pages/DeliveriesPage';
+import { SupplierOrderDetailPage } from '@/features/supplier/pages/OrderDetailPage';
+import { SupplierOrdersPage } from '@/features/supplier/pages/OrdersPage';
+import { SupplierPaymentsPage } from '@/features/supplier/pages/PaymentsPage';
+import { SupplierProfilePage } from '@/features/supplier/pages/ProfilePage';
 import { DashboardLayout } from '@/layouts/DashboardLayout';
-import { RouteErrorBoundary } from '@/components/RouteErrorBoundary';
 import {
   AdminAudit, AdminConfig, AdminContracts, AdminDisputes, AdminEscrows, AdminHealth,
   AdminOverview, AdminSettlements, AdminUsers,
@@ -18,19 +37,17 @@ import {
   ComplianceAml, ComplianceKyc, ComplianceQueue, ComplianceSar,
   DbeCoFinancing, DbeOnLending, DbePortfolio, DbeReports, DbeTaTracking,
   DonorAudit, DonorDisbursements, DonorGrants, DonorImpact, DonorReports,
-  FarmCollateral, FarmContracts, FarmEscrow, FarmHarvest, FarmInputs, FarmPayments,
   GovAudit, GovContracts, GovCredit, GovDashboard, GovForex, GovIncentives, GovInputs,
   GovReports, GovTax,
-  InvestorBonds, InvestorInvestments, InvestorOverview, InvestorReturns, InvestorStatements,
   NafaClaims, NafaGuarantees, NafaRefinancing, NafaReports, NafaRiskSharing,
-  NotFound, OpportunityBrowser, ProfilePage,
-  SupplierDeliveries, SupplierOrders, SupplierPayments, SupplierProfile,
+  NotFound, ProfilePage,
 } from '@/pages/stubs';
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <AuthLayout />,
+    errorElement: <RouteErrorBoundary />,
     children: [
       { index: true, element: <Navigate to="/login" replace /> },
       { path: 'login', element: <LoginPage /> },
@@ -42,6 +59,7 @@ export const router = createBrowserRouter([
 
   {
     element: <ProtectedRoute permission={PERMISSIONS.CONTRACT_READ_OWN} />,
+    errorElement: <RouteErrorBoundary />,
     children: [
       {
         element: <DashboardLayout />,
@@ -55,12 +73,14 @@ export const router = createBrowserRouter([
               />
             ),
             children: [
-              { path: '/portfolio', element: <InvestorOverview /> },
-              { path: '/portfolio/investments', element: <InvestorInvestments /> },
-              { path: '/portfolio/bonds', element: <InvestorBonds /> },
-              { path: '/portfolio/returns', element: <InvestorReturns /> },
-              { path: '/portfolio/statements', element: <InvestorStatements /> },
-              { path: '/opportunities', element: <OpportunityBrowser /> },
+              { path: '/portfolio', element: <InvestorOverviewPage /> },
+              { path: '/portfolio/investments', element: <InvestorInvestmentsPage /> },
+              { path: '/portfolio/investments/:id', element: <InvestorInvestmentsPage /> },
+              { path: '/portfolio/bonds', element: <InvestorBondsPage /> },
+              { path: '/portfolio/returns', element: <InvestorReturnsPage /> },
+              { path: '/portfolio/statements', element: <InvestorStatementsPage /> },
+              { path: '/opportunities', element: <OpportunityBrowserPage /> },
+              { path: '/opportunities/:id/invest', element: <OpportunityInvestPage /> },
             ],
           },
 
@@ -125,10 +145,11 @@ export const router = createBrowserRouter([
               />
             ),
             children: [
-              { path: '/supplier/orders', element: <SupplierOrders /> },
-              { path: '/supplier/deliveries', element: <SupplierDeliveries /> },
-              { path: '/supplier/payments', element: <SupplierPayments /> },
-              { path: '/supplier/profile', element: <SupplierProfile /> },
+              { path: '/supplier/orders', element: <SupplierOrdersPage /> },
+              { path: '/supplier/orders/:id', element: <SupplierOrderDetailPage /> },
+              { path: '/supplier/deliveries', element: <SupplierDeliveriesPage /> },
+              { path: '/supplier/payments', element: <SupplierPaymentsPage /> },
+              { path: '/supplier/profile', element: <SupplierProfilePage /> },
             ],
           },
 
@@ -141,12 +162,13 @@ export const router = createBrowserRouter([
               />
             ),
             children: [
-              { path: '/farm/contracts', element: <FarmContracts /> },
-              { path: '/farm/inputs', element: <FarmInputs /> },
-              { path: '/farm/escrow', element: <FarmEscrow /> },
-              { path: '/farm/harvest', element: <FarmHarvest /> },
-              { path: '/farm/collateral', element: <FarmCollateral /> },
-              { path: '/farm/payments', element: <FarmPayments /> },
+              { path: '/farm/contracts', element: <FarmContractsPage /> },
+              { path: '/farm/contracts/:id', element: <FarmContractDetailPage /> },
+              { path: '/farm/inputs', element: <FarmInputsPage /> },
+              { path: '/farm/escrow', element: <FarmEscrowPage /> },
+              { path: '/farm/harvest', element: <FarmHarvestPage /> },
+              { path: '/farm/collateral', element: <FarmCollateralPage /> },
+              { path: '/farm/payments', element: <FarmPaymentsPage /> },
             ],
           },
 
