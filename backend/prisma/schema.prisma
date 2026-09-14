@@ -324,7 +324,7 @@ model Collateral {
   verified        Boolean       @default(false)
   verifiedBy      String?
   verifiedAt      DateTime?
-  documents       String[]
+  documents       String        @default("[]")
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
