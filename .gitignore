@@ -1,14 +1,23 @@
 ```
 # Dependencies
 node_modules/
-pnpm-store/
+pnpm-lock.yaml
 
 # Build outputs
 dist/
 build/
 .next/
+.nuxt/
 out/
-coverage/
+
+# TypeScript
+*.tsbuildinfo
+*.tsx.swp
+
+# Environment
+.env
+.env.local
+.env.*
 
 # Logs
 *.log
@@ -28,16 +37,16 @@ yarn-error.log*
 *.swp
 *.swo
 
+# Temporary files
+*.tmp
+*.swp
+*.swo
+
 # OS generated files
 .DS_Store
 Thumbs.db
 
-# TypeScript
-*.tsbuildinfo
-.next/
-.cache/
-
-# Temporary files
-*.tmp
-*.temp
+# Coverage
+coverage/
+.nyc_output/
 ```
