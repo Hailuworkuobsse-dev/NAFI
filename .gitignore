@@ -1,29 +1,25 @@
 ```
+# Build artifacts
+tsconfig.tsbuildinfo
+
 # Dependencies
 node_modules/
-
-# Build outputs
-dist/
-build/
-*.js.map
-*.ts.map
-*.jsx.map
-*.tsx.map
+.pnpm-store/
 
 # Environment
 .env
 .env.local
 *.env.*
 
+# Logs and temp files
+*.log
+*.tmp
+
 # Editors
 .vscode/
 .idea/
-*.swp
-*.swo
 
-# Logs
-*.log
-
-# Temporary files
-*.tmp
+# OS generated files
+.DS_Store
+Thumbs.db
 ```
