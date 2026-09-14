@@ -68,7 +68,7 @@ export default defineConfig({
         dir: 'ltr',
       },
       devOptions: {
-        enabled: true,
+        enabled: false,
         type: 'module',
         navigateFallback: 'index.html',
       },
