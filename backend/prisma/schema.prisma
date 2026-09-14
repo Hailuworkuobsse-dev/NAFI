@@ -1,0 +1,398 @@
+# Prisma Schema for NAFI Backend
+# 13 Models, 12 Enums
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== ENUMS (12) ====================
+
+enum Role {
+  SUPER_ADMIN
+  NATIONAL_ADMIN
+  INSTITUTION_ADMIN
+  COMPLIANCE_OFFICER
+  RISK_MANAGER
+  INVESTOR_RELATIONS
+  FIELD_AGENT
+  BORROWER
+  INVESTOR
+  GUARANTOR
+  AUDITOR
+  SYSTEM
+}
+
+enum ContractStatus {
+  DRAFT
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+  ACTIVE
+  SUSPENDED
+  COMPLETED
+  DEFAULTED
+  CANCELLED
+}
+
+enum EscrowStatus {
+  PENDING
+  FUNDED
+  DISBURSED
+  REFUNDED
+  FROZEN
+  CLOSED
+}
+
+enum InvestmentStatus {
+  PENDING
+  CONFIRMED
+  ACTIVE
+  PAID_OUT
+  WRITTEN_OFF
+}
+
+enum OpportunityStatus {
+  DRAFT
+  PUBLISHED
+  FUNDED
+  CLOSED
+  ARCHIVED
+}
+
+enum InputType {
+  SEEDS
+  FERTILIZER
+  EQUIPMENT
+  TRAINING
+  INSURANCE
+  LOGISTICS
+  OTHER
+}
+
+enum SettlementStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REVERSED
+}
+
+enum CollateralType {
+  LAND
+  LIVESTOCK
+  EQUIPMENT
+  INVENTORY
+  RECEIVABLES
+  GUARANTEE
+  OTHER
+}
+
+enum DisputeStatus {
+  OPEN
+  UNDER_REVIEW
+  MEDIATION
+  ARBITRATION
+  RESOLVED
+  ESCALATED
+  CLOSED
+}
+
+enum NotificationType {
+  INFO
+  WARNING
+  ALERT
+  PAYMENT_DUE
+  PAYMENT_RECEIVED
+  CONTRACT_UPDATE
+  DISPUTE_UPDATE
+  SYSTEM
+}
+
+enum AuditAction {
+  CREATE
+  READ
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  APPROVE
+  REJECT
+  TRANSFER
+}
+
+enum TenantScope {
+  OWN
+  INSTITUTION
+  NATIONAL
+  ALL
+}
+
+// ==================== MODELS (13) ====================
+
+model User {
+  id                String    @id @default(cuid())
+  nafiId            String    @unique
+  email             String    @unique
+  phone             String?
+  passwordHash      String
+  firstName         String
+  lastName          String
+  role              Role      @default(INVESTOR)
+  institutionId     String?
+  institution       Institution? @relation(fields: [institutionId], references: [id])
+  isVerified        Boolean   @default(false)
+  isActive          Boolean   @default(true)
+  lastLoginAt       DateTime?
+  passwordResetToken String?
+  passwordResetExpires DateTime?
+  refreshToken      String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  contracts         Contract[]
+  investments       Investment[]
+  auditLogs         AuditLog[]
+  notifications     Notification[]
+  disputes          Dispute[]
+
+  @@index([email])
+  @@index([nafiId])
+  @@index([role])
+  @@index([institutionId])
+}
+
+model Institution {
+  id              String   @id @default(cuid())
+  name            String
+  code            String   @unique
+  type            String
+  country         String
+  isVerified      Boolean  @default(false)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  users           User[]
+  contracts       Contract[]
+  opportunities   Opportunity[]
+
+  @@index([code])
+  @@index([country])
+}
+
+model Contract {
+  id              String        @id @default(cuid())
+  contractHash    String        @unique
+  nafiContractId  String        @unique
+  title           String
+  description     String
+  principalAmount Decimal       @db.Decimal(15, 2)
+  interestRate    Decimal       @db.Decimal(5, 2)
+  termMonths      Int
+  status          ContractStatus @default(DRAFT)
+  borrowerId      String
+  borrower        User          @relation(fields: [borrowerId], references: [id])
+  institutionId   String?
+  institution     Institution?  @relation(fields: [institutionId], references: [id])
+  startDate       DateTime?
+  maturityDate    DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  escrows         Escrow[]
+  investments     Investment[]
+  settlements     Settlement[]
+  collateral      Collateral[]
+  disputes        Dispute[]
+  inputs          Input[]
+
+  @@index([contractHash])
+  @@index([nafiContractId])
+  @@index([borrowerId])
+  @@index([status])
+  @@index([institutionId])
+}
+
+model Escrow {
+  id              String       @id @default(cuid())
+  escrowRef       String       @unique
+  contractId      String
+  contract        Contract     @relation(fields: [contractId], references: [id])
+  amount          Decimal      @db.Decimal(15, 2)
+  currency        String       @default("USD")
+  status          EscrowStatus @default(PENDING)
+  fundedAt        DateTime?
+  disbursedAt     DateTime?
+  refundAddress   String?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([contractId])
+  @@index([status])
+}
+
+model Investment {
+  id              String           @id @default(cuid())
+  investmentRef   String           @unique
+  contractId      String
+  contract        Contract         @relation(fields: [contractId], references: [id])
+  investorId      String
+  investor        User             @relation(fields: [investorId], references: [id])
+  amount          Decimal          @db.Decimal(15, 2)
+  shares          Decimal          @db.Decimal(15, 4)
+  status          InvestmentStatus @default(PENDING)
+  confirmedAt     DateTime?
+  payoutAddress   String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([contractId])
+  @@index([investorId])
+  @@index([status])
+}
+
+model Opportunity {
+  id              String            @id @default(cuid())
+  title           String
+  description     String
+  targetAmount    Decimal           @db.Decimal(15, 2)
+  raisedAmount    Decimal           @db.Decimal(15, 2) @default(0)
+  minInvestment   Decimal           @db.Decimal(15, 2)
+  status          OpportunityStatus @default(DRAFT)
+  publishedAt     DateTime?
+  closesAt        DateTime?
+  institutionId   String?
+  institution     Institution?      @relation(fields: [institutionId], references: [id])
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([status])
+  @@index([institutionId])
+}
+
+model Input {
+  id              String     @id @default(cuid())
+  inputRef        String     @unique
+  contractId      String
+  contract        Contract   @relation(fields: [contractId], references: [id])
+  type            InputType
+  description     String
+  quantity        Decimal    @db.Decimal(15, 2)
+  unit            String
+  unitPrice       Decimal    @db.Decimal(15, 2)
+  totalPrice      Decimal    @db.Decimal(15, 2)
+  supplier        String?
+  deliveredAt     DateTime?
+  verifiedAt      DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  @@index([contractId])
+  @@index([type])
+}
+
+model Settlement {
+  id              String         @id @default(cuid())
+  settlementRef   String         @unique
+  contractId      String
+  contract        Contract       @relation(fields: [contractId], references: [id])
+  amount          Decimal        @db.Decimal(15, 2)
+  type            String
+  status          SettlementStatus @default(PENDING)
+  dueDate         DateTime
+  paidAt          DateTime?
+  paymentMethod   String?
+  transactionRef  String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([contractId])
+  @@index([status])
+  @@index([dueDate])
+}
+
+model Collateral {
+  id              String        @id @default(cuid())
+  collateralRef   String        @unique
+  contractId      String
+  contract        Contract      @relation(fields: [contractId], references: [id])
+  type            CollateralType
+  description     String
+  estimatedValue  Decimal       @db.Decimal(15, 2)
+  verified        Boolean       @default(false)
+  verifiedBy      String?
+  verifiedAt      DateTime?
+  documents       String[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([contractId])
+  @@index([type])
+}
+
+model Dispute {
+  id              String        @id @default(cuid())
+  disputeRef      String        @unique
+  contractId      String?
+  contract        Contract?     @relation(fields: [contractId], references: [id])
+  initiatedBy     String
+  initiator       User          @relation(fields: [initiatedBy], references: [id])
+  reason          String
+  description     String
+  status          DisputeStatus @default(OPEN)
+  resolution      String?
+  resolvedAt      DateTime?
+  resolvedBy      String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([contractId])
+  @@index([status])
+  @@index([initiatedBy])
+}
+
+model Notification {
+  id              String           @id @default(cuid())
+  notificationRef String           @unique
+  userId          String
+  user            User             @relation(fields: [userId], references: [id])
+  type            NotificationType
+  title           String
+  message         String
+  data            Json?
+  isRead          Boolean          @default(false)
+  readAt          DateTime?
+  createdAt       DateTime         @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([type])
+}
+
+model AuditLog {
+  id              String      @id @default(cuid())
+  logRef          String      @unique
+  previousHash    String?
+  currentHash     String      @unique
+  action          AuditAction
+  entity          String
+  entityId        String
+  userId          String?
+  user            User?       @relation(fields: [userId], references: [id])
+  tenantScope     TenantScope @default(OWN)
+  ipAddress       String?
+  userAgent       String?
+  metadata        Json?
+  createdAt       DateTime    @default(now())
+
+  @@index([entity])
+  @@index([entityId])
+  @@index([userId])
+  @@index([currentHash])
+  @@index([createdAt])
+}
