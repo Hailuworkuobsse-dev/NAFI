@@ -1,0 +1,19 @@
+{
+  "name": "@nafi/config",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./tailwind": "./tailwind.preset.js",
+    "./eslint": "./eslint.config.js"
+  },
+  "dependencies": {
+    "@nafi/design-tokens": "workspace:*"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.9",
+    "@tailwindcss/typography": "^0.5.15",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "tailwindcss": "^3.4.14"
+  }
+}

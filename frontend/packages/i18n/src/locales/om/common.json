@@ -1,0 +1,49 @@
+{
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "approve": "Approve",
+    "reject": "Reject",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "reset": "Reset",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "retry": "Retry",
+    "export": "Export",
+    "download": "Download",
+    "upload": "Upload",
+    "sign": "Sign",
+    "verify": "Verify"
+  },
+  "status": {
+    "DRAFT": "Draft",
+    "ACTIVE": "Active",
+    "FULFILLED": "Fulfilled",
+    "DEFAULTED": "Defaulted",
+    "DISPUTED": "Disputed",
+    "PENDING": "Pending",
+    "APPROVED": "Approved",
+    "REJECTED": "Rejected"
+  },
+  "errors": {
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email",
+    "invalidPhone": "Please enter a valid phone number",
+    "networkError": "Network error. Please try again.",
+    "unauthorized": "You do not have permission to perform this action.",
+    "unexpected": "Something went wrong. Please try again later.",
+    "sessionExpired": "Your session has expired. Please sign in again."
+  },
+  "states": {
+    "loading": "Loading…",
+    "empty": "No data to display",
+    "offline": "You are offline. Changes will sync when you reconnect."
+  }
+}

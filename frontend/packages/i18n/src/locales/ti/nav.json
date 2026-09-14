@@ -1,0 +1,44 @@
+{
+  "portfolio": {
+    "title": "Portfolio",
+    "overview": "Overview",
+    "investments": "Investments",
+    "bonds": "Bonds",
+    "returns": "Returns",
+    "statements": "Statements"
+  },
+  "opportunities": {
+    "title": "Opportunities",
+    "browse": "Browse"
+  },
+  "bank": {
+    "title": "Bank",
+    "overview": "Overview",
+    "escrows": "Escrows",
+    "loans": "Loans",
+    "collateral": "Collateral",
+    "settlements": "Settlements",
+    "npl": "NPL Monitor"
+  },
+  "farm": {
+    "title": "Farm",
+    "contracts": "Contracts",
+    "inputs": "Inputs",
+    "escrow": "Escrow",
+    "harvest": "Harvest",
+    "collateral": "Collateral",
+    "payments": "Payments"
+  },
+  "gov": {
+    "title": "Government",
+    "dashboard": "Dashboard",
+    "contracts": "Contracts",
+    "forex": "Forex Flows",
+    "credit": "Credit Deployment",
+    "inputs": "Input Supply Chain",
+    "tax": "Tax Compliance",
+    "incentives": "Incentives",
+    "audit": "Audit Log",
+    "reports": "Reports"
+  }
+}

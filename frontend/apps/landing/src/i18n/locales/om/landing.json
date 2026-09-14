@@ -1,0 +1,269 @@
+{
+  "nav": {
+    "platform": "Platform",
+    "forInvestors": "For Investors",
+    "forFarmers": "For Farmers",
+    "forBanks": "For Banks",
+    "impact": "Impact",
+    "about": "About",
+    "login": "Log in",
+    "getStarted": "Get Started"
+  },
+  "hero": {
+    "badge": "Aligned with HGER 2.0 · NAFIR · ACCII · DAR",
+    "title": "The Digital Backbone of Ethiopia's Agricultural Transformation",
+    "subtitle": "Channel diaspora capital into productive agriculture. De-risk bank lending. Formalize contract farming from farm gate to export gate.",
+    "ctaInvest": "Invest in Ethiopia",
+    "ctaFarmer": "Register as Farmer",
+    "statFunded": "Diaspora capital mobilized",
+    "statContracts": "Active contracts",
+    "statFarmers": "Farmers reached"
+  },
+  "trustBar": {
+    "title": "Aligned with national priorities. Backed by institutional partners."
+  },
+  "problem": {
+    "eyebrow": "The Challenge",
+    "title": "Ethiopia's agriculture is under-financed, fragmented, and unable to absorb the capital that exists.",
+    "items": {
+      "credit": {
+        "title": "Less than 10% of credit",
+        "description": "Agriculture employs 64% of the workforce but receives under 10% of total domestic credit."
+      },
+      "diaspora": {
+        "title": "Idle diaspora capital",
+        "description": "$5.1B in remittances last year — most goes to consumption, not production."
+      },
+      "enforcement": {
+        "title": "Unenforceable contracts",
+        "description": "Side-selling, broken agreements, and no auditable record of who owes what to whom."
+      },
+      "leakage": {
+        "title": "Value leakage",
+        "description": "Input supply chains lose value at every handoff — from certified seed to delivered fertilizer."
+      }
+    }
+  },
+  "solution": {
+    "eyebrow": "The Solution",
+    "title": "NAFI — a neutral digital backbone that connects every stakeholder",
+    "subtitle": "One smart-contract ledger. One escrow system. One source of truth.",
+    "nodes": {
+      "diaspora": {
+        "title": "Diaspora Crowdfunders",
+        "description": "Inject hard currency into agricultural bonds or equity pools with transparent returns."
+      },
+      "banks": {
+        "title": "Commercial Banks",
+        "description": "Provide ETB matching, escrow, and structured credit backed by diaspora deposits."
+      },
+      "dbe": {
+        "title": "Development Bank of Ethiopia",
+        "description": "Co-finances long-term agricultural infrastructure under RUFIP III."
+      },
+      "nafa": {
+        "title": "NAFA",
+        "description": "Provides refinancing, risk-sharing, and first-loss guarantees to de-risk bank lending."
+      },
+      "suppliers": {
+        "title": "Input Suppliers",
+        "description": "Deliver seeds, fertilizer, machinery, and technology with guaranteed payment on verified delivery."
+      },
+      "farmers": {
+        "title": "Commercial Farmers",
+        "description": "Manage large-scale production with access to inputs, finance, and premium buyers."
+      },
+      "government": {
+        "title": "Government Regulators",
+        "description": "Real-time visibility into forex flows, credit deployment, and contract performance."
+      }
+    }
+  },
+  "audience": {
+    "title": "Built for every stakeholder",
+    "subtitle": "Each role gets a purpose-built workspace. All operate on one shared ledger.",
+    "diaspora": {
+      "title": "For Diaspora Investors",
+      "points": [
+        "Fractional investment from $500",
+        "Fixed-return bonds or profit-share equity",
+        "Escrow-protected capital",
+        "Sovereign risk-sharing available"
+      ],
+      "cta": "Start investing"
+    },
+    "farmers": {
+      "title": "For Commercial Farmers",
+      "points": [
+        "Inputs delivered, payment guaranteed",
+        "Access to low-cost credit",
+        "Direct access to export buyers",
+        "Protection from middlemen"
+      ],
+      "cta": "Register your farm"
+    },
+    "banks": {
+      "title": "For Commercial Banks",
+      "points": [
+        "Zero-risk lending with escrow controls",
+        "NAFA guarantees up to 70%",
+        "Real-time loan performance data",
+        "Differentiated NPL treatment"
+      ],
+      "cta": "Partner with us"
+    },
+    "government": {
+      "title": "For Government",
+      "points": [
+        "Forex generation and retention",
+        "Agricultural commercialization",
+        "Tax revenue and compliance",
+        "Real-time policy dashboards"
+      ],
+      "cta": "View alignment"
+    }
+  },
+  "how": {
+    "title": "How it works",
+    "subtitle": "Five steps from onboarding to settled returns.",
+    "steps": {
+      "onboard": {
+        "title": "1. Onboard & Verify",
+        "description": "Every stakeholder completes KYC/KYB. Contracts are digitally witnessed, including by a government representative."
+      },
+      "fund": {
+        "title": "2. Fund the Contract",
+        "description": "Diaspora investors fund the contract through bonds or equity pools. Banks open escrow. DBE co-finances."
+      },
+      "deploy": {
+        "title": "3. Deploy Inputs",
+        "description": "Suppliers deliver seeds, fertilizer, and machinery. Escrow releases payment only after geo-verified delivery."
+      },
+      "produce": {
+        "title": "4. Produce & Verify",
+        "description": "Farmers produce. Harvest is logged, verified, and stored. Warehouse receipts become collateral."
+      },
+      "settle": {
+        "title": "5. Settle & Distribute",
+        "description": "Export proceeds flow to escrow. Smart contracts distribute returns to investors, suppliers, banks, and farmers."
+      }
+    }
+  },
+  "opportunities": {
+    "title": "Live opportunities",
+    "subtitle": "Contracts open for investment right now.",
+    "viewAll": "View all opportunities",
+    "funded": "funded",
+    "investors": "investors",
+    "targetYield": "Target yield",
+    "floorPrice": "Floor price",
+    "maturity": "Maturity",
+    "empty": "No open opportunities right now. Check back soon."
+  },
+  "impact": {
+    "title": "Impact so far",
+    "subtitle": "Every metric verified on the NAFI ledger.",
+    "metrics": {
+      "capital": "Diaspora capital mobilized",
+      "hectares": "Hectares under contract",
+      "farmers": "Farmers reached",
+      "forex": "Forex generated",
+      "jobs": "Jobs created"
+    }
+  },
+  "security": {
+    "title": "Security & compliance",
+    "items": {
+      "sandbox": {
+        "title": "NBE Regulatory Sandbox",
+        "description": "Operating under the National Bank of Ethiopia's regulatory sandbox framework."
+      },
+      "escrow": {
+        "title": "Escrow-protected",
+        "description": "Every birr held in a regulated commercial bank escrow account."
+      },
+      "audit": {
+        "title": "Audit-grade ledger",
+        "description": "Every transaction anchored to an immutable audit trail."
+      },
+      "data": {
+        "title": "Data residency in Ethiopia",
+        "description": "Sensitive data stored in Ethiopian data centers."
+      }
+    }
+  },
+  "testimonials": {
+    "title": "What partners say",
+    "items": {
+      "one": {
+        "quote": "NAFI gives us the real-time data and escrow controls we need to make agricultural lending safe.",
+        "author": "Commercial Bank Partner",
+        "role": "Head of Agri-Finance"
+      },
+      "two": {
+        "quote": "For the first time, my investment in Ethiopia is traceable, auditable, and aligned with national priorities.",
+        "author": "Diaspora Investor",
+        "role": "Washington, DC"
+      }
+    }
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "items": {
+      "what": {
+        "q": "What is NAFI?",
+        "a": "NAFI is a digital infrastructure platform that coordinates diaspora investors, commercial banks, the Development Bank of Ethiopia, NAFA, input suppliers, and commercial farmers within a unified smart-contract engine."
+      },
+      "howInvest": {
+        "q": "How do I invest as a diaspora member?",
+        "a": "Register, complete KYC, browse open contracts, and commit capital through fixed-return bonds or profit-share equity pools. Minimum investment is $500."
+      },
+      "risk": {
+        "q": "What happens if a contract fails?",
+        "a": "Escrow funds are frozen and arbitration is triggered. NAFA guarantees and sovereign risk-sharing may cover partial losses. All outcomes are transparent on the ledger."
+      },
+      "farmer": {
+        "q": "How can a farmer participate?",
+        "a": "Farmers register through the platform, verify land-use rights, and sign digital contracts with a government witness. Inputs are delivered and financed through escrow."
+      },
+      "government": {
+        "q": "How does NAFI align with government priorities?",
+        "a": "NAFI is the digital execution layer of NAFIR, and directly supports HGER 2.0, ACCII, and DAR. It generates forex, formalizes contract farming, and provides real-time policy dashboards."
+      }
+    }
+  },
+  "finalCta": {
+    "title": "Join the infrastructure of Ethiopia's future",
+    "subtitle": "Whether you invest, farm, bank, or govern — NAFI is where capital meets soil.",
+    "cta": "Get Started"
+  },
+  "footer": {
+    "tagline": "The digital backbone of Ethiopia's agricultural transformation.",
+    "platform": {
+      "title": "Platform",
+      "howItWorks": "How it works",
+      "security": "Security",
+      "impact": "Impact"
+    },
+    "audience": {
+      "title": "For You",
+      "investors": "Investors",
+      "farmers": "Farmers",
+      "banks": "Banks",
+      "government": "Government"
+    },
+    "resources": {
+      "title": "Resources",
+      "docs": "Documentation",
+      "api": "API",
+      "faq": "FAQ"
+    },
+    "legal": {
+      "title": "Legal",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "compliance": "Compliance"
+    },
+    "rights": "© {{year}} NAFI. All rights reserved."
+  }
+}
