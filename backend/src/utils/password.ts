@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcrypt";
 
 const SALT_ROUNDS = 12;
 
@@ -14,7 +14,7 @@ export async function hashPassword(password: string): Promise<string> {
  */
 export async function verifyPassword(
   password: string,
-  hash: string
+  hash: string,
 ): Promise<boolean> {
   return bcrypt.compare(password, hash);
 }
@@ -23,6 +23,6 @@ export async function verifyPassword(
  * Check if a hash needs rehashing (due to salt rounds change)
  */
 export function needsRehash(hash: string): boolean {
-  const [_, saltRounds] = hash.split('$');
+  const [_, saltRounds] = hash.split("$");
   return parseInt(saltRounds, 10) !== SALT_ROUNDS;
 }
