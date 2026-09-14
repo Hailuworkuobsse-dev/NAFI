@@ -1,119 +1,94 @@
 /**
- * Permission strings for RBAC system
+ * Permission string convention for NAFI RBAC system
+ * Aligned with frontend rbac-core package
+ * 
+ * Format: <resource>:<action>[:<scope>]
+ * Resources: contract, escrow, investment, input, settlement,
+ *            collateral, dispute, report, user, system, audit, tax
+ * Actions:   create, read, update, delete, approve, reject,
+ *            submit, execute, export, freeze, unfreeze
+ * Scopes:    own, institution, region, national, all
  */
 
-// User permissions
-export const USER_CREATE = 'user:create';
-export const USER_READ = 'user:read';
-export const USER_UPDATE = 'user:update';
-export const USER_DELETE = 'user:delete';
-export const USER_LIST = 'user:list';
-
-// Contract permissions
+// Contracts
 export const CONTRACT_CREATE = 'contract:create';
-export const CONTRACT_READ = 'contract:read';
+export const CONTRACT_READ_OWN = 'contract:read:own';
+export const CONTRACT_READ_ALL = 'contract:read:all';
 export const CONTRACT_UPDATE = 'contract:update';
-export const CONTRACT_DELETE = 'contract:delete';
-export const CONTRACT_LIST = 'contract:list';
 export const CONTRACT_APPROVE = 'contract:approve';
-export const CONTRACT_REJECT = 'contract:reject';
+export const CONTRACT_FREEZE = 'contract:freeze';
 
-// Investment permissions
-export const INVESTMENT_CREATE = 'investment:create';
-export const INVESTMENT_READ = 'investment:read';
-export const INVESTMENT_UPDATE = 'investment:update';
-export const INVESTMENT_DELETE = 'investment:delete';
-export const INVESTMENT_LIST = 'investment:list';
-
-// Escrow permissions
-export const ESCROW_CREATE = 'escrow:create';
-export const ESCROW_READ = 'escrow:read';
-export const ESCROW_UPDATE = 'escrow:update';
-export const ESCROW_DELETE = 'escrow:delete';
+// Escrow
+export const ESCROW_READ_OWN = 'escrow:read:own';
 export const ESCROW_FUND = 'escrow:fund';
-export const ESCROW_DISBURSE = 'escrow:disburse';
+export const ESCROW_RELEASE = 'escrow:release';
+export const ESCROW_FREEZE = 'escrow:freeze';
 
-// Opportunity permissions
-export const OPPORTUNITY_CREATE = 'opportunity:create';
-export const OPPORTUNITY_READ = 'opportunity:read';
-export const OPPORTUNITY_UPDATE = 'opportunity:update';
-export const OPPORTUNITY_DELETE = 'opportunity:delete';
-export const OPPORTUNITY_PUBLISH = 'opportunity:publish';
+// Investment
+export const INVESTMENT_CREATE = 'investment:create';
+export const INVESTMENT_READ_OWN = 'investment:read:own';
+export const INVESTMENT_READ_ALL = 'investment:read:all';
 
-// Settlement permissions
-export const SETTLEMENT_CREATE = 'settlement:create';
-export const SETTLEMENT_READ = 'settlement:read';
-export const SETTLEMENT_UPDATE = 'settlement:update';
-export const SETTLEMENT_DELETE = 'settlement:delete';
-export const SETTLEMENT_PROCESS = 'settlement:process';
-
-// Collateral permissions
-export const COLLATERAL_CREATE = 'collateral:create';
-export const COLLATERAL_READ = 'collateral:read';
-export const COLLATERAL_UPDATE = 'collateral:update';
-export const COLLATERAL_DELETE = 'collateral:delete';
-export const COLLATERAL_VERIFY = 'collateral:verify';
-
-// Dispute permissions
-export const DISPUTE_CREATE = 'dispute:create';
-export const DISPUTE_READ = 'dispute:read';
-export const DISPUTE_UPDATE = 'dispute:update';
-export const DISPUTE_DELETE = 'dispute:delete';
-export const DISPUTE_RESOLVE = 'dispute:resolve';
-
-// Input permissions
+// Input supply
 export const INPUT_CREATE = 'input:create';
-export const INPUT_READ = 'input:read';
-export const INPUT_UPDATE = 'input:update';
-export const INPUT_DELETE = 'input:delete';
 export const INPUT_VERIFY = 'input:verify';
+export const INPUT_DISBURSE = 'input:disburse';
 
-// Report permissions
-export const REPORT_CREATE = 'report:create';
-export const REPORT_READ = 'report:read';
-export const REPORT_DELETE = 'report:delete';
+// Settlement
+export const SETTLEMENT_SIMULATE = 'settlement:simulate';
+export const SETTLEMENT_EXECUTE = 'settlement:execute';
+export const SETTLEMENT_READ = 'settlement:read';
+
+// Collateral
+export const COLLATERAL_REGISTER = 'collateral:register';
+export const COLLATERAL_LIQUIDATE = 'collateral:liquidate';
+
+// Disputes
+export const DISPUTE_FLAG = 'dispute:flag';
+export const DISPUTE_ARBITRATE = 'dispute:arbitrate';
+
+// Reports
+export const REPORT_READ_OWN = 'report:read:own';
+export const REPORT_GENERATE = 'report:generate';
 export const REPORT_EXPORT = 'report:export';
 
-// Audit permissions
+// Users
+export const USER_INVITE = 'user:invite';
+export const USER_MANAGE_OWN = 'user:manage:own';
+export const USER_MANAGE_ALL = 'user:manage:all';
+
+// System
+export const SYSTEM_CONFIGURE = 'system:configure';
+
+// Audit
 export const AUDIT_READ = 'audit:read';
-export const AUDIT_EXPORT = 'audit:export';
 
-// Notification permissions
-export const NOTIFICATION_READ = 'notification:read';
-export const NOTIFICATION_SEND = 'notification:send';
-export const NOTIFICATION_DELETE = 'notification:delete';
-
-// Admin permissions
-export const ADMIN_SETTINGS = 'admin:settings';
-export const ADMIN_ROLES = 'admin:roles';
-export const ADMIN_AUDIT = 'admin:audit';
-export const ADMIN_SYSTEM = 'admin:system';
+// Tax
+export const TAX_READ = 'tax:read';
 
 export const ALL_PERMISSIONS = [
-  // User
-  USER_CREATE, USER_READ, USER_UPDATE, USER_DELETE, USER_LIST,
-  // Contract
-  CONTRACT_CREATE, CONTRACT_READ, CONTRACT_UPDATE, CONTRACT_DELETE, CONTRACT_LIST, CONTRACT_APPROVE, CONTRACT_REJECT,
-  // Investment
-  INVESTMENT_CREATE, INVESTMENT_READ, INVESTMENT_UPDATE, INVESTMENT_DELETE, INVESTMENT_LIST,
+  // Contracts
+  CONTRACT_CREATE, CONTRACT_READ_OWN, CONTRACT_READ_ALL, CONTRACT_UPDATE, CONTRACT_APPROVE, CONTRACT_FREEZE,
   // Escrow
-  ESCROW_CREATE, ESCROW_READ, ESCROW_UPDATE, ESCROW_DELETE, ESCROW_FUND, ESCROW_DISBURSE,
-  // Opportunity
-  OPPORTUNITY_CREATE, OPPORTUNITY_READ, OPPORTUNITY_UPDATE, OPPORTUNITY_DELETE, OPPORTUNITY_PUBLISH,
+  ESCROW_READ_OWN, ESCROW_FUND, ESCROW_RELEASE, ESCROW_FREEZE,
+  // Investment
+  INVESTMENT_CREATE, INVESTMENT_READ_OWN, INVESTMENT_READ_ALL,
+  // Input supply
+  INPUT_CREATE, INPUT_VERIFY, INPUT_DISBURSE,
   // Settlement
-  SETTLEMENT_CREATE, SETTLEMENT_READ, SETTLEMENT_UPDATE, SETTLEMENT_DELETE, SETTLEMENT_PROCESS,
+  SETTLEMENT_SIMULATE, SETTLEMENT_EXECUTE, SETTLEMENT_READ,
   // Collateral
-  COLLATERAL_CREATE, COLLATERAL_READ, COLLATERAL_UPDATE, COLLATERAL_DELETE, COLLATERAL_VERIFY,
-  // Dispute
-  DISPUTE_CREATE, DISPUTE_READ, DISPUTE_UPDATE, DISPUTE_DELETE, DISPUTE_RESOLVE,
-  // Input
-  INPUT_CREATE, INPUT_READ, INPUT_UPDATE, INPUT_DELETE, INPUT_VERIFY,
-  // Report
-  REPORT_CREATE, REPORT_READ, REPORT_DELETE, REPORT_EXPORT,
+  COLLATERAL_REGISTER, COLLATERAL_LIQUIDATE,
+  // Disputes
+  DISPUTE_FLAG, DISPUTE_ARBITRATE,
+  // Reports
+  REPORT_READ_OWN, REPORT_GENERATE, REPORT_EXPORT,
+  // Users
+  USER_INVITE, USER_MANAGE_OWN, USER_MANAGE_ALL,
+  // System
+  SYSTEM_CONFIGURE,
   // Audit
-  AUDIT_READ, AUDIT_EXPORT,
-  // Notification
-  NOTIFICATION_READ, NOTIFICATION_SEND, NOTIFICATION_DELETE,
-  // Admin
-  ADMIN_SETTINGS, ADMIN_ROLES, ADMIN_AUDIT, ADMIN_SYSTEM,
+  AUDIT_READ,
+  // Tax
+  TAX_READ,
 ];

@@ -1,6 +1,3 @@
-# Prisma Schema for NAFI Backend
-# 13 Models, 12 Enums
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,18 +10,18 @@ datasource db {
 // ==================== ENUMS (12) ====================
 
 enum Role {
-  SUPER_ADMIN
-  NATIONAL_ADMIN
-  INSTITUTION_ADMIN
+  DIASPORA_INVESTOR
+  COMMERCIAL_BANK
+  DBE_OFFICER
+  NAFA_OFFICER
+  INPUT_SUPPLIER
+  COMMERCIAL_FARMER
+  OFF_TAKER
+  GOVERNMENT_REGULATOR
+  DONOR
+  NAFI_ADMIN
   COMPLIANCE_OFFICER
-  RISK_MANAGER
-  INVESTOR_RELATIONS
-  FIELD_AGENT
-  BORROWER
-  INVESTOR
-  GUARANTOR
-  AUDITOR
-  SYSTEM
+  ARBITRATOR
 }
 
 enum ContractStatus {
@@ -142,7 +139,7 @@ model User {
   passwordHash      String
   firstName         String
   lastName          String
-  role              Role      @default(INVESTOR)
+  role              Role      @default(COMMERCIAL_FARMER)
   institutionId     String?
   institution       Institution? @relation(fields: [institutionId], references: [id])
   isVerified        Boolean   @default(false)
