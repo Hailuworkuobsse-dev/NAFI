@@ -7,4 +7,5 @@ export * from './Select/Select';
 export * from './Skeleton/Skeleton';
 export * from './Spinner/Spinner';
 export * from './Switch/Switch';
+export * from './Textarea/Textarea';
 export * from './Tooltip/Tooltip';

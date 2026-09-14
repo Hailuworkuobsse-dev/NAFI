@@ -1,0 +1,21 @@
+{
+  "name": "NAFI - National Agricultural Finance Initiative",
+  "short_name": "NAFI",
+  "description": "Agricultural finance platform for Ethiopia",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#16A34A",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "agriculture", "business"],
+  "lang": "en-US",
+  "dir": "ltr"
+}
