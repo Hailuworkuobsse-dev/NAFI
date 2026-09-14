@@ -1,1 +1,29 @@
-(frontend/apps/web/src/auth/AuthProvider.tsx is a source file, and there are no build artifacts, dependencies, or temporary files in the changes)
+```
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+*.js.map
+*.ts.map
+*.jsx.map
+*.tsx.map
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+```

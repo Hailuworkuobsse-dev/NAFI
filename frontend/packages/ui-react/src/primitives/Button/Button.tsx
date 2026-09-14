@@ -1,7 +1,7 @@
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Loader2 } from 'lucide-react';
-import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
+import { Fragment, forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 
 import { cn } from '../../lib/cn';
 
@@ -75,10 +75,36 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   const Comp = asChild ? Slot : 'button';
   const isDisabled = disabled || loading;
 
+  // When using asChild, we need to ensure only one child element is passed to Slot
+  // Wrap all internal content in a single fragment to satisfy Radix Slot requirement
+  if (asChild) {
+    return (
+      <Comp
+        ref={ref}
+        type={undefined}
+        className={cn(buttonVariants({ variant, size, fullWidth }), className)}
+        disabled={isDisabled}
+        aria-busy={loading || undefined}
+        data-loading={loading || undefined}
+        {...props}
+      >
+        <Fragment>
+          {loading ? (
+            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+          ) : leadingIcon ? (
+            leadingIcon
+          ) : null}
+          {children}
+          {!loading && trailingIcon ? trailingIcon : null}
+        </Fragment>
+      </Comp>
+    );
+  }
+
   return (
     <Comp
       ref={ref}
-      type={asChild ? undefined : type}
+      type={type}
       className={cn(buttonVariants({ variant, size, fullWidth }), className)}
       disabled={isDisabled}
       aria-busy={loading || undefined}
