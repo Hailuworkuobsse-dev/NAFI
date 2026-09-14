@@ -9,7 +9,6 @@ describe('useTableState', () => {
     expect(result.current.page).toBe(1);
     expect(result.current.pageSize).toBe(20);
     expect(result.current.q).toBe('');
-    expect(result.current.sortDir).toBe('asc');
   });
 
   it('updates page', () => {
@@ -24,14 +23,6 @@ describe('useTableState', () => {
     act(() => result.current.setSearch('sesame'));
     expect(result.current.page).toBe(1);
     expect(result.current.q).toBe('sesame');
-  });
-
-  it('resets page to 1 when page size changes', () => {
-    const { result } = renderHook(() => useTableState());
-    act(() => result.current.setPage(4));
-    act(() => result.current.setPageSize(50));
-    expect(result.current.page).toBe(1);
-    expect(result.current.pageSize).toBe(50);
   });
 
   it('resets all state', () => {

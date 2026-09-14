@@ -1,0 +1,72 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        required: true
+        default: staging
+        type: choice
+        options: [staging, production]
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy-staging:
+    name: Deploy to staging
+    if: |
+      github.event_name == 'push' ||
+      (github.event_name == 'workflow_dispatch' && inputs.environment == 'staging')
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment:
+      name: staging
+      url: https://staging.nafi.et
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Deploy frontends to Vercel
+        run: |
+          pnpm dlx vercel@latest deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --yes --cwd apps/landing
+          pnpm dlx vercel@latest deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --yes --cwd apps/web
+
+  deploy-production:
+    name: Deploy to production
+    if: github.event_name == 'workflow_dispatch' && inputs.environment == 'production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment:
+      name: production
+      url: https://app.nafi.et
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Run migrations (production)
+        run: ./services/api/scripts/migrate.sh production
+        env:
+          PRODUCTION_DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+          S3_BACKUP_BUCKET: ${{ secrets.S3_BACKUP_BUCKET }}
+      - name: Deploy frontends to Vercel
+        run: |
+          pnpm dlx vercel@latest deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --yes --cwd apps/landing
+          pnpm dlx vercel@latest deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --yes --cwd apps/web
+      - name: Smoke test production
+        run: |
+          set -e
+          curl -fs https://nafi.et | grep -q "NAFI"
+          curl -fs https://app.nafi.et | grep -q "NAFI"

@@ -43,6 +43,8 @@ import { useTranslation } from 'react-i18next';
 import { Avatar, Button, Can, cn } from '@nafi/ui-react';
 
 import { useAuth } from '@/auth/useAuth';
+import { InstallPrompt } from '@/components/InstallPrompt';
+import { OfflineBanner } from '@/components/OfflineBanner';
 import { useAuthActions } from '@/auth/AuthProvider';
 
 import { NAV_BY_ROLE } from './navConfig';
@@ -95,6 +97,7 @@ export function DashboardLayout() {
           <X className="h-5 w-5" />
         </button>
       </div>
+      {user.role === 'COMMERCIAL_FARMER' && <InstallPrompt />}
 
       <nav className="flex-1 overflow-y-auto px-3 py-4" aria-label="Sidebar">
         {sections.map((section) => (
@@ -142,6 +145,7 @@ export function DashboardLayout() {
           Sign out
         </button>
       </div>
+      {user.role === 'COMMERCIAL_FARMER' && <InstallPrompt />}
     </div>
   );
 
@@ -165,6 +169,7 @@ export function DashboardLayout() {
       )}
 
       <div className="flex flex-1 flex-col">
+        <OfflineBanner />
         <header className="sticky top-0 z-sticky flex h-16 items-center justify-between border-b border-neutral-200 bg-white/95 px-4 backdrop-blur sm:px-6">
           <div className="flex items-center gap-3">
             <button
@@ -199,6 +204,7 @@ export function DashboardLayout() {
           <Outlet />
         </main>
       </div>
+      {user.role === 'COMMERCIAL_FARMER' && <InstallPrompt />}
     </div>
   );
 }

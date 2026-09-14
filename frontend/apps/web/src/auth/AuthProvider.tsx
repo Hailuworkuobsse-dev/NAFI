@@ -2,6 +2,7 @@ import { AuthProvider as UIAuthProvider, type AuthContextValue } from '@nafi/ui-
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, type ReactNode } from 'react';
 
+import { clearUser, identifyUser } from '@/observability/sentry';
 import { authApi } from './api';
 import { useAuthStore } from './authStore';
 import { tokenStore } from './tokenStore';
@@ -58,6 +59,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     setLoading(false);
   }, [setLoading]);
+
+  useEffect(() => {
+    if (user) {
+      identifyUser({ id: user.id, role: user.role, institutionId: user.institutionId });
+    } else {
+      clearUser();
+    }
+  }, [user]);
 
   const value: AuthContextValue = useMemo(
     () => ({

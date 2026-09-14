@@ -13,32 +13,35 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
+    "test:coverage": "turbo run test:coverage",
     "test:e2e": "pnpm --filter @nafi/e2e test",
+    "test:e2e:ui": "pnpm --filter @nafi/e2e test:ui",
+    "test:a11y": "pnpm --filter @nafi/e2e test:a11y",
+    "lighthouse": "lhci autorun",
+    "size": "size-limit",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
     "clean": "turbo run clean && rm -rf node_modules",
     "storybook": "pnpm --filter @nafi/ui-react storybook",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
+    "@lhci/cli": "^0.14.0",
     "@nafi/config": "workspace:*",
+    "@size-limit/preset-app": "^11.1.4",
     "@types/node": "^22.7.5",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.8",
+    "size-limit": "^11.1.4",
     "turbo": "^2.2.3",
     "typescript": "^5.6.3"
   },
   "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md,css}": [
-      "prettier --write"
-    ]
+    "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
+    "*.{json,md,css}": ["prettier --write"]
   }
 }
