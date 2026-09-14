@@ -144,6 +144,9 @@ importers:
       '@nafi/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@nafi/landing':
+        specifier: workspace:*
+        version: link:../landing
       '@nafi/rbac-core':
         specifier: workspace:*
         version: link:../../packages/rbac-core

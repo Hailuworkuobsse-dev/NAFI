@@ -1,6 +1,9 @@
 import { PERMISSIONS } from '@nafi/rbac-core';
 import { ProtectedRoute } from '@nafi/ui-react';
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
+
+import { LandingPage } from '@nafi/landing';
+import { PublicLayout } from '@nafi/landing';
 
 import { RouteErrorBoundary } from '@/components/RouteErrorBoundary';
 import { AuthLayout } from '@/features/auth/layouts/AuthLayout';
@@ -44,12 +47,31 @@ import {
 } from '@/pages/stubs';
 
 export const router = createBrowserRouter([
+  // -------- Public / Landing --------
+  {
+    path: '/',
+    element: <PublicLayout />,
+    errorElement: <RouteErrorBoundary />,
+    children: [
+      { index: true, element: <LandingPage /> },
+      { path: 'how-it-works', element: <LandingPage /> },
+      { path: 'for-investors', element: <LandingPage /> },
+      { path: 'for-farmers', element: <LandingPage /> },
+      { path: 'for-banks', element: <LandingPage /> },
+      { path: 'for-government', element: <LandingPage /> },
+      { path: 'impact', element: <LandingPage /> },
+      { path: 'security', element: <LandingPage /> },
+      { path: 'about', element: <LandingPage /> },
+      { path: 'contact', element: <LandingPage /> },
+    ],
+  },
+
+  // -------- Auth --------
   {
     path: '/',
     element: <AuthLayout />,
     errorElement: <RouteErrorBoundary />,
     children: [
-      { index: true, element: <Navigate to="/login" replace /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'register', element: <RegisterPage /> },
       { path: 'forgot-password', element: <ForgotPasswordPage /> },

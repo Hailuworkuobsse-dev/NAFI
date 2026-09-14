@@ -21,4 +21,25 @@
   .container-app {
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
   }
+
+  /* Landing page utilities */
+  .container-narrow {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-py {
+    @apply py-16 sm:py-20 lg:py-24;
+  }
+
+  .z-sticky {
+    z-index: 40;
+  }
+
+  .z-modal-backdrop {
+    z-index: 50;
+  }
+
+  .z-modal {
+    z-index: 60;
+  }
 }

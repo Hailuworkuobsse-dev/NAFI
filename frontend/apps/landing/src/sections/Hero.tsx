@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 
 import { Badge, Button } from '@nafi/ui-react';
 
-import { StatCounter } from '@/components/StatCounter';
-import { usePublicStats } from '@/hooks/usePublicStats';
+import { StatCounter } from '../components/StatCounter';
+import { usePublicStats } from '../hooks/usePublicStats';
 
 import { EcosystemDiagram } from './EcosystemDiagram';
 

@@ -12,7 +12,7 @@ import {
   Skeleton,
 } from '@nafi/ui-react';
 
-import { usePublicOpportunities } from '@/hooks/usePublicOpportunities';
+import { usePublicOpportunities } from '../hooks/usePublicOpportunities';
 
 export function LiveOpportunities() {
   const { t } = useTranslation('landing');

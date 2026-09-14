@@ -19,6 +19,7 @@
     "@nafi/design-tokens": "workspace:*",
     "@nafi/formatters": "workspace:*",
     "@nafi/i18n": "workspace:*",
+    "@nafi/landing": "workspace:*",
     "@nafi/rbac-core": "workspace:*",
     "@nafi/ui-react": "workspace:*",
     "@nafi/validators": "workspace:*",

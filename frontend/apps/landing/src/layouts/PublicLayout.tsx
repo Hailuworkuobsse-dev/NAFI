@@ -1,8 +1,8 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 
-import { Footer } from '@/sections/Footer';
-import { Navbar } from '@/sections/Navbar';
+import { Footer } from '../sections/Footer';
+import { Navbar } from '../sections/Navbar';
 
 export function PublicLayout() {
   const { pathname, hash } = useLocation();

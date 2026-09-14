@@ -1,7 +1,7 @@
-import rateLimit from 'express-rate-limit';
-import { getEnv } from '../config/env';
-import { ApiError } from '../utils/ApiError';
-import { logger } from '../config/logger';
+import rateLimit from "express-rate-limit";
+import { getEnv } from "../config/env";
+import { ApiError } from "../utils/ApiError";
+import { logger } from "../config/logger";
 
 const env = getEnv();
 
@@ -13,19 +13,32 @@ export const defaultLimiter = rateLimit({
   max: env.RATE_LIMIT_MAX_REQUESTS,
   standardHeaders: true,
   legacyHeaders: false,
-  message: ApiError.tooManyRequests('Too many requests, please try again later'),
+  skip: (req) => {
+    const path = req.path ?? "";
+    return (
+      path === "/api/v1/auth/refresh" ||
+      path === "/api/v1/auth/login" ||
+      path === "/api/v1/auth/register"
+    );
+  },
+  message: ApiError.tooManyRequests(
+    "Too many requests, please try again later",
+  ),
   handler: (req, res) => {
-    logger.warn({
-      ip: req.ip,
-      path: req.path,
-      method: req.method,
-    }, 'Rate limit exceeded');
-    
+    logger.warn(
+      {
+        ip: req.ip,
+        path: req.path,
+        method: req.method,
+      },
+      "Rate limit exceeded",
+    );
+
     res.status(429).json({
       success: false,
       error: {
-        code: 'TOO_MANY_REQUESTS',
-        message: 'Too many requests, please try again later',
+        code: "TOO_MANY_REQUESTS",
+        message: "Too many requests, please try again later",
       },
     });
   },
@@ -36,21 +49,24 @@ export const defaultLimiter = rateLimit({
  */
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // 10 attempts per window
+  max: 50, // allow refresh rehydration and normal auth flows without false positives
   standardHeaders: true,
   legacyHeaders: false,
-  message: ApiError.tooManyRequests('Too many authentication attempts'),
+  message: ApiError.tooManyRequests("Too many authentication attempts"),
   handler: (req, res) => {
-    logger.warn({
-      ip: req.ip,
-      path: req.path,
-    }, 'Auth rate limit exceeded');
-    
+    logger.warn(
+      {
+        ip: req.ip,
+        path: req.path,
+      },
+      "Auth rate limit exceeded",
+    );
+
     res.status(429).json({
       success: false,
       error: {
-        code: 'TOO_MANY_REQUESTS',
-        message: 'Too many authentication attempts, please try again later',
+        code: "TOO_MANY_REQUESTS",
+        message: "Too many authentication attempts, please try again later",
       },
     });
   },
@@ -64,7 +80,7 @@ export const sensitiveLimiter = rateLimit({
   max: 5, // 5 attempts per hour
   standardHeaders: true,
   legacyHeaders: false,
-  message: ApiError.tooManyRequests('Too many attempts'),
+  message: ApiError.tooManyRequests("Too many attempts"),
 });
 
 /**

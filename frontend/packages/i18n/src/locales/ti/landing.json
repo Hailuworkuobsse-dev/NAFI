@@ -1,0 +1,123 @@
+{
+  "nav": {
+    "platform": "መድረክ",
+    "forInvestors": "ንመወልቲ",
+    "forFarmers": "ንሓረስቶት",
+    "forBanks": "ንባንክታት",
+    "impact": "ጽልዋ",
+    "about": "ብዛዕባና",
+    "login": "እቶ",
+    "getStarted": "ጀምር"
+  },
+  "hero": {
+    "badge": "ምስ HGER 2.0 · NAFIR · ACCII · DAR እተሰማመዐ",
+    "title": "ዲጂታል መሕቖ ናይ ኢትዮጵያ ህንጸት ሕሻናት",
+    "subtitle": "ካፒታል ዲያስፖራ ናብ ፍሪያታዊ ሕሻናት ኣእትዉ። ባንክታት ብደህንነት የለቅሑ።",
+    "ctaInvest": "ኣብ ኢትዮጵያ ወፍሩ",
+    "ctaFarmer": "ብሓረስታይ ተመዝገቡ",
+    "statFunded": "ዝተኣከበ ካፒታል ዲያስፖራ",
+    "statContracts": "ነቃሓት ውዕላት",
+    "statFarmers": "ዝበጽሑ ሓረስቶት"
+  },
+  "trustBar": {
+    "title": "ምስ ሃገራዊ ቀዳምነታት ዝተሰማመዐ።"
+  },
+  "problem": {
+    "eyebrow": "እቲ ጸገም",
+    "title": "ሕሻናት ኢትዮጵያ እኹል ፋይናንስ የብሉን።",
+    "items": {
+      "credit": { "title": "ትሕቲ 10% ሓገዝ", "description": "ሕሻናት 64% ሓይሊ ሰብ እንተሓዘ እውን ትሕቲ 10% ልቃሕ ይረክብ።" },
+      "diaspora": { "title": "ዘይተጠቕመ ካፒታል", "description": "$5.1B ናብ ሃገር ዘኣተወ ፍልሰት ገንዘብ።" },
+      "enforcement": { "title": "ዘይተተግብሩ ውዕላት", "description": "ሕጋዊ ዘይኮኑ ውዕላትን ምስራቕን።" },
+      "leakage": { "title": "ምብኻን ዋጋ", "description": "ሰንሰለት ቀረብ ዋጋ የብክን።" }
+    }
+  },
+  "solution": {
+    "eyebrow": "እቲ መፍትሒ",
+    "title": "NAFI — ኩሎም መዳርግቲ ኣካላት ዘራክብ ዲጂታል መድረኽ",
+    "subtitle": "ሓደ ስማርት ኮንትራክት። ሓደ ናይ ዋስትና ስርዓት።",
+    "nodes": {
+      "diaspora": { "title": "መወልቲ ዲያስፖራ", "description": "ጽንኩር ገንዘብ ናብ ናይ ሕሻናት ቦንድ የኣትዉ።" },
+      "banks": { "title": "ንግዳዊ ባንክታት", "description": "ብቋንቋ ETB ልቃሕ ይህቡ።" },
+      "dbe": { "title": "ባንኪ ልምዓት ኢትዮጵያ", "description": "ናይ ነዊሕ እዋን መሰረተ ልምዓት ይድግፍ።" },
+      "nafa": { "title": "NAFA", "description": "ናይ ባንኪ ስግኣት ይቕንስ።" },
+      "suppliers": { "title": "ኣቕረብቲ እታዎት", "description": "ዘርኢ፣ ድብሪ፣ ማሽነሪ የቕርቡ።" },
+      "farmers": { "title": "ንግዳውያን ሓረስቶት", "description": "ዓበይቲ ፍሪያት የፍርዩ።" },
+      "government": { "title": "መንግስታዊ ተቖጻጸርቲ", "description": "ናይ ወጻኢ ሸረፍን ልቃሕን ይቆጻጸሩ።" }
+    }
+  },
+  "audience": {
+    "title": "ንኹሎም መዳርግቲ ኣካላት ዝተሰርሐ",
+    "subtitle": "ነፍሲ ወከፍ ብፅሒት ዝተዳለወ ቦታ ይረክብ።",
+    "diaspora": { "title": "ንመወልቲ ዲያስፖራ", "points": ["ካብ $500 ጀሚሩ", "ዉሑስ ርእሰ ማል"], "cta": "ወፍሩ" },
+    "farmers": { "title": "ንንግዳውያን ሓረስቶት", "points": ["እታዎት ይበጽሕ", "ሕሱር ልቃሕ"], "cta": "እርሻኹም ይመዝገቡ" },
+    "banks": { "title": "ንንግዳዊ ባንክታት", "points": ["ዘይስግኣታዊ ልቃሕ"], "cta": "ተሓባበሩ" },
+    "government": { "title": "ንመንግስቲ", "points": ["ምፍራይ ወጻኢ ሸረፍ"], "cta": "ይመልከቱ" }
+  },
+  "how": {
+    "title": "ብኸመይ ይሰርሕ",
+    "subtitle": "ሓሙሽተ 登錄 ደረጃታት።",
+    "steps": {
+      "onboard": { "title": "1. ተመዝገቡ", "description": "KYC ያጠናቅቁ።" },
+      "fund": { "title": "2. ውዕል ምላእ", "description": "መወልቲ ይድግፉ።" },
+      "deploy": { "title": "3. እታዎት ኣእትዉ", "description": "ኣቕረብቲ የቕርቡ።" },
+      "produce": { "title": "4. ኣፍርዩ", "description": "ሓረስቶት የፍርዩ።" },
+      "settle": { "title": "5. ክፍሊት ኣካፍሉ", "description": "ስማርት ኮንትራክት ይኸፍል።" }
+    }
+  },
+  "opportunities": {
+    "title": "ቀጥታ ዕድላት",
+    "subtitle": "ሕጂ ክፍቲ ዝኾኑ ውዕላት።",
+    "viewAll": "ኩሎም ዕድላት ርኣዩ",
+    "funded": "ዝተወደበ",
+    "investors": "መወልቲ",
+    "targetYield": "ዕላማ ፍሪያት",
+    "floorPrice": "ትሕተዋጋ",
+    "maturity": "መወዳእታ",
+    "empty": "ሕጂ ክፍቲ ዕድል የለን።"
+  },
+  "impact": {
+    "title": "ናይ ሕጂ ጽልዋ",
+    "subtitle": "ኣብ NAFI ዝተረጋገጸ።",
+    "metrics": { "capital": "ካፒታል ዲያስፖራ", "hectares": "ሄክታር", "farmers": "ሓረስቶት", "forex": "ወጻኢ ሸረፍ", "jobs": "ስራሕ" }
+  },
+  "security": {
+    "title": "ደህንነትን ሕግን",
+    "items": {
+      "sandbox": { "title": "NBE ሳንድቦክስ", "description": "ብሕጊ NBE ዝሰርሕ።" },
+      "escrow": { "title": "ብዋስትና ዝተሓዘ", "description": "አብ ባንኪ ዝተሓዘ።" },
+      "audit": { "title": "ኦዲት", "description": "ዘይለወጥ መዝገብ።" },
+      "data": { "title": "ዳታ አብ ኢትዮጵያ", "description": "ዳታ አብ ኢትዮጵያ ይቕመጥ።" }
+    }
+  },
+  "testimonials": {
+    "title": "ተሓባበርቲ እንታይ ይብሉ",
+    "items": {
+      "one": { "quote": "NAFI ንልቃሕ ዉሑስ ይገብሮ።", "author": "ባንክ", "role": "ሓላፊ" },
+      "two": { "quote": "ወፍረይ ዉሑስ እዩ።", "author": "ዲያስፖራ", "role": "ዲሲ" }
+    }
+  },
+  "faq": {
+    "title": "ተደጋገምቲ ሕቶታት",
+    "items": {
+      "what": { "q": "NAFI እንታይ እዩ?", "a": "NAFI ዲጂታል መድረኽ እዩ።" },
+      "howInvest": { "q": "ብኸመይ ይወፍር?", "a": "ተመዝገቡ $500 ጀሚርኩም ወፍሩ።" },
+      "risk": { "q": "ስግኣት ኣሎዶ?", "a": "NAFA ዋስትና ኣሎ።" },
+      "farmer": { "q": "ሓረስቶት ብኸመይ ይሳተፉ?", "a": "ብመድረኽ ይወፍሩ።" },
+      "government": { "q": "መንግስቲ ብኸመይ ይጥቀም?", "a": "ወጻኢ ሸረፍ የፍሪ።" }
+    }
+  },
+  "finalCta": {
+    "title": "ናብ መጻኢ ኢትዮጵያ ተጸምበሩ",
+    "subtitle": "NAFI ካፒታልን ሓፈርትን ዘራኽብ እዩ።",
+    "cta": "ጀምር"
+  },
+  "footer": {
+    "tagline": "ዲጂታል መሕቖ ናይ ኢትዮጵያ ህንጸት ሕሻናት።",
+    "platform": { "title": "መድረክ", "howItWorks": "ብኸመይ ይሰርሕ", "security": "ደህንነት", "impact": "ጽልዋ" },
+    "audience": { "title": "ንዓኹም", "investors": "መወልቲ", "farmers": "ሓረስቶት", "banks": "ባንክታት", "government": "መንግስቲ" },
+    "resources": { "title": "ሃብቲ", "docs": "ሰነዳት", "api": "API", "faq": "ሕቶታት" },
+    "legal": { "title": "ሕጊ", "terms": "ውዕል", "privacy": "ፖሊሲ", "compliance": "ሕጊ" },
+    "rights": "© {{year}} NAFI። ኩሉ መብትታት ብሕጊ ዝተሓለወ እዩ።"
+  }
+}

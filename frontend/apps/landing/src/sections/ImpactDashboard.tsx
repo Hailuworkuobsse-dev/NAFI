@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { formatCompactMoney, formatNumber } from '@nafi/formatters';
 import { StatCard } from '@nafi/ui-react';
 
-import { usePublicStats } from '@/hooks/usePublicStats';
+import { usePublicStats } from '../hooks/usePublicStats';
 
 export function ImpactDashboard() {
   const { t } = useTranslation('landing');

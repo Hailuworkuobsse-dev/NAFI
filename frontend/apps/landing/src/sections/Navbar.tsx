@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { Button, cn } from '@nafi/ui-react';
 
-import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { LanguageSwitcher } from '../components/LanguageSwitcher';
 
 const NAV_LINKS = [
   { href: '#solution', key: 'nav.platform' },
