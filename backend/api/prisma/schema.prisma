@@ -1,0 +1,527 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum ParticipantRole {
+  DIASPORA_INVESTOR
+  COMMERCIAL_BANK
+  DBE_OFFICER
+  NAFA_OFFICER
+  INPUT_SUPPLIER
+  COMMERCIAL_FARMER
+  OFF_TAKER
+  GOVERNMENT_REGULATOR
+  DONOR
+  NAFI_ADMIN
+  COMPLIANCE_OFFICER
+  ARBITRATOR
+}
+
+enum ContractStatus {
+  DRAFT
+  ACTIVE
+  FULFILLED
+  DEFAULTED
+  DISPUTED
+}
+
+enum ContractSignerRole {
+  FARMER
+  BANK
+  GOVERNMENT_WITNESS
+  SUPPLIER
+  OFF_TAKER
+}
+
+enum EscrowStatus {
+  OPEN
+  LOCKED
+  RELEASED
+  FROZEN
+  CLOSED
+}
+
+enum EscrowDirection {
+  CREDIT
+  DEBIT
+  HOLD
+  RELEASE
+}
+
+enum Currency {
+  ETB
+  USD
+  EUR
+  GBP
+  CAD
+  AUD
+  AED
+}
+
+enum FundingType {
+  DEBT_FIXED_RETURN
+  EQUITY_PROFIT_SHARE
+}
+
+enum SettlementStatus {
+  PENDING
+  SIMULATED
+  APPROVED
+  EXECUTED
+  REVERSED
+}
+
+enum CollateralType {
+  WAREHOUSE_RECEIPT
+  MOVABLE_PROPERTY
+  FUTURE_HARVEST
+  MACHINERY
+}
+
+enum LienStatus {
+  FREE
+  LIEN_REGISTERED
+  LIQUIDATED
+  RELEASED
+}
+
+enum DisputeStatus {
+  FLAGGED
+  UNDER_REVIEW
+  HEARING_SCHEDULED
+  DECIDED
+  APPEALED
+  CLOSED
+}
+
+enum DisputeCategory {
+  CONTRACT_BREACH
+  QUALITY
+  PAYMENT
+  DELIVERY
+  OTHER
+}
+
+enum ReportType {
+  REGULATORY_NBE
+  REGULATORY_MOA
+  REGULATORY_MOR
+  DONOR_EIB
+  DONOR_IFAD
+  PORTFOLIO
+  TAX
+  AUDIT
+}
+
+enum ReportFormat {
+  PDF
+  CSV
+  XLSX
+}
+
+// ============================================================
+// MODELS
+// ============================================================
+
+model Stakeholder {
+  id               String          @id @default(uuid())
+  nafiId           String          @unique
+  email            String          @unique
+  passwordHash     String
+  fullName         String
+  phone            String?
+  organizationName String?
+  role             ParticipantRole
+  institutionId    String?
+  institutionName  String?
+  locale           String          @default("en")
+  countryCode      String          @default("ET")
+  isActive         Boolean         @default(true)
+  mfaEnabled       Boolean         @default(false)
+  mfaSecret        String?
+  avatarUrl        String?
+  lastLoginAt      DateTime?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  // Relations
+  refreshTokens     RefreshToken[]
+  passwordResets    PasswordResetToken[]
+  contractsAsFarmer Contract[]        @relation("ContractFarmer")
+  contractsAsWitness Contract[]       @relation("ContractWitness")
+  contractsAsBank   Contract[]        @relation("ContractBank")
+  signatures        ContractSignature[]
+  investments       Investment[]
+  escrowsManaged    Escrow[]          @relation("EscrowBank")
+  ledgerEntries     EscrowLedgerEntry[]
+  inputOrdersAsSupp InputPurchase[]   @relation("InputSupplier")
+  settlementsRecv   SettlementDistribution[]
+  collateralOwned   Collateral[]      @relation("CollateralOwner")
+  collateralLien    Collateral[]      @relation("CollateralLienHolder")
+  disputesFiled     Dispute[]         @relation("DisputeFiledBy")
+  disputesArbitrated Dispute[]        @relation("DisputeArbitrator")
+  reportsGenerated  Report[]
+  notifications     Notification[]
+  pushSubscriptions PushSubscription[]
+  auditEntries      AuditLog[]
+
+  @@index([role])
+  @@index([institutionId])
+}
+
+model RefreshToken {
+  id         String    @id @default(uuid())
+  userId     String
+  tokenHash  String    @unique
+  userAgent  String?
+  ip         String?
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  user Stakeholder @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model PasswordResetToken {
+  id         String    @id @default(uuid())
+  userId     String
+  tokenHash  String    @unique
+  expiresAt  DateTime
+  usedAt     DateTime?
+  createdAt  DateTime  @default(now())
+
+  user Stakeholder @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Contract {
+  id                   String         @id @default(uuid())
+  targetCrop           String
+  region               String
+  regionCode           String
+  commercialFarmerId   String
+  governmentWitnessId  String?
+  bankId               String?
+  totalTargetYieldKg   Decimal        @db.Decimal(14, 2)
+  guaranteedFloorPriceEtb Decimal     @db.Decimal(12, 2)
+  contractValueEtb     Decimal        @db.Decimal(18, 2)
+  committedAmountEtb   Decimal        @default(0) @db.Decimal(18, 2)
+  status               ContractStatus @default(DRAFT)
+  maturityDate         DateTime
+  onChainHash          String
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+
+  farmer          Stakeholder          @relation("ContractFarmer", fields: [commercialFarmerId], references: [id])
+  governmentWitness Stakeholder?       @relation("ContractWitness", fields: [governmentWitnessId], references: [id])
+  bank            Stakeholder?         @relation("ContractBank", fields: [bankId], references: [id])
+  signatures      ContractSignature[]
+  timeline        ContractTimelineEvent[]
+  escrow          Escrow?
+  investments     Investment[]
+  inputPurchases  InputPurchase[]
+  settlements     Settlement[]
+  collateral      Collateral[]         @relation("ContractCollateral")
+  disputes        Dispute[]
+
+  @@index([status])
+  @@index([regionCode])
+  @@index([commercialFarmerId])
+}
+
+model ContractSignature {
+  id            String              @id @default(uuid())
+  contractId    String
+  role          ContractSignerRole
+  signerId      String
+  signatureHash String
+  signedAt      DateTime            @default(now())
+
+  contract Contract    @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  signer   Stakeholder @relation(fields: [signerId], references: [id])
+
+  @@unique([contractId, role])
+  @@index([contractId])
+}
+
+model ContractTimelineEvent {
+  id          String   @id @default(uuid())
+  contractId  String
+  type        String
+  label       String
+  description String?  @db.Text
+  timestamp   DateTime @default(now())
+
+  contract Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+  @@index([contractId])
+}
+
+model Escrow {
+  id                  String       @id @default(uuid())
+  contractId          String       @unique
+  managingBankId      String
+  status              EscrowStatus @default(OPEN)
+  isLocked            Boolean      @default(true)
+  totalDepositedEtb   Decimal      @default(0) @db.Decimal(18, 2)
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+
+  contract Contract            @relation(fields: [contractId], references: [id])
+  bank     Stakeholder         @relation("EscrowBank", fields: [managingBankId], references: [id])
+  balances EscrowBalance[]
+  ledger   EscrowLedgerEntry[]
+
+  @@index([status])
+}
+
+model EscrowBalance {
+  id       String   @id @default(uuid())
+  escrowId String
+  currency Currency
+  amount   Decimal  @default(0) @db.Decimal(18, 2)
+
+  escrow Escrow @relation(fields: [escrowId], references: [id], onDelete: Cascade)
+
+  @@unique([escrowId, currency])
+}
+
+model EscrowLedgerEntry {
+  id          String           @id @default(uuid())
+  escrowId    String
+  direction   EscrowDirection
+  amount      Decimal          @db.Decimal(18, 2)
+  currency    Currency
+  purpose     String
+  referenceId String?
+  actorId     String
+  createdAt   DateTime         @default(now())
+
+  escrow Escrow      @relation(fields: [escrowId], references: [id], onDelete: Cascade)
+  actor  Stakeholder @relation(fields: [actorId], references: [id])
+
+  @@index([escrowId])
+  @@index([createdAt])
+}
+
+model Investment {
+  id                     String      @id @default(uuid())
+  contractId             String
+  investorId             String
+  fundingType            FundingType
+  amountForeignCurrency  Decimal     @db.Decimal(18, 2)
+  currency               Currency
+  amountEtb              Decimal     @db.Decimal(18, 2)
+  agreedReturnRate       Decimal     @db.Decimal(6, 4)
+  expectedReturnEtb      Decimal     @db.Decimal(18, 2)
+  realizedReturnEtb      Decimal?    @db.Decimal(18, 2)
+  sourceOfFunds          String?     @db.Text
+  investedAt             DateTime    @default(now())
+  settledAt              DateTime?
+
+  contract Contract    @relation(fields: [contractId], references: [id])
+  investor Stakeholder @relation(fields: [investorId], references: [id])
+
+  @@index([contractId])
+  @@index([investorId])
+}
+
+model InputPurchase {
+  id               String    @id @default(uuid())
+  contractId       String
+  supplierId       String
+  itemDescription  String
+  quantity         Decimal   @db.Decimal(14, 3)
+  unit             String
+  unitCostEtb      Decimal   @db.Decimal(12, 2)
+  totalCostEtb     Decimal   @db.Decimal(18, 2)
+  isDelivered      Boolean   @default(false)
+  isDisbursed      Boolean   @default(false)
+  deliveredAt      DateTime?
+  verifiedAt       DateTime?
+  photoHash        String?
+  latitude         Decimal?  @db.Decimal(10, 6)
+  longitude        Decimal?  @db.Decimal(10, 6)
+  qrCode           String?
+  notes            String?   @db.Text
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  contract Contract    @relation(fields: [contractId], references: [id])
+  supplier Stakeholder @relation("InputSupplier", fields: [supplierId], references: [id])
+
+  @@index([contractId])
+  @@index([supplierId])
+}
+
+model Settlement {
+  id                   String           @id @default(uuid())
+  contractId           String
+  status               SettlementStatus @default(PENDING)
+  grossRevenueEtb      Decimal          @db.Decimal(18, 2)
+  actualYieldKg        Decimal          @db.Decimal(14, 2)
+  totalDistributedEtb  Decimal          @default(0) @db.Decimal(18, 2)
+  waterfallOrder       Json?
+  executedAt           DateTime?
+  reversalReason       String?          @db.Text
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  contract      Contract                 @relation(fields: [contractId], references: [id])
+  distributions SettlementDistribution[]
+
+  @@index([contractId])
+  @@index([status])
+}
+
+model SettlementDistribution {
+  id               String  @id @default(uuid())
+  settlementId     String
+  recipientId      String
+  role             ParticipantRole
+  payoutAmountEtb  Decimal @db.Decimal(18, 2)
+  notes            String? @db.Text
+
+  settlement Settlement  @relation(fields: [settlementId], references: [id], onDelete: Cascade)
+  recipient  Stakeholder @relation(fields: [recipientId], references: [id])
+
+  @@index([settlementId])
+}
+
+model Collateral {
+  id                    String         @id @default(uuid())
+  type                  CollateralType
+  ownerId               String
+  description           String
+  estimatedValueEtb     Decimal        @db.Decimal(18, 2)
+  lienStatus            LienStatus     @default(FREE)
+  lienHolderId          String?
+  contractId            String?
+  quantityKg            Decimal?       @db.Decimal(14, 2)
+  grade                 String?
+  warehouseId           String?
+  warehouseName         String?
+  emcrRegistrationId    String?
+  qrPayload             String?
+  registeredAt          DateTime       @default(now())
+  expiresAt             DateTime?
+
+  owner      Stakeholder @relation("CollateralOwner", fields: [ownerId], references: [id])
+  lienHolder Stakeholder? @relation("CollateralLienHolder", fields: [lienHolderId], references: [id])
+  contract   Contract?   @relation("ContractCollateral", fields: [contractId], references: [id])
+
+  @@index([ownerId])
+  @@index([lienStatus])
+}
+
+model Dispute {
+  id            String          @id @default(uuid())
+  contractId    String
+  category      DisputeCategory
+  status        DisputeStatus   @default(FLAGGED)
+  filedById     String
+  summary       String          @db.Text
+  arbitratorId  String?
+  filedAt       DateTime        @default(now())
+  hearingAt     DateTime?
+  decision      String?         @db.Text
+  decisionAt    DateTime?
+  resolvedAt    DateTime?
+
+  contract   Contract          @relation(fields: [contractId], references: [id])
+  filedBy    Stakeholder       @relation("DisputeFiledBy", fields: [filedById], references: [id])
+  arbitrator Stakeholder?      @relation("DisputeArbitrator", fields: [arbitratorId], references: [id])
+  evidence   DisputeEvidence[]
+
+  @@index([contractId])
+  @@index([status])
+  @@index([arbitratorId])
+}
+
+model DisputeEvidence {
+  id         String   @id @default(uuid())
+  disputeId  String
+  label      String
+  fileUrl    String
+  uploadedAt DateTime @default(now())
+
+  dispute Dispute @relation(fields: [disputeId], references: [id], onDelete: Cascade)
+
+  @@index([disputeId])
+}
+
+model Report {
+  id             String       @id @default(uuid())
+  type           ReportType
+  title          String
+  periodStart    DateTime
+  periodEnd      DateTime
+  format         ReportFormat
+  fileUrl        String
+  generatedById  String
+  generatedAt    DateTime     @default(now())
+
+  generatedBy Stakeholder @relation(fields: [generatedById], references: [id])
+
+  @@index([type])
+  @@index([generatedById])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  body      String   @db.Text
+  isRead    Boolean  @default(false)
+  deepLink  String?
+  createdAt DateTime @default(now())
+
+  user Stakeholder @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+}
+
+model PushSubscription {
+  id        String   @id @default(uuid())
+  userId    String
+  endpoint  String   @unique @db.Text
+  keys      Json
+  createdAt DateTime @default(now())
+
+  user Stakeholder @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  actorId    String?
+  action     String
+  resource   String
+  resourceId String?
+  ip         String?
+  userAgent  String?  @db.Text
+  metadata   Json?
+  hash       String
+  prevHash   String?
+  createdAt  DateTime @default(now())
+
+  actor Stakeholder? @relation(fields: [actorId], references: [id])
+
+  @@index([actorId])
+  @@index([resource, resourceId])
+  @@index([createdAt])
+}

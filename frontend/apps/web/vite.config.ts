@@ -78,10 +78,10 @@ export default defineConfig({
     alias: { '@': path.resolve(__dirname, './src') },
   },
   server: {
-    port: 3000,
+    port: 3144,
     proxy: {
       '/api': {
-        target: process.env.VITE_API_PROXY ?? 'http://localhost:4000',
+        target: process.env.VITE_API_PROXY ?? 'http://localhost:3143',
         changeOrigin: true,
       },
     },
