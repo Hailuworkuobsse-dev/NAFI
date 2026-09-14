@@ -1,36 +1,37 @@
 ```
 # Dependencies
 node_modules/
+pnpm-lock.yaml
 
 # Build outputs
 dist/
 build/
-target/
+.next/
+.nuxt/
+out/
 
 # TypeScript
 *.tsbuildinfo
-*.js.map
+*.tsx.swp
 
 # Environment
 .env
 .env.local
-*.env.*
+.env.*
 
 # Logs
 *.log
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
 
 # OS generated files
 .DS_Store
 Thumbs.db
 
-# Editor
-.vscode/
-.idea/
-*.swp
-*.swo
-*.tmp
-
-# Prisma
-prisma/migrations/
-prisma/generated/
+# Coverage
+coverage/
+.nyc_output/
 ```

@@ -13,17 +13,17 @@ export interface TabItem {
 
 export interface TabsProps {
   items: TabItem[];
-  defaultValue?: string;
-  value?: string;
-  onValueChange?: (value: string) => void;
-  className?: string;
+  defaultValue?: string | undefined;
+  value?: string | undefined;
+  onValueChange?: ((value: string) => void) | undefined;
+  className?: string | undefined;
 }
 
 export function Tabs({ items, defaultValue, value, onValueChange, className }: TabsProps) {
   return (
     <RadixTabs.Root
       defaultValue={defaultValue ?? items[0]?.value}
-      value={value}
+      value={value || items[0]?.value}
       onValueChange={onValueChange}
       className={cn('flex flex-col gap-4', className)}
     >

@@ -4,11 +4,11 @@ import { forwardRef } from 'react';
 import { cn } from '../../lib/cn';
 
 export interface SwitchProps {
-  checked?: boolean;
-  onCheckedChange?: (checked: boolean) => void;
-  disabled?: boolean;
-  label?: string;
-  className?: string;
+  checked?: boolean | undefined;
+  onCheckedChange?: ((checked: boolean) => void) | undefined;
+  disabled?: boolean | undefined;
+  label?: string | undefined;
+  className?: string | undefined;
 }
 
 export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch(
@@ -19,9 +19,9 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
     <label className={cn('inline-flex items-center gap-3', className)}>
       <RadixSwitch.Root
         ref={ref}
-        checked={checked}
-        onCheckedChange={onCheckedChange}
-        disabled={disabled}
+        checked={checked ?? false}
+        onCheckedChange={onCheckedChange ?? (() => {})}
+        disabled={disabled ?? false}
         className={cn(
           'relative h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors',
           'data-[state=checked]:bg-brand-500 data-[state=unchecked]:bg-neutral-300',

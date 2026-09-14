@@ -20,13 +20,16 @@ export function can(
 
   const rolePerms = ROLE_PERMISSIONS[subject.role];
   const hasWildcard = (rolePerms as readonly string[]).includes('*');
-  const effectivePerms = hasWildcard
-    ? null
-    : subject.permissions && subject.permissions.length > 0
-      ? subject.permissions
-      : rolePerms;
+  
+  // Get effective permissions: explicit subject permissions OR role-based permissions
+  let effectivePerms: readonly Permission[] | readonly ['*'];
+  if (subject.permissions && subject.permissions.length > 0) {
+    effectivePerms = subject.permissions;
+  } else {
+    effectivePerms = rolePerms;
+  }
 
-  if (effectivePerms === null) {
+  if (hasWildcard || effectivePerms.includes('*' as unknown as Permission)) {
     if (!scope) return true;
     return subject.scopes?.[permission]?.includes(scope) ?? true;
   }

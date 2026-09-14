@@ -11,15 +11,15 @@ export interface SelectOption {
 }
 
 export interface SelectProps {
-  value?: string;
-  onValueChange?: (value: string) => void;
-  placeholder?: string;
+  value?: string | undefined;
+  onValueChange?: ((value: string) => void) | undefined;
+  placeholder?: string | undefined;
   options: SelectOption[];
-  disabled?: boolean;
-  error?: string;
-  label?: string;
-  className?: string;
-  fullWidth?: boolean;
+  disabled?: boolean | undefined;
+  error?: string | undefined;
+  label?: string | undefined;
+  className?: string | undefined;
+  fullWidth?: boolean | undefined;
 }
 
 export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select(
@@ -39,7 +39,11 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
   return (
     <div className={cn('flex flex-col gap-1.5', fullWidth && 'w-full')}>
       {label && <label className="text-sm font-medium text-neutral-700">{label}</label>}
-      <RadixSelect.Root value={value} onValueChange={onValueChange} disabled={disabled}>
+      <RadixSelect.Root 
+        value={value || options[0]?.value} 
+        onValueChange={onValueChange ?? (() => {})} 
+        disabled={disabled ?? false}
+      >
         <RadixSelect.Trigger
           ref={ref}
           className={cn(
@@ -68,7 +72,7 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
                 <RadixSelect.Item
                   key={opt.value}
                   value={opt.value}
-                  disabled={opt.disabled}
+                  disabled={opt.disabled ?? false}
                   className={cn(
                     'relative flex cursor-pointer select-none items-center rounded px-8 py-2 text-sm',
                     'data-[highlighted]:bg-brand-50 data-[highlighted]:text-brand-700',

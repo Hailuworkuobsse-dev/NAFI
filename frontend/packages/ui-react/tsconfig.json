@@ -7,6 +7,6 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
-  "include": ["src/**/*", ".storybook/**/*"],
-  "exclude": ["node_modules", "dist", "storybook-static"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "storybook-static", ".storybook"]
 }
