@@ -5,13 +5,13 @@ import { forwardRef } from 'react';
 import { cn } from '../../lib/cn';
 
 export interface CheckboxProps {
-  checked?: boolean | 'indeterminate';
-  onCheckedChange?: (checked: boolean | 'indeterminate') => void;
-  disabled?: boolean;
-  label?: string;
-  hint?: string;
-  error?: string;
-  className?: string;
+  checked?: boolean | 'indeterminate' | undefined;
+  onCheckedChange?: ((checked: boolean | 'indeterminate') => void) | undefined;
+  disabled?: boolean | undefined;
+  label?: string | undefined;
+  hint?: string | undefined;
+  error?: string | undefined;
+  className?: string | undefined;
 }
 
 export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(function Checkbox(
@@ -23,9 +23,9 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(function Ch
       <label className="inline-flex items-start gap-2">
         <RadixCheckbox.Root
           ref={ref}
-          checked={checked}
-          onCheckedChange={onCheckedChange}
-          disabled={disabled}
+          checked={checked ?? false}
+          onCheckedChange={onCheckedChange ?? (() => {})}
+          disabled={disabled ?? false}
           aria-invalid={Boolean(error) || undefined}
           className={cn(
             'flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors',
