@@ -1,28 +1,22 @@
-import prisma from '../../config/prisma';
-import { ApiError } from '../../utils/ApiError';
+import { prisma } from '../../config/prisma';
 
-export class ${module^}Service {
-  async findAll(userId: string, institutionId?: string | null, scope = 'OWN') {
-    const modelName = '${module%s}'.slice(0, -1);
-    // Placeholder implementation
-    return [];
+export class PublicService {
+  async getStats() {
+    const [totalUsers, activeContracts, totalInvestments, totalOpportunities] = await Promise.all([
+      prisma.user.count(),
+      prisma.contract.count({ where: { status: 'ACTIVE' } }),
+      prisma.investment.count(),
+      prisma.opportunity.count({ where: { status: 'ACTIVE' } }),
+    ]);
+    return { totalUsers, activeContracts, totalInvestments, totalOpportunities };
   }
-
-  async findById(id: string) {
-    throw ApiError.notFound('Resource not found');
-  }
-
-  async create(data: any, userId: string) {
-    throw ApiError.internal('Not implemented');
-  }
-
-  async update(id: string, data: any) {
-    throw ApiError.internal('Not implemented');
-  }
-
-  async delete(id: string) {
-    throw ApiError.internal('Not implemented');
+  async getOpportunities(page = 1, limit = 10) {
+    const where = { status: 'ACTIVE' };
+    const [data, total] = await Promise.all([
+      prisma.opportunity.findMany({ where, skip: (page - 1) * limit, take: limit }),
+      prisma.opportunity.count({ where }),
+    ]);
+    return { data, pagination: { page, limit, total, totalPages: Math.ceil(total / limit) } };
   }
 }
-
-export const ${module}Service = new ${module^}Service();
+export const publicService = new PublicService();
