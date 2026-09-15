@@ -20,22 +20,22 @@ export function Problem() {
           <p className="text-xs font-semibold uppercase tracking-wide text-danger">
             {t('problem.eyebrow')}
           </p>
-          <h2 className="mt-3 text-3xl font-bold text-neutral-900 sm:text-4xl">
+          <h2 className="mt-3 text-3xl font-bold text-neutral-900 sm:text-4xl lg:text-5xl">
             {t('problem.title')}
           </h2>
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {ITEMS.map(({ key, Icon }) => (
-            <Card key={key} className="border-danger/20">
-              <CardBody className="flex flex-col gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-md bg-danger-light text-danger">
-                  <Icon className="h-5 w-5" />
+            <Card key={key} className="group border-danger/20 bg-white transition-all hover:shadow-lg hover:-translate-y-1">
+              <CardBody className="flex flex-col gap-4 p-6">
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-danger-light text-danger group-hover:scale-110 group-hover:bg-danger group-hover:text-white transition-all">
+                  <Icon className="h-7 w-7" />
                 </div>
-                <h3 className="text-base font-semibold text-neutral-900">
+                <h3 className="text-lg font-semibold text-neutral-900">
                   {t(`problem.items.${key}.title`)}
                 </h3>
-                <p className="text-sm text-neutral-600">
+                <p className="text-sm leading-relaxed text-neutral-600">
                   {t(`problem.items.${key}.description`)}
                 </p>
               </CardBody>

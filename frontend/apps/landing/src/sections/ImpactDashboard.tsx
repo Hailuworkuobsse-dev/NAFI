@@ -11,10 +11,15 @@ export function ImpactDashboard() {
   const { stats } = usePublicStats();
 
   return (
-    <section id="impact" className="section-py bg-white">
+    <section id="impact" className="section-py bg-gradient-to-b from-white to-brand-50/50">
       <div className="container-narrow flex flex-col gap-10">
         <div className="max-w-3xl">
-          <h2 className="text-3xl font-bold text-neutral-900 sm:text-4xl">{t('impact.title')}</h2>
+          <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">
+            {t('impact.eyebrow')}
+          </p>
+          <h2 className="mt-2 text-3xl font-bold text-neutral-900 sm:text-4xl lg:text-5xl">
+            {t('impact.title')}
+          </h2>
           <p className="mt-3 text-lg text-neutral-600">{t('impact.subtitle')}</p>
         </div>
 
@@ -22,27 +27,32 @@ export function ImpactDashboard() {
           <StatCard
             label={t('impact.metrics.capital')}
             value={formatCompactMoney(stats.totalFundedUsd, 'USD')}
-            icon={<Coins className="h-5 w-5" />}
+            icon={<Coins className="h-6 w-6" />}
+            className="group hover:shadow-lg transition-all hover:-translate-y-1"
           />
           <StatCard
             label={t('impact.metrics.hectares')}
             value={formatNumber(stats.hectaresUnderContract)}
-            icon={<Globe2 className="h-5 w-5" />}
+            icon={<Globe2 className="h-6 w-6" />}
+            className="group hover:shadow-lg transition-all hover:-translate-y-1"
           />
           <StatCard
             label={t('impact.metrics.farmers')}
             value={formatNumber(stats.farmersReached)}
-            icon={<Users className="h-5 w-5" />}
+            icon={<Users className="h-6 w-6" />}
+            className="group hover:shadow-lg transition-all hover:-translate-y-1"
           />
           <StatCard
             label={t('impact.metrics.forex')}
             value={formatCompactMoney(stats.forexGeneratedUsd, 'USD')}
-            icon={<TrendingUp className="h-5 w-5" />}
+            icon={<TrendingUp className="h-6 w-6" />}
+            className="group hover:shadow-lg transition-all hover:-translate-y-1"
           />
           <StatCard
             label={t('impact.metrics.jobs')}
             value={formatNumber(stats.jobsCreated)}
-            icon={<Sprout className="h-5 w-5" />}
+            icon={<Sprout className="h-6 w-6" />}
+            className="group hover:shadow-lg transition-all hover:-translate-y-1"
           />
         </div>
       </div>
