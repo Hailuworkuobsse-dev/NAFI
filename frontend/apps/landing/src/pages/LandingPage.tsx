@@ -1,5 +1,6 @@
 import { SEO } from '../components/SEO';
 import { AudiencePaths } from '../sections/AudiencePaths';
+import { EcosystemDiagram } from '../sections/EcosystemDiagram';
 import { FAQ } from '../sections/FAQ';
 import { FinalCTA } from '../sections/FinalCTA';
 import { Hero } from '../sections/Hero';
@@ -16,40 +17,44 @@ export function LandingPage() {
   return (
     <>
       <SEO />
-      {/* 1. Hero - Strong opening with value prop and stats */}
+
+      {/* 1. Hero - Sovereign institutional opening & live simulation */}
       <Hero />
-      
-      {/* 2. Problem - Establish the pain points early */}
-      <Problem />
-      
-      {/* 3. Solution - Present NAFI as the answer (without duplicate diagram) */}
-      <Solution />
-      
-      {/* 4. HowItWorks - Explain the process before showing audience paths */}
-      <HowItWorks />
-      
-      {/* 5. AudiencePaths - Show how different users benefit */}
-      <AudiencePaths />
-      
-      {/* 6. LiveOpportunities - Display real investment opportunities */}
-      <LiveOpportunities />
-      
-      {/* 7. ImpactDashboard - Prove results with verified metrics */}
-      <ImpactDashboard />
-      
-      {/* 8. Security - Address trust and compliance concerns */}
-      <Security />
-      
-      {/* 9. Testimonials - Social proof positioned near CTA */}
-      <Testimonials />
-      
-      {/* 10. TrustBar - Additional credibility markers */}
+
+      {/* 2. TrustBar - Institutional partner credibility ticker */}
       <TrustBar />
-      
-      {/* 11. FAQ - Answer final questions before conversion */}
+
+      {/* 3. Problem - Data-driven structural agricultural bottlenecks */}
+      <Problem />
+
+      {/* 4. Solution - 4-pillar architectural foundation */}
+      <Solution />
+
+      {/* 5. EcosystemDiagram - Interactive Smart Contract Settlement & Escrow Engine */}
+      <EcosystemDiagram />
+
+      {/* 6. HowItWorks - 5-stage lifecycle explorer */}
+      <HowItWorks />
+
+      {/* 7. AudiencePaths - Dedicated stakeholder workspaces & portals */}
+      <AudiencePaths />
+
+      {/* 8. LiveOpportunities - Active agricultural pools & termsheet inspector */}
+      <LiveOpportunities />
+
+      {/* 9. ImpactDashboard - Macroeconomic & regional corridor telemetry */}
+      <ImpactDashboard />
+
+      {/* 10. Security - Sovereign regulatory compliance & Book V Commercial Code */}
+      <Security />
+
+      {/* 11. Testimonials - Real multi-stakeholder proof & case studies */}
+      <Testimonials />
+
+      {/* 12. FAQ - Institutional Q&A with category filtering */}
       <FAQ />
-      
-      {/* 12. FinalCTA - Strong closing call-to-action */}
+
+      {/* 13. FinalCTA - Role-based quick start onboarding */}
       <FinalCTA />
     </>
   );
