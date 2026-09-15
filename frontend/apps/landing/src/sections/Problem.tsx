@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 
 import { Card, CardBody } from '@nafi/ui-react';
 
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
+
 const ITEMS = [
   { key: 'credit', Icon: TrendingDown },
   { key: 'diaspora', Icon: Coins },
@@ -12,10 +14,11 @@ const ITEMS = [
 
 export function Problem() {
   const { t } = useTranslation('landing');
+  const sectionRef = useScrollAnimation();
 
   return (
-    <section id="problem" className="section-py bg-neutral-50">
-      <div className="container-narrow flex flex-col gap-10">
+    <section id="problem" className="section-py bg-gradient-to-b from-neutral-50 to-white">
+      <div ref={sectionRef} className="container-narrow flex flex-col gap-10 animate-on-scroll">
         <div className="max-w-3xl">
           <p className="text-xs font-semibold uppercase tracking-wide text-danger">
             {t('problem.eyebrow')}
@@ -25,11 +28,12 @@ export function Problem() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {ITEMS.map(({ key, Icon }) => (
-            <Card key={key} className="group border-danger/20 bg-white transition-all hover:shadow-lg hover:-translate-y-1">
-              <CardBody className="flex flex-col gap-4 p-6">
-                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-danger-light text-danger group-hover:scale-110 group-hover:bg-danger group-hover:text-white transition-all">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {ITEMS.map(({ key, Icon }, idx) => (
+            <Card key={key} className="group border-danger/20 bg-white transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 overflow-hidden">
+              <CardBody className="flex flex-col gap-4 p-6 relative">
+                <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-danger/5 transition-transform group-hover:scale-150" />
+                <div className="relative flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-danger-light to-danger/20 text-danger group-hover:scale-110 group-hover:bg-gradient-to-br group-hover:from-danger group-hover:to-danger-dark group-hover:text-white transition-all duration-300">
                   <Icon className="h-7 w-7" />
                 </div>
                 <h3 className="text-lg font-semibold text-neutral-900">

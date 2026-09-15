@@ -21,11 +21,31 @@
 
 @layer utilities {
   .container-narrow {
-    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-wide {
+    @apply mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8;
   }
 
   .section-py {
     @apply py-16 sm:py-20 lg:py-24;
+  }
+
+  .animate-on-scroll {
+    @apply opacity-0 translate-y-8 transition-all duration-700 ease-out;
+  }
+
+  .animate-on-scroll.visible {
+    @apply opacity-100 translate-y-0;
+  }
+
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-2;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-brand-600 to-accent-600 bg-clip-text text-transparent;
   }
 }
 

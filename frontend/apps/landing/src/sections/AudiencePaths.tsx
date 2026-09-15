@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 
 import { Button, Card, CardBody, CardHeader, cn } from '@nafi/ui-react';
 
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
+
 const AUDIENCES = [
   { key: 'diaspora', accent: 'brand' },
   { key: 'farmers', accent: 'brand' },
@@ -19,10 +21,11 @@ const accentMap = {
 
 export function AudiencePaths() {
   const { t } = useTranslation('landing');
+  const sectionRef = useScrollAnimation();
 
   return (
     <section id="audience" className="section-py bg-gradient-to-b from-neutral-50 to-white">
-      <div className="container-narrow flex flex-col gap-10">
+      <div ref={sectionRef} className="container-narrow flex flex-col gap-10 animate-on-scroll">
         <div className="max-w-3xl">
           <h2 className="text-3xl font-bold text-neutral-900 sm:text-4xl lg:text-5xl">
             {t('audience.title')}
@@ -34,12 +37,12 @@ export function AudiencePaths() {
           {AUDIENCES.map(({ key, accent }) => {
             const points = t(`audience.${key}.points`, { returnObjects: true }) as string[];
             return (
-              <Card key={key} className="group flex flex-col transition-all hover:shadow-xl hover:-translate-y-2">
+              <Card key={key} className="group flex flex-col transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 rounded-2xl border-neutral-200 overflow-hidden">
                 <CardHeader
                   title={
                     <span
                       className={cn(
-                        'inline-flex rounded px-3 py-1 text-xs font-semibold uppercase tracking-wide',
+                        'inline-flex rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wide',
                         accentMap[accent],
                       )}
                     >
@@ -57,7 +60,7 @@ export function AudiencePaths() {
                     ))}
                   </ul>
                   <div className="mt-auto pt-4">
-                    <Button asChild variant="outline" size="md" fullWidth className="group-hover:bg-brand-500 group-hover:text-white group-hover:border-brand-500 transition-colors">
+                    <Button asChild variant="outline" size="md" fullWidth className="group-hover:bg-gradient-to-r group-hover:from-brand-500 group-hover:to-brand-600 group-hover:text-white group-hover:border-transparent transition-all shadow-sm hover:shadow-md">
                       <Link to="/register">{t(`audience.${key}.cta`)}</Link>
                     </Button>
                   </div>

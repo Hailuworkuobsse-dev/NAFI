@@ -5,14 +5,16 @@ import { formatCompactMoney, formatNumber } from '@nafi/formatters';
 import { StatCard } from '@nafi/ui-react';
 
 import { usePublicStats } from '../hooks/usePublicStats';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 export function ImpactDashboard() {
   const { t } = useTranslation('landing');
   const { stats } = usePublicStats();
+  const sectionRef = useScrollAnimation();
 
   return (
     <section id="impact" className="section-py bg-gradient-to-b from-white to-brand-50/50">
-      <div className="container-narrow flex flex-col gap-10">
+      <div ref={sectionRef} className="container-narrow flex flex-col gap-10 animate-on-scroll">
         <div className="max-w-3xl">
           <p className="text-xs font-semibold uppercase tracking-wide text-brand-600">
             {t('impact.eyebrow')}
@@ -28,31 +30,31 @@ export function ImpactDashboard() {
             label={t('impact.metrics.capital')}
             value={formatCompactMoney(stats.totalFundedUsd, 'USD')}
             icon={<Coins className="h-6 w-6" />}
-            className="group hover:shadow-lg transition-all hover:-translate-y-1"
+            className="group hover:shadow-xl transition-all hover:-translate-y-2 rounded-2xl border-neutral-200 bg-white"
           />
           <StatCard
             label={t('impact.metrics.hectares')}
             value={formatNumber(stats.hectaresUnderContract)}
             icon={<Globe2 className="h-6 w-6" />}
-            className="group hover:shadow-lg transition-all hover:-translate-y-1"
+            className="group hover:shadow-xl transition-all hover:-translate-y-2 rounded-2xl border-neutral-200 bg-white"
           />
           <StatCard
             label={t('impact.metrics.farmers')}
             value={formatNumber(stats.farmersReached)}
             icon={<Users className="h-6 w-6" />}
-            className="group hover:shadow-lg transition-all hover:-translate-y-1"
+            className="group hover:shadow-xl transition-all hover:-translate-y-2 rounded-2xl border-neutral-200 bg-white"
           />
           <StatCard
             label={t('impact.metrics.forex')}
             value={formatCompactMoney(stats.forexGeneratedUsd, 'USD')}
             icon={<TrendingUp className="h-6 w-6" />}
-            className="group hover:shadow-lg transition-all hover:-translate-y-1"
+            className="group hover:shadow-xl transition-all hover:-translate-y-2 rounded-2xl border-neutral-200 bg-white"
           />
           <StatCard
             label={t('impact.metrics.jobs')}
             value={formatNumber(stats.jobsCreated)}
             icon={<Sprout className="h-6 w-6" />}
-            className="group hover:shadow-lg transition-all hover:-translate-y-1"
+            className="group hover:shadow-xl transition-all hover:-translate-y-2 rounded-2xl border-neutral-200 bg-white"
           />
         </div>
       </div>
