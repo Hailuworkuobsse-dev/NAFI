@@ -1,0 +1,6 @@
+{
+  "name": "NAFI",
+  "description": "National Agri-Finance Infrastructure — The digital backbone of Ethiopia's agricultural transformation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

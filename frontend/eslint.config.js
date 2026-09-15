@@ -1,3 +1,3 @@
-import base from '@nafi/config/eslint';
+import base from './packages/config/eslint.config.js';
 
 export default [...base];

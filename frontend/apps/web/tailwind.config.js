@@ -1,4 +1,4 @@
-import preset from '@nafi/config/tailwind';
+import preset from '../../packages/config/tailwind.preset.js';
 
 export default {
   presets: [preset],

@@ -17,7 +17,8 @@ export function usePublicOpportunities() {
   const { data, isLoading } = useQuery({
     queryKey: ['public', 'opportunities'] as const,
     queryFn: async (): Promise<PublicOpportunity[]> => {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/public/opportunities`, {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || '/api/v1';
+      const res = await fetch(`${baseUrl}/public/opportunities`, {
         headers: { Accept: 'application/json' },
       });
       if (!res.ok) throw new Error('Failed to fetch opportunities');

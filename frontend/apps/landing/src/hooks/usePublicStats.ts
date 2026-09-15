@@ -15,7 +15,8 @@ export function usePublicStats(): { stats: PublicStats; isLoading: boolean } {
   const { data, isLoading } = useQuery({
     queryKey: queryKeys.publicStats,
     queryFn: async (): Promise<PublicStats> => {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/public/stats`, {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || '/api/v1';
+      const res = await fetch(`${baseUrl}/public/stats`, {
         headers: { Accept: 'application/json' },
       });
       if (!res.ok) throw new Error('Failed to fetch public stats');
