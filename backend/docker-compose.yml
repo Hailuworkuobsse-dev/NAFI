@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   db:
@@ -12,9 +12,10 @@ services:
     ports:
       - "${DB_PORT:-5432}:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/mysql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-nafi} -d ${DB_NAME:-nafi_db}"]
+      test:
+        ["CMD-SHELL", "pg_isready -U ${DB_USER:-nafi} -d ${DB_NAME:-nafi_db}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -28,7 +29,7 @@ services:
     restart: unless-stopped
     environment:
       NODE_ENV: development
-      DATABASE_URL: postgresql://${DB_USER:-nafi}:${DB_PASSWORD:-nafi_password}@db:5432/${DB_NAME:-nafi_db}?schema=public
+      DATABASE_URL: mysql://${DB_USER:-nafi}:${DB_PASSWORD:-nafi_password}@db:5432/${DB_NAME:-nafi_db}?schema=public
       JWT_SECRET: ${JWT_SECRET:-dev_jwt_secret_change_in_production}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev_refresh_secret_change_in_production}
       PORT: 3000

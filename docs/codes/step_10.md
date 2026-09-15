@@ -44,6 +44,7 @@
 ```
 
 **Design decisions:**
+
 - **Vercel** for the three frontends — edge CDN, instant rollbacks, preview deploys per PR
 - **Fly.io** (or equivalent) for backend — multi-region, close to Ethiopian users
 - **MySQL** on managed RDS or DigitalOcean Managed Database
@@ -63,14 +64,15 @@
   "buildCommand": "pnpm --filter @nafi/landing build",
   "outputDirectory": "dist",
   "installCommand": "pnpm install --frozen-lockfile",
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
   "headers": [
     {
       "source": "/assets/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
       ]
     },
     {
@@ -78,8 +80,14 @@
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        },
         {
           "key": "Strict-Transport-Security",
           "value": "max-age=63072000; includeSubDomains; preload"
@@ -103,20 +111,24 @@
   "buildCommand": "pnpm --filter @nafi/web build",
   "outputDirectory": "dist",
   "installCommand": "pnpm install --frozen-lockfile",
-  "rewrites": [
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
-  ],
+  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }],
   "headers": [
     {
       "source": "/assets/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
       ]
     },
     {
       "source": "/sw.js",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        },
         { "key": "Service-Worker-Allowed", "value": "/" }
       ]
     },
@@ -132,7 +144,10 @@
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
         {
           "key": "Permissions-Policy",
           "value": "camera=(self), microphone=(), geolocation=(self)"
@@ -162,18 +177,24 @@ Deploy the farmer PWA to `farmer.nafi.et` from the same build — but with a str
   "buildCommand": "pnpm --filter @nafi/web build",
   "outputDirectory": "dist",
   "installCommand": "pnpm install --frozen-lockfile",
-  "rewrites": [
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
-  ],
+  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }],
   "headers": [
     {
       "source": "/assets/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
       "source": "/sw.js",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        },
         { "key": "Service-Worker-Allowed", "value": "/" }
       ]
     },
@@ -181,7 +202,10 @@ Deploy the farmer PWA to `farmer.nafi.et` from the same build — but with a str
       "source": "/(.*)",
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
         {
           "key": "Permissions-Policy",
           "value": "camera=(self), geolocation=(self), microphone=()"
@@ -310,7 +334,7 @@ CMD ["node", "dist/server.js"]
 ### `services/api/docker-compose.yml` (for staging/local prod-like)
 
 ```yaml
-version: '3.9'
+version: "3.9"
 
 services:
   api:
@@ -319,7 +343,7 @@ services:
       dockerfile: services/api/Dockerfile
     restart: unless-stopped
     ports:
-      - '4000:4000'
+      - "4000:4000"
     environment:
       NODE_ENV: production
       DATABASE_URL: mysql://nafi:${MYSQL_PASSWORD}@db:3306/nafi
@@ -342,7 +366,7 @@ services:
     volumes:
       - nafi_db:/var/lib/mysql
     healthcheck:
-      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -350,7 +374,7 @@ services:
   cache:
     image: redis:7-alpine
     restart: unless-stopped
-    command: ['redis-server', '--appendonly', 'yes']
+    command: ["redis-server", "--appendonly", "yes"]
     volumes:
       - nafi_cache:/data
 
@@ -465,13 +489,13 @@ echo "✓ Migration complete."
 
 ### Migration policy
 
-| Rule | Rationale |
-| :--- | :--- |
-| **No destructive migrations in the same release as code change** | Schema and code deploy separately |
-| **Expand-contract pattern** | Add columns → backfill → deploy code → drop old columns |
-| **Always backwards compatible** | New code must work with the previous schema during rolling deploy |
-| **Automated snapshot before migrate** | Recovery in under 15 minutes |
-| **Migrations reviewed by 2 engineers** | `prisma migrate diff` reviewed in the PR |
+| Rule                                                             | Rationale                                                         |
+| :--------------------------------------------------------------- | :---------------------------------------------------------------- |
+| **No destructive migrations in the same release as code change** | Schema and code deploy separately                                 |
+| **Expand-contract pattern**                                      | Add columns → backfill → deploy code → drop old columns           |
+| **Always backwards compatible**                                  | New code must work with the previous schema during rolling deploy |
+| **Automated snapshot before migrate**                            | Recovery in under 15 minutes                                      |
+| **Migrations reviewed by 2 engineers**                           | `prisma migrate diff` reviewed in the PR                          |
 
 ---
 
@@ -623,6 +647,7 @@ jobs:
 ### Environment protection
 
 Configure in GitHub → Settings → Environments → `production`:
+
 - **Required reviewers:** 2 senior engineers
 - **Wait timer:** 5 minutes
 - **Deployment branches:** `main` only
@@ -699,13 +724,13 @@ Already wired in Step 9. Add:
 
 Monitor these endpoints every 60 seconds from 3 regions:
 
-| URL | Expected | Alert threshold |
-| :--- | :--- | :--- |
-| `https://api.nafi.et/api/v1/health` | `200 {"status":"ok"}` | 2 consecutive failures |
-| `https://nafi.et` | `200 + "NAFI"` | 3 consecutive failures |
-| `https://app.nafi.et` | `200 + "NAFI"` | 3 consecutive failures |
-| `https://farmer.nafi.et` | `200 + "NAFI"` | 3 consecutive failures |
-| `https://api.nafi.et/api/v1/health/db` | `200` | 1 failure |
+| URL                                    | Expected              | Alert threshold        |
+| :------------------------------------- | :-------------------- | :--------------------- |
+| `https://api.nafi.et/api/v1/health`    | `200 {"status":"ok"}` | 2 consecutive failures |
+| `https://nafi.et`                      | `200 + "NAFI"`        | 3 consecutive failures |
+| `https://app.nafi.et`                  | `200 + "NAFI"`        | 3 consecutive failures |
+| `https://farmer.nafi.et`               | `200 + "NAFI"`        | 3 consecutive failures |
+| `https://api.nafi.et/api/v1/health/db` | `200`                 | 1 failure              |
 
 ### Grafana dashboard (backend metrics)
 
@@ -728,6 +753,7 @@ Alerts:
 ### Web Vitals dashboard
 
 The `/vitals` endpoint from Step 9 feeds into a Supabase or Postgres table; a Grafana panel shows p75 of LCP, INP, CLS by route. Alerts when:
+
 - LCP p75 > 2.5s for 24h
 - INP p75 > 200ms for 24h
 
@@ -764,13 +790,13 @@ The `/vitals` endpoint from Step 9 feeds into a Supabase or Postgres table; a Gr
 
 Cloudflare rules:
 
-| Route pattern | Limit |
-| :--- | :--- |
-| `/api/v1/auth/login` | 10 requests / 5 min / IP |
-| `/api/v1/auth/register` | 5 requests / hour / IP |
-| `/api/v1/auth/password/forgot` | 3 requests / hour / IP |
-| `/api/v1/*` (general) | 300 requests / 5 min / IP |
-| `POST /api/v1/investments` | 20 requests / hour / user |
+| Route pattern                  | Limit                     |
+| :----------------------------- | :------------------------ |
+| `/api/v1/auth/login`           | 10 requests / 5 min / IP  |
+| `/api/v1/auth/register`        | 5 requests / hour / IP    |
+| `/api/v1/auth/password/forgot` | 3 requests / hour / IP    |
+| `/api/v1/*` (general)          | 300 requests / 5 min / IP |
+| `POST /api/v1/investments`     | 20 requests / hour / user |
 
 ### Secrets Management
 
@@ -813,12 +839,12 @@ Cloudflare rules:
 
 ## Severity Levels
 
-| Level | Definition | Response Time | Comms |
-|-------|------------|---------------|-------|
-| **SEV1** | Platform down, data loss, security breach | 5 min | All-hands, status page |
-| **SEV2** | Major feature broken for >50% of users | 15 min | Slack #nafi-incidents |
-| **SEV3** | Degraded performance or minor feature down | 1 hour | Slack #nafi-alerts |
-| **SEV4** | Cosmetic bug or edge case | Next business day | Issue tracker |
+| Level    | Definition                                 | Response Time     | Comms                  |
+| -------- | ------------------------------------------ | ----------------- | ---------------------- |
+| **SEV1** | Platform down, data loss, security breach  | 5 min             | All-hands, status page |
+| **SEV2** | Major feature broken for >50% of users     | 15 min            | Slack #nafi-incidents  |
+| **SEV3** | Degraded performance or minor feature down | 1 hour            | Slack #nafi-alerts     |
+| **SEV4** | Cosmetic bug or edge case                  | Next business day | Issue tracker          |
 
 ## On-call rotation
 
@@ -838,30 +864,35 @@ Cloudflare rules:
 ## Diagnosis playbook
 
 ### API is down
+
 - Check BetterStack uptime
 - `flyctl status --app nafi-api`
 - `flyctl logs --app nafi-api`
 - Recent deploys: `flyctl releases --app nafi-api`
 
 ### Database is slow
+
 - Check Grafana: `db_query_duration_seconds`
 - Slow query log in MySQL
 - Check connection pool utilization
 - Consider read replica promotion if primary overloaded
 
 ### Frontend broken
+
 - Check Sentry for error spike
 - Check Vercel deployment logs
 - Verify CSP hasn't blocked a new dependency
 - Roll back via Vercel
 
 ### Settlement failure
+
 - **IMMEDIATE ESCALATION to CTO and CFO**
 - Freeze all settlement mutations via feature flag
 - Reconcile escrow balances manually
 - Root cause analysis before resuming
 
 ### Security incident
+
 - **IMMEDIATE ESCALATION to CTO and CEO**
 - Rotate all secrets (JWT, DB, S3, VAPID)
 - Force logout all sessions (bump JWT version)
@@ -965,20 +996,20 @@ pnpm dev
 
 All test users have password `Password123`:
 
-| Email | Role |
-|-------|------|
-| investor@nafi.et | DIASPORA_INVESTOR |
-| farmer@nafi.et | COMMERCIAL_FARMER |
-| bank@nafi.et | COMMERCIAL_BANK |
-| dbe@nafi.et | DBE_OFFICER |
-| nafa@nafi.et | NAFA_OFFICER |
-| supplier@nafi.et | INPUT_SUPPLIER |
-| buyer@nafi.et | OFF_TAKER |
-| gov@nafi.et | GOVERNMENT_REGULATOR |
-| donor@nafi.et | DONOR |
-| admin@nafi.et | NAFI_ADMIN |
-| compliance@nafi.et | COMPLIANCE_OFFICER |
-| arbitrator@nafi.et | ARBITRATOR |
+| Email              | Role                 |
+| ------------------ | -------------------- |
+| investor@nafi.et   | DIASPORA_INVESTOR    |
+| farmer@nafi.et     | COMMERCIAL_FARMER    |
+| bank@nafi.et       | COMMERCIAL_BANK      |
+| dbe@nafi.et        | DBE_OFFICER          |
+| nafa@nafi.et       | NAFA_OFFICER         |
+| supplier@nafi.et   | INPUT_SUPPLIER       |
+| buyer@nafi.et      | OFF_TAKER            |
+| gov@nafi.et        | GOVERNMENT_REGULATOR |
+| donor@nafi.et      | DONOR                |
+| admin@nafi.et      | NAFI_ADMIN           |
+| compliance@nafi.et | COMPLIANCE_OFFICER   |
+| arbitrator@nafi.et | ARBITRATOR           |
 
 ## Common tasks
 
@@ -992,12 +1023,15 @@ All test users have password `Password123`:
 ## Troubleshooting
 
 **"Port 3000 already in use"**
+
 - `lsof -i :3000` and kill the offending process
 
 **"Prisma client not generated"**
+
 - `pnpm --filter @nafi/api prisma:generate`
 
 **E2E tests fail with "connection refused"**
+
 - Ensure backend and DB are running; check `E2E_BASE_URL`
 ```
 
@@ -1011,22 +1045,22 @@ All test users have password `Password123`:
 \`\`\`
 nafi-frontend/
 ├── apps/
-│   ├── landing/          # Public marketing site
-│   ├── web/              # Authenticated web app (all roles)
-│   └── web/              # Farmer PWA (same build, different deploy)
+│ ├── landing/ # Public marketing site
+│ ├── web/ # Authenticated web app (all roles)
+│ └── web/ # Farmer PWA (same build, different deploy)
 ├── packages/
-│   ├── design-tokens/    # Brand colors, spacing, typography
-│   ├── config/           # Shared ESLint, Tailwind, TS presets
-│   ├── rbac-core/        # Roles, permissions, can()
-│   ├── formatters/       # Currency, dates, weights, text
-│   ├── validators/       # Zod schemas (shared with backend)
-│   ├── i18n/             # Translations (en, am, om, ti)
-│   ├── api-client/       # Axios wrapper + query keys
-│   └── ui-react/         # Component library (4 layers)
+│ ├── design-tokens/ # Brand colors, spacing, typography
+│ ├── config/ # Shared ESLint, Tailwind, TS presets
+│ ├── rbac-core/ # Roles, permissions, can()
+│ ├── formatters/ # Currency, dates, weights, text
+│ ├── validators/ # Zod schemas (shared with backend)
+│ ├── i18n/ # Translations (en, am, om, ti)
+│ ├── api-client/ # Axios wrapper + query keys
+│ └── ui-react/ # Component library (4 layers)
 ├── services/
-│   └── api/              # Node.js + Express + Prisma + MySQL
-├── e2e/                  # Playwright tests
-└── docs/                 # This documentation
+│ └── api/ # Node.js + Express + Prisma + MySQL
+├── e2e/ # Playwright tests
+└── docs/ # This documentation
 \`\`\`
 
 ## Data flow
@@ -1066,20 +1100,20 @@ See [RBAC.md](./RBAC.md) for the full permission matrix.
 
 12 roles, defined in `@nafi/rbac-core`:
 
-| Role | Description | Default landing |
-|------|-------------|-----------------|
-| DIASPORA_INVESTOR | Diaspora investor | /portfolio |
-| COMMERCIAL_BANK | Bank officer | /bank/overview |
-| DBE_OFFICER | Development Bank officer | /dbe/portfolio |
-| NAFA_OFFICER | NAFA officer | /nafa/guarantees |
-| INPUT_SUPPLIER | Input supplier | /supplier/orders |
-| COMMERCIAL_FARMER | Commercial farmer | /farm/contracts |
-| OFF_TAKER | Buyer/exporter | /buyer/purchases |
-| GOVERNMENT_REGULATOR | MoA/NBE/EIC/MoR | /gov/dashboard |
-| DONOR | Donor program officer | /donor/grants |
-| NAFI_ADMIN | Platform admin | /admin/overview |
-| COMPLIANCE_OFFICER | Compliance reviewer | /compliance/queue |
-| ARBITRATOR | Dispute arbitrator | /arbitration/cases |
+| Role                 | Description              | Default landing    |
+| -------------------- | ------------------------ | ------------------ |
+| DIASPORA_INVESTOR    | Diaspora investor        | /portfolio         |
+| COMMERCIAL_BANK      | Bank officer             | /bank/overview     |
+| DBE_OFFICER          | Development Bank officer | /dbe/portfolio     |
+| NAFA_OFFICER         | NAFA officer             | /nafa/guarantees   |
+| INPUT_SUPPLIER       | Input supplier           | /supplier/orders   |
+| COMMERCIAL_FARMER    | Commercial farmer        | /farm/contracts    |
+| OFF_TAKER            | Buyer/exporter           | /buyer/purchases   |
+| GOVERNMENT_REGULATOR | MoA/NBE/EIC/MoR          | /gov/dashboard     |
+| DONOR                | Donor program officer    | /donor/grants      |
+| NAFI_ADMIN           | Platform admin           | /admin/overview    |
+| COMPLIANCE_OFFICER   | Compliance reviewer      | /compliance/queue  |
+| ARBITRATOR           | Dispute arbitrator       | /arbitration/cases |
 
 ## Permission model
 
@@ -1097,7 +1131,7 @@ See the full matrix in `packages/rbac-core/src/rolePermissions.ts`.
 
 \`\`\`tsx
 <ProtectedRoute permission={PERMISSIONS.CONTRACT_READ_OWN} roles={['COMMERCIAL_FARMER']}>
-  <FarmContractsPage />
+<FarmContractsPage />
 </ProtectedRoute>
 \`\`\`
 
@@ -1105,7 +1139,7 @@ See the full matrix in `packages/rbac-core/src/rolePermissions.ts`.
 
 \`\`\`tsx
 <Can I={PERMISSIONS.ESCROW_RELEASE}>
-  <Button onClick={release}>Release funds</Button>
+<Button onClick={release}>Release funds</Button>
 </Can>
 \`\`\`
 
@@ -1116,6 +1150,7 @@ Middleware `authorize('escrow:release')` on every protected route.
 ## Testing RBAC
 
 Every protected route has tests in `e2e/tests/`:
+
 - Unauthenticated → redirect to login
 - Wrong role → redirect to role home
 - Missing permission → ForbiddenPage
@@ -1129,11 +1164,11 @@ Every protected route has tests in `e2e/tests/`:
 
 ## Environments
 
-| Environment | Frontend | Backend | Database |
-|-------------|----------|---------|----------|
-| Local | localhost:3000/3001 | localhost:4000 | Docker MySQL |
-| Staging | staging-app.nafi.et | staging-api.nafi.et | staging DB (RDS) |
-| Production | app.nafi.et | api.nafi.et | production DB (RDS, multi-AZ) |
+| Environment | Frontend            | Backend             | Database                      |
+| ----------- | ------------------- | ------------------- | ----------------------------- |
+| Local       | localhost:3000/3001 | localhost:4000      | Docker MySQL                  |
+| Staging     | staging-app.nafi.et | staging-api.nafi.et | staging DB (RDS)              |
+| Production  | app.nafi.et         | api.nafi.et         | production DB (RDS, multi-AZ) |
 
 ## Deploying to staging
 
@@ -1161,6 +1196,7 @@ See [INCIDENT_RESPONSE.md](./INCIDENT_RESPONSE.md) for details.
 Never deploy a destructive migration in the same release as a code change.
 
 **Expand-contract pattern:**
+
 1. Release 1: Add new column (nullable)
 2. Release 2: Backfill data
 3. Release 3: Update code to use new column
@@ -1183,14 +1219,14 @@ Run migrations: `./services/api/scripts/migrate.sh production`
 
 ## Tools
 
-| Concern | Tool | URL |
-|---------|------|-----|
-| Error tracking | Sentry | sentry.io/nafi |
-| Uptime | BetterStack | betterstack.com/nafi |
-| Metrics | Grafana | grafana.nafi.et |
-| Logs | Fly.io + Loki | (via flyctl logs) |
-| Web Vitals | Custom endpoint | analytics.nafi.et |
-| Analytics | Plausible | plausible.io/nafi.et |
+| Concern        | Tool            | URL                  |
+| -------------- | --------------- | -------------------- |
+| Error tracking | Sentry          | sentry.io/nafi       |
+| Uptime         | BetterStack     | betterstack.com/nafi |
+| Metrics        | Grafana         | grafana.nafi.et      |
+| Logs           | Fly.io + Loki   | (via flyctl logs)    |
+| Web Vitals     | Custom endpoint | analytics.nafi.et    |
+| Analytics      | Plausible       | plausible.io/nafi.et |
 
 ## Critical alerts (PagerDuty)
 
@@ -1210,12 +1246,14 @@ Run migrations: `./services/api/scripts/migrate.sh production`
 ## Dashboards
 
 **Grafana > NAFI Overview**
+
 - Request rate, error rate, latency (RED metrics)
 - DB query performance
 - Settlement queue depth
 - Bank integration health
 
 **Grafana > NAFI Business**
+
 - Contracts created (daily)
 - Diaspora capital committed (weekly)
 - Settlements executed (weekly)
@@ -1229,6 +1267,7 @@ Weekly rotation. Primary + secondary. Escalation to CTO after 30 min unacknowled
 ### `docs/runbooks/` — Task-specific procedures
 
 **`docs/runbooks/add-new-role.md`**
+
 - Add role to `packages/rbac-core/src/roles.ts`
 - Add permissions to `rolePermissions.ts`
 - Add landing route to `roleHome.ts`
@@ -1238,6 +1277,7 @@ Weekly rotation. Primary + secondary. Escalation to CTO after 30 min unacknowled
 - Update `docs/RBAC.md`
 
 **`docs/runbooks/rotate-secrets.md`**
+
 - Generate new secret: `openssl rand -base64 48`
 - Update in Vercel and Fly.io
 - Deploy backend with new secret
@@ -1246,6 +1286,7 @@ Weekly rotation. Primary + secondary. Escalation to CTO after 30 min unacknowled
 - Verify login flow works
 
 **`docs/runbooks/db-backup-restore.md`**
+
 - Automatic snapshots daily (RDS)
 - Manual snapshot: `./services/api/scripts/snapshot.sh`
 - Restore: `aws rds restore-db-instance-from-db-snapshot`
@@ -1253,6 +1294,7 @@ Weekly rotation. Primary + secondary. Escalation to CTO after 30 min unacknowled
 - Verify with `prisma migrate status`
 
 **`docs/runbooks/integrate-new-bank.md`**
+
 - Add adapter to `services/api/src/integrations/bank-adapters/`
 - Implement `BankAdapter` interface
 - Register in `services/api/src/integrations/bank-adapters/index.ts`
@@ -1261,6 +1303,7 @@ Weekly rotation. Primary + secondary. Escalation to CTO after 30 min unacknowled
 - Update `docs/INTEGRATIONS.md`
 
 **`docs/runbooks/handle-dispute.md`**
+
 - Arbitrator assigned automatically when dispute filed
 - Hearing scheduled within 14 days
 - Evidence collected via platform
@@ -1273,13 +1316,13 @@ Weekly rotation. Primary + secondary. Escalation to CTO after 30 min unacknowled
 
 ### Health endpoints (backend contract)
 
-| Endpoint | Purpose | Returns |
-| :--- | :--- | :--- |
-| `GET /api/v1/health` | Liveness | `{ status: "ok" }` |
-| `GET /api/v1/health/db` | DB connectivity | `{ status: "ok", latencyMs }` |
-| `GET /api/v1/health/redis` | Redis connectivity | `{ status: "ok" }` |
-| `GET /api/v1/health/integrations` | Bank/Fayda/EMCR statuses | `{ bank1: "ok", ... }` |
-| `GET /api/v1/health/ready` | Readiness (all checks) | `{ ready: true }` |
+| Endpoint                          | Purpose                  | Returns                       |
+| :-------------------------------- | :----------------------- | :---------------------------- |
+| `GET /api/v1/health`              | Liveness                 | `{ status: "ok" }`            |
+| `GET /api/v1/health/db`           | DB connectivity          | `{ status: "ok", latencyMs }` |
+| `GET /api/v1/health/redis`        | Redis connectivity       | `{ status: "ok" }`            |
+| `GET /api/v1/health/integrations` | Bank/Fayda/EMCR statuses | `{ bank1: "ok", ... }`        |
+| `GET /api/v1/health/ready`        | Readiness (all checks)   | `{ ready: true }`             |
 
 ### Feature flags
 
@@ -1287,10 +1330,10 @@ Add `apps/web/src/config/featureFlags.ts`:
 
 ```ts
 export const featureFlags = {
-  ussdSimulator: import.meta.env.VITE_ENABLE_USSD === 'true',
-  pushNotifications: import.meta.env.VITE_ENABLE_PUSH === 'true',
-  offlineMode: import.meta.env.VITE_ENABLE_OFFLINE_MODE === 'true',
-  multiPartyRelease: import.meta.env.VITE_ENABLE_MULTIPARTY === 'true',
+  ussdSimulator: import.meta.env.VITE_ENABLE_USSD === "true",
+  pushNotifications: import.meta.env.VITE_ENABLE_PUSH === "true",
+  offlineMode: import.meta.env.VITE_ENABLE_OFFLINE_MODE === "true",
+  multiPartyRelease: import.meta.env.VITE_ENABLE_MULTIPARTY === "true",
 } as const;
 ```
 
@@ -1299,6 +1342,7 @@ Flags are set per environment — turn off features in production if they misbeh
 ### Audit logging for admin actions
 
 Every admin action (user invite, config change, contract freeze) writes to the immutable audit log with:
+
 - Actor ID, role, IP
 - Action, resource, resource ID
 - Before/after snapshot for config changes
@@ -1386,31 +1430,32 @@ Before announcing production launch, verify all of these:
 
 ## 10.13 What Was Built & Why
 
-| Layer | Artifact | Purpose |
-| :--- | :--- | :--- |
-| **Vercel configs** | `vercel.json` for each app | Deploy, headers, rewrites |
-| **Backend Docker** | `Dockerfile`, `docker-compose.yml` | Reproducible runtime |
-| **Fly.io config** | `fly.toml` | Production deployment with rolling strategy |
-| **Migration script** | `migrate.sh` | Snapshot → migrate → verify with rollback |
-| **Deploy pipeline** | `.github/workflows/deploy.yml` | Staging auto, production gated by approvals |
-| **Rollback procedures** | Documented in `DEPLOYMENT.md` | Under-2-minute rollbacks for both frontend and backend |
-| **Security headers** | CSP, HSTS, X-Frame-Options, Permissions-Policy | Defense-in-depth for the browser |
-| **Rate limiting** | Cloudflare rules per route | Brute-force protection |
-| **Secrets management** | Vercel/Fly.io env vars + Husky block | No secrets in git |
-| **Monitoring** | Sentry + BetterStack + Grafana + Web Vitals | Full observability |
-| **Alerting** | PagerDuty critical, Slack warnings | Right signal to the right channel |
-| **Incident runbook** | `INCIDENT_RESPONSE.md` | Clear playbook for SEV1–SEV4 |
-| **Handover docs** | 10 documents under `docs/` | Anything an engineer or operator needs |
-| **Runbooks** | 5 task-specific procedures | Repeatable operations |
-| **Go-live checklist** | 50+ verification items | Confidence before launch |
+| Layer                   | Artifact                                       | Purpose                                                |
+| :---------------------- | :--------------------------------------------- | :----------------------------------------------------- |
+| **Vercel configs**      | `vercel.json` for each app                     | Deploy, headers, rewrites                              |
+| **Backend Docker**      | `Dockerfile`, `docker-compose.yml`             | Reproducible runtime                                   |
+| **Fly.io config**       | `fly.toml`                                     | Production deployment with rolling strategy            |
+| **Migration script**    | `migrate.sh`                                   | Snapshot → migrate → verify with rollback              |
+| **Deploy pipeline**     | `.github/workflows/deploy.yml`                 | Staging auto, production gated by approvals            |
+| **Rollback procedures** | Documented in `DEPLOYMENT.md`                  | Under-2-minute rollbacks for both frontend and backend |
+| **Security headers**    | CSP, HSTS, X-Frame-Options, Permissions-Policy | Defense-in-depth for the browser                       |
+| **Rate limiting**       | Cloudflare rules per route                     | Brute-force protection                                 |
+| **Secrets management**  | Vercel/Fly.io env vars + Husky block           | No secrets in git                                      |
+| **Monitoring**          | Sentry + BetterStack + Grafana + Web Vitals    | Full observability                                     |
+| **Alerting**            | PagerDuty critical, Slack warnings             | Right signal to the right channel                      |
+| **Incident runbook**    | `INCIDENT_RESPONSE.md`                         | Clear playbook for SEV1–SEV4                           |
+| **Handover docs**       | 10 documents under `docs/`                     | Anything an engineer or operator needs                 |
+| **Runbooks**            | 5 task-specific procedures                     | Repeatable operations                                  |
+| **Go-live checklist**   | 50+ verification items                         | Confidence before launch                               |
 
 **Design decisions made in this step:**
+
 - **Vercel for frontends** — instant rollback, preview deploys, edge CDN close to Ethiopia via Cloudflare
 - **Fly.io for backend** — Johannesburg region minimizes latency to Addis
 - **Separate farmer deploy** — stricter CSP for camera/geolocation, own subdomain for PWA install
 - **Migrations ship separately** — expand-contract pattern makes rollbacks safe
 - **Production deploy requires 2 approvals** — protects against accidents
-- **PostgreSQL-style audit chain** — every audit row hashes into the previous, detecting tampering
+- **mySQL-style audit chain** — every audit row hashes into the previous, detecting tampering
 - **Feature flags over kill switches** — turn off risky features without redeploying
 - **Docs in the repo, not Confluence** — versioned with the code, no drift
 
@@ -1432,18 +1477,18 @@ Before announcing production launch, verify all of these:
 
 ### What was delivered across all 10 steps
 
-| Step | Deliverable |
-| :--- | :--- |
-| **1** | Monorepo, design tokens, RBAC core, formatters, validators, i18n, API client |
-| **2** | 40+ component library with 4 layers, Storybook, RBAC React primitives |
-| **3** | Public landing page with 14 sections, 4 languages, live impact stats |
-| **4** | Authenticated app shell, auth flow, role-aware routing for 12 roles |
-| **5** | Complete data layer — 12 typed domain modules, query hooks, mutations, error normalization |
-| **6** | Diaspora Investor, Commercial Farmer, Input Supplier portals — fully functional |
-| **7** | Bank, DBE, NAFA, Government, Donor, Admin, Compliance, Arbitrator portals |
-| **8** | Offline-first PWA with IndexedDB queue, Background Sync, push notifications, USSD simulator |
-| **9** | Full test suite (unit, component, integration, E2E), a11y audits, Lighthouse CI, Sentry, analytics |
-| **10** | Production deployment (Vercel + Fly.io), security hardening, monitoring, runbooks, handover docs |
+| Step   | Deliverable                                                                                        |
+| :----- | :------------------------------------------------------------------------------------------------- |
+| **1**  | Monorepo, design tokens, RBAC core, formatters, validators, i18n, API client                       |
+| **2**  | 40+ component library with 4 layers, Storybook, RBAC React primitives                              |
+| **3**  | Public landing page with 14 sections, 4 languages, live impact stats                               |
+| **4**  | Authenticated app shell, auth flow, role-aware routing for 12 roles                                |
+| **5**  | Complete data layer — 12 typed domain modules, query hooks, mutations, error normalization         |
+| **6**  | Diaspora Investor, Commercial Farmer, Input Supplier portals — fully functional                    |
+| **7**  | Bank, DBE, NAFA, Government, Donor, Admin, Compliance, Arbitrator portals                          |
+| **8**  | Offline-first PWA with IndexedDB queue, Background Sync, push notifications, USSD simulator        |
+| **9**  | Full test suite (unit, component, integration, E2E), a11y audits, Lighthouse CI, Sentry, analytics |
+| **10** | Production deployment (Vercel + Fly.io), security hardening, monitoring, runbooks, handover docs   |
 
 ### The platform now supports
 
@@ -1463,17 +1508,17 @@ Before announcing production launch, verify all of these:
 
 ### What the platform does for each stakeholder
 
-| Stakeholder | What NAFI gives them |
-| :--- | :--- |
-| **Diaspora Investors** | Fractional investment from $500, fixed-return bonds or profit-share equity, escrow-protected capital |
+| Stakeholder            | What NAFI gives them                                                                                                 |
+| :--------------------- | :------------------------------------------------------------------------------------------------------------------- |
+| **Diaspora Investors** | Fractional investment from $500, fixed-return bonds or profit-share equity, escrow-protected capital                 |
 | **Commercial Farmers** | Inputs delivered with payment guaranteed, low-cost credit, direct access to premium buyers, offline-first mobile app |
-| **Commercial Banks** | Zero-risk lending with escrow controls, NAFA guarantees, real-time loan performance data |
-| **DBE** | Portfolio of co-financed contracts, RUFIP III tracking, on-lending to RUSACCOs and MFIs |
-| **NAFA** | Guarantee issuance with 70% coverage, claim processing, risk-sharing dashboards |
-| **Government** | Forex generation, contract farming formalization, tax revenue, real-time policy dashboards |
-| **Donors** | Verifiable impact metrics, transparent disbursement tracking |
-| **Input Suppliers** | Guaranteed payment on verified delivery, zero default risk |
-| **Off-Takers** | Traceable, quality-assured supply chains |
+| **Commercial Banks**   | Zero-risk lending with escrow controls, NAFA guarantees, real-time loan performance data                             |
+| **DBE**                | Portfolio of co-financed contracts, RUFIP III tracking, on-lending to RUSACCOs and MFIs                              |
+| **NAFA**               | Guarantee issuance with 70% coverage, claim processing, risk-sharing dashboards                                      |
+| **Government**         | Forex generation, contract farming formalization, tax revenue, real-time policy dashboards                           |
+| **Donors**             | Verifiable impact metrics, transparent disbursement tracking                                                         |
+| **Input Suppliers**    | Guaranteed payment on verified delivery, zero default risk                                                           |
+| **Off-Takers**         | Traceable, quality-assured supply chains                                                                             |
 
 ### The proof is in the platform
 
@@ -1500,10 +1545,10 @@ Everything is code. Everything is tested. Everything is documented. Everything i
 **The NAFI frontend build is complete.** 🚀
 
 **National Agri-Finance Infrastructure**
-*The digital backbone of Ethiopia's agricultural transformation.*
+_The digital backbone of Ethiopia's agricultural transformation._
 
 ---
 
-*End of Step 10. End of build.*
+_End of Step 10. End of build._
 
 **— NAFI Frontend Skill v1.0.0**
