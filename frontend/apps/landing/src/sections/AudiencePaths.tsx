@@ -21,25 +21,25 @@ export function AudiencePaths() {
   const { t } = useTranslation('landing');
 
   return (
-    <section id="audience" className="section-py bg-neutral-50">
+    <section id="audience" className="section-py bg-gradient-to-b from-neutral-50 to-white">
       <div className="container-narrow flex flex-col gap-10">
         <div className="max-w-3xl">
-          <h2 className="text-3xl font-bold text-neutral-900 sm:text-4xl">
+          <h2 className="text-3xl font-bold text-neutral-900 sm:text-4xl lg:text-5xl">
             {t('audience.title')}
           </h2>
           <p className="mt-3 text-lg text-neutral-600">{t('audience.subtitle')}</p>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {AUDIENCES.map(({ key, accent }) => {
             const points = t(`audience.${key}.points`, { returnObjects: true }) as string[];
             return (
-              <Card key={key} className="flex flex-col">
+              <Card key={key} className="group flex flex-col transition-all hover:shadow-xl hover:-translate-y-2">
                 <CardHeader
                   title={
                     <span
                       className={cn(
-                        'inline-flex rounded px-2 py-0.5 text-xs font-semibold uppercase',
+                        'inline-flex rounded px-3 py-1 text-xs font-semibold uppercase tracking-wide',
                         accentMap[accent],
                       )}
                     >
@@ -47,17 +47,17 @@ export function AudiencePaths() {
                     </span>
                   }
                 />
-                <CardBody className="flex flex-1 flex-col gap-4">
-                  <ul className="flex flex-col gap-2.5 text-sm">
+                <CardBody className="flex flex-1 flex-col gap-5 p-6">
+                  <ul className="flex flex-col gap-3 text-sm">
                     {points.map((point, idx) => (
-                      <li key={idx} className="flex gap-2">
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-success" />
+                      <li key={idx} className="flex gap-3">
+                        <Check className="mt-0.5 h-5 w-5 shrink-0 text-success" />
                         <span className="text-neutral-700">{point}</span>
                       </li>
                     ))}
                   </ul>
-                  <div className="mt-auto pt-2">
-                    <Button asChild variant="outline" size="sm" fullWidth>
+                  <div className="mt-auto pt-4">
+                    <Button asChild variant="outline" size="md" fullWidth className="group-hover:bg-brand-500 group-hover:text-white group-hover:border-brand-500 transition-colors">
                       <Link to="/register">{t(`audience.${key}.cta`)}</Link>
                     </Button>
                   </div>

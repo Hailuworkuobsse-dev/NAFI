@@ -150,9 +150,11 @@
     }
   },
   "opportunities": {
+    "eyebrow": "Investment Opportunities",
     "title": "Live opportunities",
     "subtitle": "Contracts open for investment right now.",
     "viewAll": "View all opportunities",
+    "learnMore": "Learn more",
     "funded": "funded",
     "investors": "investors",
     "targetYield": "Target yield",
@@ -161,6 +163,7 @@
     "empty": "No open opportunities right now. Check back soon."
   },
   "impact": {
+    "eyebrow": "Verified Impact",
     "title": "Impact so far",
     "subtitle": "Every metric verified on the NAFI ledger.",
     "metrics": {
