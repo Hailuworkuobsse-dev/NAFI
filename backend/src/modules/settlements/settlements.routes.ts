@@ -12,6 +12,5 @@ router.get('/', settlementsController.findAll);
 router.post('/', settlementsController.create);
 router.get('/:id', settlementsController.findById);
 router.put('/:id', settlementsController.update);
-router.delete('/:id', settlementsController.delete);
 
 export default router;

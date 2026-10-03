@@ -6,29 +6,21 @@ import { ok, created, list } from '../../utils/apiResponse';
 export class ReportsController {
   findAll = asyncHandler(async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 20;
-    const result = await reportsService.findAll(req.user!.userId, req.user!.institutionId, req.tenantScope);
+    const limit = parseInt(req.query.limit as string) || parseInt(req.query.pageSize as string) || 20;
+    const result = await reportsService.findAll(
+      req.user!.userId,
+      req.user!.institutionId ?? null,
+      req.tenantScope!,
+      {},
+      page,
+      limit
+    );
     list(res, result);
   });
 
-  findById = asyncHandler(async (req: Request, res: Response) => {
-    const item = await reportsService.findById(req.params.id);
-    ok(res, item);
-  });
-
-  create = asyncHandler(async (req: Request, res: Response) => {
+  generate = asyncHandler(async (req: Request, res: Response) => {
     const item = await reportsService.create(req.body, req.user!.userId);
-    created(res, item, 'Reports created successfully');
-  });
-
-  update = asyncHandler(async (req: Request, res: Response) => {
-    const item = await reportsService.update(req.params.id, req.body);
-    ok(res, item, 'Reports updated successfully');
-  });
-
-  delete = asyncHandler(async (req: Request, res: Response) => {
-    await reportsService.delete(req.params.id);
-    res.status(204).send();
+    created(res, item, 'Report generated successfully');
   });
 }
 

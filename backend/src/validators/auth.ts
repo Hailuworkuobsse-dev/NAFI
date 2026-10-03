@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { Role } from '../constants/roles';
 
 export const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -16,12 +17,7 @@ export const registerSchema = z.object({
   firstName: z.string().min(1, 'First name is required').max(50),
   lastName: z.string().min(1, 'Last name is required').max(50),
   phone: z.string().optional(),
-  role: z.enum([
-    'BORROWER',
-    'INVESTOR',
-    'GUARANTOR',
-    'FIELD_AGENT',
-  ]).default('INVESTOR'),
+  role: z.nativeEnum(Role).default(Role.DIASPORA_INVESTOR),
   institutionId: z.string().optional(),
 });
 

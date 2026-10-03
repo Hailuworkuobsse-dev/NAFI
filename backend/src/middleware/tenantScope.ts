@@ -18,7 +18,7 @@ declare module 'express' {
 /**
  * Middleware to enforce tenant scope filtering
  */
-export function tenantScope(requiredScope: TenantScope) {
+export function tenantScope(requiredScope: TenantScope | 'OWN' | 'INSTITUTION' | 'NATIONAL' | 'ALL') {
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       if (!req.user) {
