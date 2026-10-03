@@ -10,7 +10,8 @@ function resolveDatasourceUrl(): string | undefined {
   if (process.env.DATABASE_URL) return process.env.DATABASE_URL;
   const { POSTGRES_HOST, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB } = process.env;
   if (POSTGRES_HOST && POSTGRES_USER && POSTGRES_PASSWORD && POSTGRES_DB) {
-    const url = `mysql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:5432/${POSTGRES_DB}?schema=public`;
+    const port = process.env.POSTGRES_PORT ?? process.env.DB_PORT ?? "5432";
+    const url = `mysql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${port}/${POSTGRES_DB}`;
     process.env.DATABASE_URL = url;
     return url;
   }
