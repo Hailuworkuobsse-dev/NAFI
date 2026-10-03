@@ -62,13 +62,8 @@ export class AuthService {
       throw ApiError.unauthorized("Invalid credentials");
     }
 
-    // Update last login
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { lastLoginAt: new Date() },
-    });
-
-    // Generate tokens
+    // Update last login and generate tokens (persisting the refresh token as rotation state).
+    // The refresh endpoint compares against user.refreshToken, so it MUST be stored here.
     const tokenPayload: TokenPayload = {
       userId: user.id,
       email: user.email,
@@ -80,6 +75,11 @@ export class AuthService {
     await prisma.user.update({
       where: { id: user.id },
       data: { refreshToken: hashRefreshToken(tokens.refreshToken) },
+    });
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { lastLoginAt: new Date(), refreshToken: tokens.refreshToken },
     });
 
     return {
@@ -130,17 +130,18 @@ export class AuthService {
         firstName: true,
         lastName: true,
         role: true,
+        institutionId: true,
         nafiId: true,
         isVerified: true,
       },
     });
 
-    // Generate tokens
+    // Generate tokens (use the user's actual institutionId, not null)
     const tokenPayload: TokenPayload = {
       userId: user.id,
       email: user.email,
       role: user.role,
-      institutionId: null,
+      institutionId: user.institutionId ?? null,
     };
 
     const tokens = generateTokenPair(tokenPayload);
@@ -199,6 +200,12 @@ export class AuthService {
     await prisma.user.update({
       where: { id: user.id },
       data: { refreshToken: hashRefreshToken(tokens.refreshToken) },
+    });
+
+    // Persist rotated refresh token so subsequent refreshes validate against it
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { refreshToken: tokens.refreshToken },
     });
 
     return tokens;

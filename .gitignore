@@ -1,2 +1,4 @@
-# TypeScript build info
-tsconfig.tsbuildinfo
+# Environment
+.env
+.env.local
+*.env.*
