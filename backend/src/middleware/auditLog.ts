@@ -46,13 +46,13 @@ async function writeAuditLog(
     
     // Resolve the entity id defensively (req.params.id may be a string array in some route patterns)
     const rawId = (req.params as Record<string, string | string[] | undefined>).id;
-    const entityId = Array.isArray(rawId) ? rawId[0] : rawId;
+    const entityIdStr = (Array.isArray(rawId) ? rawId[0] : rawId) || 'list';
 
     // Create audit data string for hashing
     const auditData = JSON.stringify({
       entity,
       action,
-      entityId: entityId || 'list',
+      entityId: entityIdStr,
       userId: req.user?.userId,
       timestamp: new Date().toISOString(),
     });
@@ -67,7 +67,7 @@ async function writeAuditLog(
         currentHash,
         action: action as any,
         entity,
-        entityId: entityId || 'list',
+        entityId: entityIdStr,
         userId: req.user?.userId || null,
         tenantScope: req.tenantScope || 'OWN',
         ipAddress: req.ip || req.socket.remoteAddress || null,
@@ -84,7 +84,7 @@ async function writeAuditLog(
     logger.info({
       entity,
       action,
-      entityId: req.params.id,
+      entityId: entityIdStr,
       userId: req.user?.userId,
       hash: currentHash,
     }, 'Audit log created');
