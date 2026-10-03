@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0 --port 3000",
+    "dev": "vite --host 0.0.0.0 --port 3144",
     "build": "vite build",
-    "preview": "vite preview --host 0.0.0.0 --port 3000",
+    "preview": "vite preview --host 0.0.0.0 --port 3144",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src",
     "test": "vitest run",

@@ -5,6 +5,7 @@ export default {
   content: [
     './index.html',
     './src/**/*.{ts,tsx}',
+    '../../apps/landing/src/**/*.{ts,tsx}',
     '../../packages/ui-react/src/**/*.{ts,tsx}',
   ],
 };
