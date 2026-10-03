@@ -152,6 +152,7 @@ export const NAV_BY_ROLE: Record<Role, NavSection[]> = {
         { labelKey: 'nav.admin.config', path: '/admin/config', icon: 'Settings', permission: PERMISSIONS.SYSTEM_CONFIGURE },
         { labelKey: 'nav.admin.audit', path: '/admin/audit', icon: 'Eye', permission: PERMISSIONS.AUDIT_READ },
         { labelKey: 'nav.admin.health', path: '/admin/health', icon: 'Activity', permission: PERMISSIONS.SYSTEM_CONFIGURE },
+        { labelKey: 'nav.admin.ussd', path: '/admin/tools/ussd', icon: 'Phone', permission: PERMISSIONS.SYSTEM_CONFIGURE },
       ],
     },
   ],

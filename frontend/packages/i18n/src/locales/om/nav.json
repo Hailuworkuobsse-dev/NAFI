@@ -40,5 +40,37 @@
     "incentives": "Incentives",
     "audit": "Audit Log",
     "reports": "Reports"
+  },
+  "admin": {
+    "title": "Admin",
+    "overview": "Overview",
+    "users": "Users",
+    "contracts": "Contracts",
+    "escrows": "Escrows",
+    "settlements": "Settlements",
+    "disputes": "Disputes",
+    "config": "System Config",
+    "audit": "Audit Log",
+    "health": "System Health",
+    "ussd": "USSD Simulator"
+  },
+  "donor": {
+    "title": "Donor",
+    "grants": "Grants",
+    "disbursements": "Disbursements",
+    "impact": "Impact Metrics",
+    "reports": "Reports",
+    "audit": "Audit Access"
+  },
+  "compliance": {
+    "title": "Compliance",
+    "queue": "Approval Queue",
+    "kyc": "KYC Review",
+    "aml": "AML Monitoring",
+    "sar": "SAR Filings"
+  },
+  "arbitration": {
+    "title": "Arbitration",
+    "cases": "Cases"
   }
 }
