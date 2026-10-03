@@ -187,7 +187,7 @@ model Contract {
   contractHash    String        @unique
   nafiContractId  String        @unique
   title           String
-  description     String
+  description     String   @db.Text
   principalAmount Decimal       @db.Decimal(15, 2)
   interestRate    Decimal       @db.Decimal(5, 2)
   termMonths      Int
@@ -256,7 +256,7 @@ model Investment {
 model Opportunity {
   id              String            @id @default(cuid())
   title           String
-  description     String
+  description     String   @db.Text
   targetAmount    Decimal           @db.Decimal(15, 2)
   raisedAmount    Decimal           @db.Decimal(15, 2) @default(0)
   minInvestment   Decimal           @db.Decimal(15, 2)
@@ -278,7 +278,7 @@ model Input {
   contractId      String
   contract        Contract   @relation(fields: [contractId], references: [id])
   type            InputType
-  description     String
+  description     String   @db.Text
   quantity        Decimal    @db.Decimal(15, 2)
   unit            String
   unitPrice       Decimal    @db.Decimal(15, 2)
@@ -319,7 +319,7 @@ model Collateral {
   contractId      String
   contract        Contract      @relation(fields: [contractId], references: [id])
   type            CollateralType
-  description     String
+  description     String   @db.Text
   estimatedValue  Decimal       @db.Decimal(15, 2)
   verified        Boolean       @default(false)
   verifiedBy      String?
@@ -340,7 +340,7 @@ model Dispute {
   initiatedBy     String
   initiator       User          @relation(fields: [initiatedBy], references: [id])
   reason          String
-  description     String
+  description     String   @db.Text
   status          DisputeStatus @default(OPEN)
   resolution      String?
   resolvedAt      DateTime?
