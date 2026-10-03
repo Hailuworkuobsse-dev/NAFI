@@ -23,6 +23,7 @@ export async function verifyPassword(
  * Check if a hash needs rehashing (due to salt rounds change)
  */
 export function needsRehash(hash: string): boolean {
-  const [_, saltRounds] = hash.split("$");
-  return parseInt(saltRounds, 10) !== SALT_ROUNDS;
+  const parts = hash.split('$');
+  const saltRounds = parts[2];
+  return parseInt(saltRounds ?? '', 10) !== SALT_ROUNDS;
 }

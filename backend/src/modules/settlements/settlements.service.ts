@@ -5,7 +5,11 @@ import { TenantScope } from '../../middleware/tenantScope';
 export class SettlementsService {
   async findAll(userId: string, institutionId: string | null, scope: TenantScope, filter: any = {}, page = 1, limit = 20) {
     const where: Record<string, unknown> = {};
-    if (scope === 'OWN') where.contractId = userId;
+    if (scope === TenantScope.OWN || scope === TenantScope.INSTITUTION) {
+      where.contract = scope === TenantScope.OWN
+        ? { borrowerId: userId }
+        : institutionId ? { institutionId } : { id: 'impossible-id' };
+    }
     if (filter.status) where.status = filter.status;
     const [data, total] = await Promise.all([
       prisma.settlement.findMany({ where, skip: (page - 1) * limit, take: limit, orderBy: { createdAt: 'desc' } }),
@@ -18,8 +22,8 @@ export class SettlementsService {
     if (!item) throw ApiError.notFound('Settlement not found');
     return item;
   }
-  async create(data: any, userId: string) {
-    return prisma.settlement.create({ data: { ...data, processedBy: userId } });
+  async create(data: any, _userId: string) {
+    return prisma.settlement.create({ data });
   }
   async update(id: string, data: any) {
     try { return await prisma.settlement.update({ where: { id }, data }); }

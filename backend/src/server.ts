@@ -15,7 +15,7 @@ const gracefulShutdown = async (signal: string) => {
   // Stop accepting new requests
   server.close((err) => {
     if (err) {
-      logger.error('Error during server close', { error: err });
+      logger.error('Error during server close: ' + String(err));
       process.exit(1);
     }
     logger.info('✅ HTTP server closed');
@@ -34,7 +34,7 @@ const gracefulShutdown = async (signal: string) => {
     clearTimeout(forceCloseTimeout);
     process.exit(0);
   } catch (error) {
-    logger.error('Error closing Prisma connections', { error });
+    logger.error('Error closing Prisma connections: ' + String(error));
     clearTimeout(forceCloseTimeout);
     process.exit(1);
   }
@@ -44,12 +44,12 @@ process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
 process.on('uncaughtException', (error) => {
-  logger.error('Uncaught Exception', { error });
+  logger.error('Uncaught Exception: ' + String(error));
   gracefulShutdown('uncaughtException');
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-  logger.error('Unhandled Rejection', { reason, promise });
+  logger.error('Unhandled Rejection: ' + String(reason));
   gracefulShutdown('unhandledRejection');
 });
 

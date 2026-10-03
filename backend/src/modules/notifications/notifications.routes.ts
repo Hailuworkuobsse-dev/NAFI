@@ -1,17 +1,16 @@
 import { Router } from 'express';
 import { notificationsController } from './notifications.controller';
 import { authenticate } from '../../middleware/authenticate';
-import { tenantScope } from '../../middleware/tenantScope';
 
 const router = Router();
 
 router.use(authenticate);
-router.use(tenantScope('OWN'));
 
 router.get('/', notificationsController.findAll);
 router.post('/', notificationsController.create);
+router.get('/unread-count', notificationsController.unreadCount);
 router.get('/:id', notificationsController.findById);
-router.put('/:id', notificationsController.update);
-router.delete('/:id', notificationsController.delete);
+router.patch('/:id/read', notificationsController.markAsRead);
+router.post('/read-all', notificationsController.markAllAsRead);
 
 export default router;

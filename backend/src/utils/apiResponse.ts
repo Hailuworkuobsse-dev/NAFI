@@ -35,10 +35,18 @@ export function noContent(res: Response): Response {
 export interface ListResult<T> {
   items?: T[];
   data?: T[];
-  page: number;
+  page?: number;
   pageSize?: number;
   limit?: number;
-  total: number;
+  total?: number;
+  pagination?: { page?: number; limit?: number; pageSize?: number; total?: number };
+}
+
+/** Normalizes a `req.params.id` (string | string[] | undefined) to a required string. */
+export function idParam(value: unknown): string {
+  if (typeof value === 'string' && value.length > 0) return value;
+  if (Array.isArray(value) && typeof value[0] === 'string') return value[0];
+  throw new Error('Missing route parameter: id');
 }
 
 export function list<T>(
@@ -47,9 +55,14 @@ export function list<T>(
   message?: string
 ): Response {
   const items = (result.items ?? result.data ?? []) as T[];
-  const total = result.total;
-  const page = result.page;
-  const limit = result.pageSize ?? result.limit ?? (items.length || 20);
+  const total = result.total ?? result.pagination?.total ?? items.length;
+  const page = result.page ?? result.pagination?.page ?? 1;
+  const limit =
+    result.pageSize ??
+    result.limit ??
+    result.pagination?.limit ??
+    result.pagination?.pageSize ??
+    (items.length || 20);
   const totalPages = Math.ceil(total / limit);
   
   return res.status(200).json({
@@ -67,5 +80,5 @@ export function list<T>(
       limit,
       totalPages,
     },
-  } as ApiResponse<T[]>);
+  } as unknown as ApiResponse<T[]>);
 }

@@ -1,18 +1,25 @@
 import { Request, Response } from 'express';
 import { inputsService } from './inputs.service';
 import { asyncHandler } from '../../utils/asyncHandler';
-import { ok, created, list } from '../../utils/apiResponse';
+import { ok, created, list, idParam } from '../../utils/apiResponse';
 
 export class InputsController {
   findAll = asyncHandler(async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 20;
-    const result = await inputsService.findAll(req.user!.userId, req.user!.institutionId, req.tenantScope);
+    const limit = parseInt(req.query.limit as string) || parseInt(req.query.pageSize as string) || 20;
+    const result = await inputsService.findAll(
+      req.user!.userId,
+      req.user!.institutionId ?? null,
+      req.tenantScope!,
+      { status: req.query.status as string | undefined, type: req.query.type as string | undefined },
+      page,
+      limit
+    );
     list(res, result);
   });
 
   findById = asyncHandler(async (req: Request, res: Response) => {
-    const item = await inputsService.findById(req.params.id);
+    const item = await inputsService.findById(idParam(req.params.id));
     ok(res, item);
   });
 
@@ -22,12 +29,12 @@ export class InputsController {
   });
 
   update = asyncHandler(async (req: Request, res: Response) => {
-    const item = await inputsService.update(req.params.id, req.body);
+    const item = await inputsService.update(idParam(req.params.id), req.body);
     ok(res, item, 'Inputs updated successfully');
   });
 
   delete = asyncHandler(async (req: Request, res: Response) => {
-    await inputsService.delete(req.params.id);
+    await inputsService.delete(idParam(req.params.id));
     res.status(204).send();
   });
 }
