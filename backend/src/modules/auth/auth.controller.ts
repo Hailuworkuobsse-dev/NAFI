@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { authService } from './auth.service';
 import { asyncHandler } from '../../utils/asyncHandler';
+import { ApiError } from '../../utils/ApiError';
 import { created, ok, noContent } from '../../utils/apiResponse';
 import { loginSchema, registerSchema, refreshTokenSchema, passwordResetRequestSchema, passwordResetConfirmSchema, changePasswordSchema } from '../../validators/auth';
 
@@ -44,7 +45,7 @@ export class AuthController {
     const refreshToken = req.cookies?.refreshToken;
     
     if (!refreshToken) {
-      throw new Error('Refresh token is required');
+      throw ApiError.unauthorized('Refresh token is required');
     }
     
     const tokens = await authService.refresh(refreshToken);
