@@ -78,7 +78,7 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
-    port: 3000,
+    port: 3144,
     proxy: {
       '/api': {
         target: 'http://localhost:3143',
@@ -88,7 +88,7 @@ export default defineConfig({
   },
   preview: {
     host: '0.0.0.0',
-    port: 3000,
+    port: 3144,
   },
   build: {
     outDir: path.resolve(__dirname, '../../../dist'),
