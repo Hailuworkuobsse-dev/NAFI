@@ -25,8 +25,13 @@ export class InvestmentsService {
         break;
       case 'INSTITUTION':
         if (institutionId) {
-          where.institutionId = institutionId;
+          where.contract = { institutionId };
+        } else {
+          where.id = 'impossible-id';
         }
+        break;
+      case 'NATIONAL':
+      case 'ALL':
         break;
     }
 
@@ -49,8 +54,10 @@ export class InvestmentsService {
     ]);
 
     return {
-      data: investments,
-      pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
+      items: investments,
+      page,
+      pageSize: limit,
+      total,
     };
   }
 

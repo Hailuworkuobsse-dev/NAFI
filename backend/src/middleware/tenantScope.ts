@@ -31,20 +31,24 @@ export function tenantScope(requiredScope: TenantScope) {
       // Determine effective scope based on role hierarchy
       let effectiveScope: TenantScope;
 
+      // Role names must match the Role enum in prisma/schema.prisma & constants/roles.ts
       switch (user.role) {
-        case 'SUPER_ADMIN':
+        case 'NAFI_ADMIN':
           effectiveScope = TenantScope.ALL;
           break;
-        case 'NATIONAL_ADMIN':
+        case 'GOVERNMENT_REGULATOR':
+        case 'DBE_OFFICER':
+        case 'NAFA_OFFICER':
+        case 'COMPLIANCE_OFFICER':
+        case 'ARBITRATOR':
           effectiveScope = TenantScope.NATIONAL;
           break;
-        case 'INSTITUTION_ADMIN':
-        case 'COMPLIANCE_OFFICER':
-        case 'RISK_MANAGER':
-        case 'INVESTOR_RELATIONS':
-        case 'FIELD_AGENT':
-          effectiveScope = user.institutionId 
-            ? TenantScope.INSTITUTION 
+        case 'COMMERCIAL_BANK':
+        case 'DONOR':
+        case 'OFF_TAKER':
+        case 'INPUT_SUPPLIER':
+          effectiveScope = user.institutionId
+            ? TenantScope.INSTITUTION
             : TenantScope.OWN;
           break;
         default:
@@ -88,11 +92,13 @@ function isValidScopeTransition(current: TenantScope, requested: TenantScope): b
 export function buildTenantWhereClause(
   scope: TenantScope,
   userId: string,
-  institutionId?: string | null
+  institutionId?: string | null,
+  ownerField: string = 'borrowerId'
 ): Record<string, unknown> {
   switch (scope) {
     case TenantScope.OWN:
-      return { borrowerId: userId };
+      // Callers pass an explicit ownerField; default to borrowerId (Contract)
+      return { [ownerField]: userId };
     
     case TenantScope.INSTITUTION:
       if (!institutionId) {

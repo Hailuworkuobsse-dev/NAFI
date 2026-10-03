@@ -5,9 +5,9 @@ import { generateContractHash } from '../../utils/nafiId';
 
 export interface ContractFilter {
   status?: string;
-  type?: string;
-  investorId?: string;
-  opportunityId?: string;
+  borrowerId?: string;
+  institutionId?: string;
+  q?: string;
 }
 
 export class ContractsService {
@@ -23,27 +23,40 @@ export class ContractsService {
 
     switch (scope) {
       case 'OWN':
-        where.investorId = userId;
+        // Contracts belong to the farmer (borrower), not an investor
+        where.borrowerId = userId;
         break;
       case 'INSTITUTION':
         if (institutionId) {
           where.institutionId = institutionId;
+        } else {
+          where.id = 'impossible-id';
         }
+        break;
+      case 'NATIONAL':
+      case 'ALL':
+        // national-level roles see everything
         break;
     }
 
     if (filter.status) where.status = filter.status;
-    if (filter.type) where.type = filter.type;
-    if (filter.investorId) where.investorId = filter.investorId;
-    if (filter.opportunityId) where.opportunityId = filter.opportunityId;
+    if (filter.borrowerId) where.borrowerId = filter.borrowerId;
+    if (filter.institutionId) where.institutionId = filter.institutionId;
+    if (filter.q) {
+      where.OR = [
+        { title: { contains: filter.q } },
+        { nafiContractId: { contains: filter.q } },
+      ];
+    }
 
     const [contracts, total] = await Promise.all([
       prisma.contract.findMany({
         where,
         include: {
-          investor: { select: { id: true, firstName: true, lastName: true, email: true } },
-          opportunity: { select: { id: true, title: true } },
-          escrow: { select: { id: true, status: true } },
+          borrower: { select: { id: true, firstName: true, lastName: true, email: true } },
+          institution: { select: { id: true, name: true, code: true } },
+          escrows: { select: { id: true, status: true } },
+          _count: { select: { investments: true, settlements: true, disputes: true } },
         },
         skip: (page - 1) * limit,
         take: limit,
@@ -52,21 +65,34 @@ export class ContractsService {
       prisma.contract.count({ where }),
     ]);
 
+    const items = contracts.map(({ _count, escrows, ...c }) => ({
+      ...c,
+      escrow: escrows[0] ?? null,
+      investmentCount: _count.investments,
+      settlementCount: _count.settlements,
+      disputeCount: _count.disputes,
+    }));
+
     return {
-      data: contracts,
-      pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
+      items,
+      page,
+      pageSize: limit,
+      total,
     };
   }
 
   async findById(id: string) {
-    const contract = await prisma.contract.findUnique({
-      where: { id },
+    const contract = await prisma.contract.findFirst({
+      where: { OR: [{ id }, { nafiContractId: id }] },
       include: {
-        investor: true,
-        opportunity: true,
-        escrow: true,
-        investments: true,
+        borrower: true,
+        institution: true,
+        escrows: true,
+        investments: { include: { investor: { select: { id: true, firstName: true, lastName: true } } } },
         settlements: true,
+        collateral: true,
+        disputes: true,
+        inputs: true,
       },
     });
     if (!contract) throw ApiError.notFound('Contract not found');
@@ -74,10 +100,11 @@ export class ContractsService {
   }
 
   async create(data: any, userId: string) {
-    const contractHash = generateContractHash(data);
+    const contractHash = generateContractHash(JSON.stringify(data));
+    const nafiContractId = `CT-${Date.now().toString(36).toUpperCase()}`;
     return prisma.contract.create({
-      data: { ...data, contractHash, investorId: userId },
-      include: { investor: true, opportunity: true },
+      data: { ...data, contractHash, nafiContractId, borrowerId: data.borrowerId ?? userId },
+      include: { borrower: true, institution: true },
     });
   }
 
@@ -97,6 +124,14 @@ export class ContractsService {
       if ((e as any).code === 'P2025') throw ApiError.notFound('Contract not found');
       throw e;
     }
+  }
+
+  async approve(id: string) {
+    return this.update(id, { status: 'APPROVED' });
+  }
+
+  async reject(id: string, reason?: string) {
+    return this.update(id, { status: 'REJECTED' });
   }
 }
 

@@ -7,8 +7,8 @@ export class DisputesController {
   findAll = asyncHandler(async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
-    const items = await disputesService.findAll(req.user!.userId, req.user!.institutionId, req.tenantScope);
-    ok(res, items);
+    const result = await disputesService.findAll(req.user!.userId, req.user!.institutionId, req.tenantScope);
+    list(res, result);
   });
 
   findById = asyncHandler(async (req: Request, res: Response) => {
