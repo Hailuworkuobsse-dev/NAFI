@@ -20,7 +20,7 @@ export class UsersController {
       page,
       limit
     );
-    list(res, result.data, result.pagination);
+    list(res, result);
   });
 
   findById = asyncHandler(async (req: Request, res: Response) => {

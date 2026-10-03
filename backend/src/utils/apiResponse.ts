@@ -32,19 +32,34 @@ export function noContent(res: Response): Response {
   return res.status(204).send();
 }
 
+export interface ListResult<T> {
+  items?: T[];
+  data?: T[];
+  page: number;
+  pageSize?: number;
+  limit?: number;
+  total: number;
+}
+
 export function list<T>(
   res: Response,
-  items: T[],
-  total: number,
-  page: number,
-  limit: number,
+  result: ListResult<T>,
   message?: string
 ): Response {
+  const items = (result.items ?? result.data ?? []) as T[];
+  const total = result.total;
+  const page = result.page;
+  const limit = result.pageSize ?? result.limit ?? (items.length || 20);
   const totalPages = Math.ceil(total / limit);
   
   return res.status(200).json({
     success: true,
-    data: items,
+    data: {
+      items,
+      page,
+      pageSize: limit,
+      total,
+    },
     message,
     meta: {
       total,

@@ -1,17 +1,28 @@
 import { Request, Response } from 'express';
 import { contractsService } from './contracts.service';
 import { asyncHandler } from '../../utils/asyncHandler';
-import { ok, created } from '../../utils/apiResponse';
+import { ok, created, list } from '../../utils/apiResponse';
 import { contractCreateSchema, contractUpdateSchema } from '../../validators/contract';
 
 export class ContractsController {
   findAll = asyncHandler(async (req: Request, res: Response) => {
-    const contracts = await contractsService.findAll(
+    const page = parseInt(req.query.page as string) || 1;
+    const pageSize = parseInt(req.query.pageSize as string) || parseInt(req.query.limit as string) || 20;
+    const filter = {
+      status: req.query.status as string | undefined,
+      borrowerId: req.query.borrowerId as string | undefined,
+      institutionId: req.query.institutionId as string | undefined,
+      q: req.query.q as string | undefined,
+    };
+    const result = await contractsService.findAll(
       req.user!.userId,
       req.user!.institutionId,
-      req.tenantScope
+      req.tenantScope!,
+      filter,
+      page,
+      pageSize
     );
-    ok(res, contracts);
+    list(res, result);
   });
 
   findById = asyncHandler(async (req: Request, res: Response) => {

@@ -7,8 +7,17 @@ export class InvestmentsController {
   findAll = asyncHandler(async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
-    const items = await investmentsService.findAll(req.user!.userId, req.user!.institutionId, req.tenantScope);
-    ok(res, items);
+    const page = parseInt(req.query.page as string) || 1;
+    const pageSize = parseInt(req.query.pageSize as string) || parseInt(req.query.limit as string) || 20;
+    const result = await investmentsService.findAll(
+      req.user!.userId,
+      req.user!.institutionId,
+      req.tenantScope!,
+      { status: req.query.status as string | undefined, contractId: req.query.contractId as string | undefined },
+      page,
+      pageSize
+    );
+    list(res, result);
   });
 
   findById = asyncHandler(async (req: Request, res: Response) => {
