@@ -30,10 +30,20 @@ import { SupplierOrderDetailPage } from '@/features/supplier/pages/OrderDetailPa
 import { SupplierOrdersPage } from '@/features/supplier/pages/OrdersPage';
 import { SupplierPaymentsPage } from '@/features/supplier/pages/PaymentsPage';
 import { SupplierProfilePage } from '@/features/supplier/pages/ProfilePage';
+
+// Admin (real pages — Step 7)
+import { AdminAuditPage } from '@/features/admin/pages/AuditPage';
+import { AdminConfigPage } from '@/features/admin/pages/ConfigPage';
+import { AdminContractsPage } from '@/features/admin/pages/ContractsPage';
+import { AdminDisputesPage } from '@/features/admin/pages/DisputesPage';
+import { AdminEscrowsPage } from '@/features/admin/pages/EscrowsPage';
+import { AdminHealthPage } from '@/features/admin/pages/HealthPage';
+import { AdminOverviewPage } from '@/features/admin/pages/OverviewPage';
+import { AdminSettlementsPage } from '@/features/admin/pages/SettlementsPage';
+import { AdminUsersPage } from '@/features/admin/pages/UsersPage';
+import { UssdSimulatorPage } from '@/features/admin/pages/UssdSimulatorPage';
 import { DashboardLayout } from '@/layouts/DashboardLayout';
 import {
-  AdminAudit, AdminConfig, AdminContracts, AdminDisputes, AdminEscrows, AdminHealth,
-  AdminOverview, AdminSettlements, AdminUsers,
   ArbitrationCases,
   BankCollateral, BankEscrows, BankLoans, BankNPL, BankOverview, BankSettlements,
   BuyerPurchases, BuyerSettlements,
@@ -252,15 +262,16 @@ export const router = createBrowserRouter([
               />
             ),
             children: [
-              { path: '/admin/overview', element: <AdminOverview /> },
-              { path: '/admin/users', element: <AdminUsers /> },
-              { path: '/admin/contracts', element: <AdminContracts /> },
-              { path: '/admin/escrows', element: <AdminEscrows /> },
-              { path: '/admin/settlements', element: <AdminSettlements /> },
-              { path: '/admin/disputes', element: <AdminDisputes /> },
-              { path: '/admin/config', element: <AdminConfig /> },
-              { path: '/admin/audit', element: <AdminAudit /> },
-              { path: '/admin/health', element: <AdminHealth /> },
+              { path: '/admin/overview', element: <AdminOverviewPage /> },
+              { path: '/admin/users', element: <AdminUsersPage /> },
+              { path: '/admin/contracts', element: <AdminContractsPage /> },
+              { path: '/admin/escrows', element: <AdminEscrowsPage /> },
+              { path: '/admin/settlements', element: <AdminSettlementsPage /> },
+              { path: '/admin/disputes', element: <AdminDisputesPage /> },
+              { path: '/admin/config', element: <AdminConfigPage /> },
+              { path: '/admin/audit', element: <AdminAuditPage /> },
+              { path: '/admin/health', element: <AdminHealthPage /> },
+              { path: '/admin/tools/ussd', element: <UssdSimulatorPage /> },
             ],
           },
 
