@@ -6,7 +6,7 @@ import * as permissions from './permissions';
  * '*' is a super-permission granted only to NAFI_ADMIN.
  * Aligned with frontend rbac-core package
  */
-export const rolePermissions: Record<Role, readonly string[] | readonly ['*']> = {
+export const rolePermissions: Record<Role, readonly string[]> = {
   [Role.DIASPORA_INVESTOR]: [
     permissions.CONTRACT_READ_OWN,
     permissions.ESCROW_READ_OWN,
@@ -187,9 +187,9 @@ export const rolePermissions: Record<Role, readonly string[] | readonly ['*']> =
 export function can(role: Role | string, permission: string): boolean {
   const rolePerms: readonly string[] | undefined = rolePermissions[role as Role];
   if (!rolePerms) return false;
-  // Super admin has all permissions
-  const perms: readonly string[] = rolePerms;
-  if (perms.includes('*')) return true;
+  // Super admin has all permissions (matrix stores the literal '*' super-permission)
+  const perms: readonly string[] = rolePerms as readonly string[];
+  if ((perms as readonly string[]).includes('*')) return true;
   return perms.includes(permission);
 }
 

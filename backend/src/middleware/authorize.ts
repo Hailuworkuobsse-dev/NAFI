@@ -15,8 +15,8 @@ export function authorize(permission: string | string[]) {
       const userRole = req.user.role;
       const requiredPermissions = Array.isArray(permission) ? permission : [permission];
 
-      // Check if user has any of the required permissions
-      const hasPermission = requiredPermissions.some(p => can(userRole, p));
+      // Check if user has any of the required permissions (can() accepts string roles)
+      const hasPermission = requiredPermissions.some((p: string) => can(userRole, p));
 
       if (!hasPermission) {
         throw ApiError.forbidden(`Missing required permission: ${requiredPermissions.join(' or ')}`);
