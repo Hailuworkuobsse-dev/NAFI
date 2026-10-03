@@ -1,9 +1,14 @@
-import prisma from '../../config/prisma';
-import { ApiError } from '../../utils/ApiError';
-import { hashPassword, verifyPassword } from '../../utils/password';
-import { generateTokenPair, verifyRefreshToken, TokenPayload } from '../../utils/jwt';
-import { generateNafiId, generateSecureToken } from '../../utils/nafiId';
-import { Role } from '../../constants/roles';
+import prisma from "../../config/prisma";
+import { ApiError } from "../../utils/ApiError";
+import { hashPassword, verifyPassword } from "../../utils/password";
+import {
+  generateTokenPair,
+  verifyRefreshToken,
+  TokenPayload,
+} from "../../utils/jwt";
+import { createHash } from "node:crypto";
+import { generateNafiId, generateSecureToken } from "../../utils/nafiId";
+import { Role } from "../../constants/roles";
 
 interface LoginInput {
   email: string;
@@ -18,6 +23,10 @@ interface RegisterInput {
   phone?: string;
   role?: Role;
   institutionId?: string;
+}
+
+function hashRefreshToken(token: string): string {
+  return createHash("sha256").update(token).digest("hex");
 }
 
 export class AuthService {
@@ -41,16 +50,16 @@ export class AuthService {
     });
 
     if (!user) {
-      throw ApiError.unauthorized('Invalid credentials');
+      throw ApiError.unauthorized("Invalid credentials");
     }
 
     if (!user.isActive) {
-      throw ApiError.unauthorized('Account is deactivated');
+      throw ApiError.unauthorized("Account is deactivated");
     }
 
     const isValid = await verifyPassword(input.password, user.passwordHash);
     if (!isValid) {
-      throw ApiError.unauthorized('Invalid credentials');
+      throw ApiError.unauthorized("Invalid credentials");
     }
 
     // Update last login
@@ -68,6 +77,10 @@ export class AuthService {
     };
 
     const tokens = generateTokenPair(tokenPayload);
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { refreshToken: hashRefreshToken(tokens.refreshToken) },
+    });
 
     return {
       user: {
@@ -91,11 +104,13 @@ export class AuthService {
     });
 
     if (existingUser) {
-      throw ApiError.conflict('Email already registered');
+      throw ApiError.conflict("Email already registered");
     }
 
     const passwordHash = await hashPassword(input.password);
-    const nafiId = generateNafiId(input.role?.toString().substring(0, 3) || 'USR');
+    const nafiId = generateNafiId(
+      input.role?.toString().substring(0, 3) || "USR",
+    );
 
     const user = await prisma.user.create({
       data: {
@@ -129,6 +144,10 @@ export class AuthService {
     };
 
     const tokens = generateTokenPair(tokenPayload);
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { refreshToken: hashRefreshToken(tokens.refreshToken) },
+    });
 
     return {
       user,
@@ -141,11 +160,11 @@ export class AuthService {
    */
   async refresh(refreshToken: string) {
     let payload: TokenPayload;
-    
+
     try {
       payload = verifyRefreshToken(refreshToken);
     } catch {
-      throw ApiError.unauthorized('Invalid refresh token');
+      throw ApiError.unauthorized("Invalid refresh token");
     }
 
     const user = await prisma.user.findUnique({
@@ -161,12 +180,12 @@ export class AuthService {
     });
 
     if (!user || !user.isActive) {
-      throw ApiError.unauthorized('User not found or inactive');
+      throw ApiError.unauthorized("User not found or inactive");
     }
 
     // Verify refresh token matches stored one
-    if (user.refreshToken !== refreshToken) {
-      throw ApiError.unauthorized('Invalid refresh token');
+    if (user.refreshToken !== hashRefreshToken(refreshToken)) {
+      throw ApiError.unauthorized("Invalid refresh token");
     }
 
     const newTokenPayload: TokenPayload = {
@@ -177,6 +196,10 @@ export class AuthService {
     };
 
     const tokens = generateTokenPair(newTokenPayload);
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { refreshToken: hashRefreshToken(tokens.refreshToken) },
+    });
 
     return tokens;
   }
@@ -220,7 +243,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw ApiError.notFound('User not found');
+      throw ApiError.notFound("User not found");
     }
 
     return user;
@@ -258,7 +281,10 @@ export class AuthService {
   /**
    * Confirm password reset
    */
-  async confirmPasswordReset(token: string, newPassword: string): Promise<void> {
+  async confirmPasswordReset(
+    token: string,
+    newPassword: string,
+  ): Promise<void> {
     const user = await prisma.user.findFirst({
       where: {
         passwordResetToken: token,
@@ -269,7 +295,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw ApiError.badRequest('Invalid or expired reset token');
+      throw ApiError.badRequest("Invalid or expired reset token");
     }
 
     const passwordHash = await hashPassword(newPassword);
@@ -287,19 +313,23 @@ export class AuthService {
   /**
    * Change password (authenticated)
    */
-  async changePassword(userId: string, currentPassword: string, newPassword: string): Promise<void> {
+  async changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<void> {
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: { passwordHash: true },
     });
 
     if (!user) {
-      throw ApiError.notFound('User not found');
+      throw ApiError.notFound("User not found");
     }
 
     const isValid = await verifyPassword(currentPassword, user.passwordHash);
     if (!isValid) {
-      throw ApiError.badRequest('Current password is incorrect');
+      throw ApiError.badRequest("Current password is incorrect");
     }
 
     const passwordHash = await hashPassword(newPassword);
