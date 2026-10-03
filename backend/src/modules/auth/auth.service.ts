@@ -104,7 +104,7 @@ export class AuthService {
         firstName: input.firstName,
         lastName: input.lastName,
         phone: input.phone,
-        role: input.role || Role.INVESTOR,
+        role: input.role || Role.DIASPORA_INVESTOR,
         institutionId: input.institutionId,
         nafiId,
         isVerified: false,

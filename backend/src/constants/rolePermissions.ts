@@ -184,12 +184,13 @@ export const rolePermissions: Record<Role, readonly string[] | readonly ['*']> =
 /**
  * Check if a role has a specific permission
  */
-export function can(role: Role, permission: string): boolean {
-  const rolePerms = rolePermissions[role];
+export function can(role: Role | string, permission: string): boolean {
+  const rolePerms: readonly string[] | undefined = rolePermissions[role as Role];
   if (!rolePerms) return false;
   // Super admin has all permissions
-  if (rolePerms.includes('*')) return true;
-  return rolePerms.includes(permission);
+  const perms: readonly string[] = rolePerms;
+  if (perms.includes('*')) return true;
+  return perms.includes(permission);
 }
 
 /**
