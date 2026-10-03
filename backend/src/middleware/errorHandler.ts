@@ -102,6 +102,19 @@ export function errorHandler(
     return;
   }
 
+  // Handle Prisma client initialization errors (e.g. DB unreachable / P1001/P1012).
+  // These are not known-request errors, so map them to 503 without leaking internals.
+  if (err.name === 'PrismaClientInitializationError') {
+    res.status(503).json({
+      success: false,
+      error: {
+        code: 'SERVICE_UNAVAILABLE',
+        message: 'Database is currently unavailable. Please check that the database server is running and DATABASE_URL is configured.',
+      },
+    });
+    return;
+  }
+
   if (err.name === 'TokenExpiredError') {
     res.status(401).json({
       success: false,
