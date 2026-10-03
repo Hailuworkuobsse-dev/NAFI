@@ -1,6 +1,7 @@
 import { prisma } from '../../config/prisma';
 import { ApiError } from '../../utils/ApiError';
 import { hashPassword } from '../../utils/password';
+import { generateNafiId } from '../../utils/nafiId';
 import { TenantScope } from '../../middleware/tenantScope';
 
 export interface UserFilter {
@@ -136,12 +137,13 @@ export class UsersService {
 
     const user = await prisma.user.create({
       data: {
+        nafiId: generateNafiId(),
         email: data.email.toLowerCase(),
         passwordHash,
         firstName: data.firstName,
         lastName: data.lastName,
         phone: data.phone,
-        role: data.role || 'USER',
+        role: data.role || 'COMMERCIAL_FARMER',
         institutionId: data.institutionId,
         isVerified: data.isVerified ?? false,
         isActive: data.isActive ?? true,

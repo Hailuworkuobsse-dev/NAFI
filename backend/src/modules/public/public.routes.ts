@@ -4,7 +4,7 @@ import { publicController } from './public.controller';
 const router = Router();
 
 // Public routes (no auth required)
-router.get('/', publicController.findAll);
-router.get('/:id', publicController.findById);
+router.get('/stats', publicController.stats);
+router.get('/opportunities', publicController.opportunities);
 
 export default router;

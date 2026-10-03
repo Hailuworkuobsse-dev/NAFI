@@ -9,9 +9,7 @@ router.use(authenticate);
 router.use(tenantScope('OWN'));
 
 router.get('/', auditController.findAll);
-router.post('/', auditController.create);
+router.get('/verify-chain', auditController.verifyChain);
 router.get('/:id', auditController.findById);
-router.put('/:id', auditController.update);
-router.delete('/:id', auditController.delete);
 
 export default router;

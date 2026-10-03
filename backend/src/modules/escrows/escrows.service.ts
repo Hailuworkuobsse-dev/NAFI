@@ -5,7 +5,11 @@ import { TenantScope } from '../../middleware/tenantScope';
 export class EscrowsService {
   async findAll(userId: string, institutionId: string | null, scope: TenantScope, filter: any = {}, page = 1, limit = 20) {
     const where: Record<string, unknown> = {};
-    if (scope === 'OWN') where.contractId = userId;
+    if (scope === TenantScope.OWN || scope === TenantScope.INSTITUTION) {
+      where.contract = scope === TenantScope.OWN
+        ? { borrowerId: userId }
+        : institutionId ? { institutionId } : { id: 'impossible-id' };
+    }
     if (filter.status) where.status = filter.status;
     const [data, total] = await Promise.all([
       prisma.escrow.findMany({ where, skip: (page - 1) * limit, take: limit, orderBy: { createdAt: 'desc' } }),
@@ -18,8 +22,8 @@ export class EscrowsService {
     if (!item) throw ApiError.notFound('Escrow not found');
     return item;
   }
-  async create(data: any, userId: string) {
-    return prisma.escrow.create({ data: { ...data, contractId: data.contractId } });
+  async create(data: any, _userId: string) {
+    return prisma.escrow.create({ data });
   }
   async update(id: string, data: any) {
     try { return await prisma.escrow.update({ where: { id }, data }); }

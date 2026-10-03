@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { contractsService } from './contracts.service';
 import { asyncHandler } from '../../utils/asyncHandler';
-import { ok, created, list } from '../../utils/apiResponse';
+import { ok, created, list, idParam } from '../../utils/apiResponse';
 import { contractCreateSchema, contractUpdateSchema } from '../../validators/contract';
 
 export class ContractsController {
@@ -16,7 +16,7 @@ export class ContractsController {
     };
     const result = await contractsService.findAll(
       req.user!.userId,
-      req.user!.institutionId,
+      req.user!.institutionId ?? null,
       req.tenantScope!,
       filter,
       page,
@@ -26,11 +26,7 @@ export class ContractsController {
   });
 
   findById = asyncHandler(async (req: Request, res: Response) => {
-    const contract = await contractsService.findById(
-      req.params.id,
-      req.user!.userId,
-      req.user!.institutionId
-    );
+    const contract = await contractsService.findById(idParam(req.params.id));
     ok(res, contract);
   });
 
@@ -42,23 +38,23 @@ export class ContractsController {
 
   update = asyncHandler(async (req: Request, res: Response) => {
     const data = contractUpdateSchema.parse(req.body);
-    const contract = await contractsService.update(req.params.id, data);
+    const contract = await contractsService.update(idParam(req.params.id), data);
     ok(res, contract, 'Contract updated successfully');
   });
 
   approve = asyncHandler(async (req: Request, res: Response) => {
-    const contract = await contractsService.approve(req.params.id);
+    const contract = await contractsService.approve(idParam(req.params.id));
     ok(res, contract, 'Contract approved');
   });
 
   reject = asyncHandler(async (req: Request, res: Response) => {
     const { reason } = req.body;
-    const contract = await contractsService.reject(req.params.id, reason);
+    const contract = await contractsService.reject(idParam(req.params.id), reason);
     ok(res, contract, 'Contract rejected');
   });
 
   delete = asyncHandler(async (req: Request, res: Response) => {
-    await contractsService.delete(req.params.id);
+    await contractsService.delete(idParam(req.params.id));
     res.status(204).send();
   });
 }

@@ -1,2 +1,2 @@
-# Dependencies
-node_modules/
+# TypeScript build info
+tsconfig.tsbuildinfo

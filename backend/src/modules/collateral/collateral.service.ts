@@ -5,7 +5,11 @@ import { TenantScope } from '../../middleware/tenantScope';
 export class CollateralService {
   async findAll(userId: string, institutionId: string | null, scope: TenantScope, filter: any = {}, page = 1, limit = 20) {
     const where: Record<string, unknown> = {};
-    if (scope === 'OWN') where.ownerId = userId;
+    if (scope === TenantScope.OWN || scope === TenantScope.INSTITUTION) {
+      where.contract = scope === TenantScope.OWN
+        ? { borrowerId: userId }
+        : institutionId ? { institutionId } : { id: 'impossible-id' };
+    }
     if (filter.type) where.type = filter.type;
     const [data, total] = await Promise.all([
       prisma.collateral.findMany({ where, skip: (page - 1) * limit, take: limit, orderBy: { createdAt: 'desc' } }),
@@ -18,8 +22,8 @@ export class CollateralService {
     if (!item) throw ApiError.notFound('Collateral not found');
     return item;
   }
-  async create(data: any, userId: string) {
-    return prisma.collateral.create({ data: { ...data, ownerId: userId } });
+  async create(data: any, _userId: string) {
+    return prisma.collateral.create({ data });
   }
   async update(id: string, data: any) {
     try { return await prisma.collateral.update({ where: { id }, data }); }

@@ -5,7 +5,10 @@ import { TenantScope } from '../../middleware/tenantScope';
 export class DisputesService {
   async findAll(userId: string, institutionId: string | null, scope: TenantScope, filter: any = {}, page = 1, limit = 20) {
     const where: Record<string, unknown> = {};
-    if (scope === 'OWN') where.raisedById = userId;
+    if (scope === TenantScope.OWN) where.initiatedBy = userId;
+    if (scope === TenantScope.INSTITUTION) {
+      where.contract = institutionId ? { institutionId } : { id: 'impossible-id' };
+    }
     if (filter.status) where.status = filter.status;
     const [data, total] = await Promise.all([
       prisma.dispute.findMany({ where, skip: (page - 1) * limit, take: limit, orderBy: { createdAt: 'desc' } }),
@@ -19,17 +22,22 @@ export class DisputesService {
     return item;
   }
   async create(data: any, userId: string) {
-    return prisma.dispute.create({ data: { ...data, raisedById: userId } });
+    return prisma.dispute.create({ data: { ...data, initiatedBy: userId } });
   }
   async update(id: string, data: any) {
     try { return await prisma.dispute.update({ where: { id }, data }); }
     catch (e) { if ((e as any).code === 'P2025') throw ApiError.notFound('Dispute not found'); throw e; }
   }
   async resolve(id: string, resolution: string, resolvedBy: string) {
-    return prisma.dispute.update({
-      where: { id },
-      data: { status: 'RESOLVED', resolution, resolvedById: resolvedBy, resolvedAt: new Date() },
-    });
+    try {
+      return await prisma.dispute.update({
+        where: { id },
+        data: { status: 'RESOLVED', resolution, resolvedBy, resolvedAt: new Date() },
+      });
+    } catch (e) {
+      if ((e as any).code === 'P2025') throw ApiError.notFound('Dispute not found');
+      throw e;
+    }
   }
 }
 export const disputesService = new DisputesService();

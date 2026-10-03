@@ -12,6 +12,6 @@ router.get('/', disputesController.findAll);
 router.post('/', disputesController.create);
 router.get('/:id', disputesController.findById);
 router.put('/:id', disputesController.update);
-router.delete('/:id', disputesController.delete);
+router.post('/:id/resolve', disputesController.resolve);
 
 export default router;
