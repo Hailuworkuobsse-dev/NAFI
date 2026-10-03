@@ -2,12 +2,9 @@ import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from 'node:path';
-import { mockApiPlugin } from './vite-mock-api';
-
 export default defineConfig({
   plugins: [
     react(),
-    mockApiPlugin(),
     VitePWA({
       registerType: 'prompt',
       injectRegister: 'auto',
@@ -82,6 +79,12 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 3144,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3143',
+        changeOrigin: true,
+      },
+    },
   },
   preview: {
     host: '0.0.0.0',
