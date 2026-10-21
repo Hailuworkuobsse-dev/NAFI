@@ -1,5 +1,6 @@
 import type { AxiosInstance, AxiosRequestConfig } from 'axios';
 
+import { tokenStore } from '@/auth/tokenStore';
 import { apiClient as baseClient } from '@/auth/api';
 
 import { normalizeApiError } from './errors';
@@ -65,7 +66,7 @@ export const http = new HttpClient(baseClient);
 /**
  * Build query strings safely, dropping undefined/null values.
  */
-export function buildQuery(params: Record<string, unknown>): string {
+export function buildQuery(params: object): string {
   const usp = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) {
     if (v === undefined || v === null || v === '') continue;
@@ -79,4 +80,5 @@ export function buildQuery(params: Record<string, unknown>): string {
   return qs ? `?${qs}` : '';
 }
 
-export { BASE_URL };
+// Re-export for convenience
+export { BASE_URL, tokenStore };
