@@ -52,7 +52,7 @@ export function BankEscrowsPage() {
       header: 'Balance',
       align: 'right',
       render: (row) => {
-        const etb = row.balances.find((b) => b.currency === 'ETB');
+        const etb = (row.balances ?? []).find((b) => b.currency === 'ETB');
         return (
           <span className="font-mono tabular-nums text-neutral-900">
             {etb ? formatMoney(etb.amount, 'ETB') : '—'}
@@ -66,7 +66,7 @@ export function BankEscrowsPage() {
       align: 'right',
       hideBelow: 'md',
       render: (row) => {
-        const usd = row.balances.find((b) => b.currency === 'USD');
+        const usd = (row.balances ?? []).find((b) => b.currency === 'USD');
         return (
           <span className="font-mono tabular-nums text-neutral-700">
             {usd ? formatMoney(usd.amount, 'USD') : '—'}
