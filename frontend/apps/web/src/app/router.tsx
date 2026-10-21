@@ -11,13 +11,14 @@ import { ForgotPasswordPage } from '@/features/auth/pages/ForgotPasswordPage';
 import { LoginPage } from '@/features/auth/pages/LoginPage';
 import { RegisterPage } from '@/features/auth/pages/RegisterPage';
 import { ResetPasswordPage } from '@/features/auth/pages/ResetPasswordPage';
+import { FarmContractsPage } from '@/features/farmer/pages/ContractsPage';
 import { FarmContractDetailPage } from '@/features/farmer/pages/ContractDetailPage';
 import { FarmCollateralPage } from '@/features/farmer/pages/CollateralPage';
-import { FarmContractsPage } from '@/features/farmer/pages/ContractsPage';
 import { FarmEscrowPage } from '@/features/farmer/pages/EscrowPage';
 import { FarmHarvestPage } from '@/features/farmer/pages/HarvestPage';
 import { FarmInputsPage } from '@/features/farmer/pages/InputsPage';
 import { FarmPaymentsPage } from '@/features/farmer/pages/PaymentsPage';
+import { FarmerProfilePage } from '@/features/farmer/pages/ProfilePage';
 import { InvestorBondsPage } from '@/features/investor/pages/BondsPage';
 import { InvestorInvestmentsPage } from '@/features/investor/pages/InvestmentsPage';
 import { OpportunityBrowserPage } from '@/features/investor/pages/OpportunityBrowserPage';
@@ -97,7 +98,7 @@ import { ArbitrationCaseDetailPage } from '@/features/arbitrator/pages/CaseDetai
 
 import {
   BuyerPurchases, BuyerSettlements,
-  NotFound, ProfilePage,
+  NotFound,
 } from '@/pages/stubs';
 
 export const router = createBrowserRouter([
@@ -351,7 +352,7 @@ export const router = createBrowserRouter([
           },
 
           // -------- Shared --------
-          { path: '/profile', element: <ProfilePage /> },
+          { path: '/profile', element: <FarmerProfilePage /> },
         ],
       },
     ],

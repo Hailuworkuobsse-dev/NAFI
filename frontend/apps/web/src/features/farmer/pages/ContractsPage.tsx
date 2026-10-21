@@ -6,10 +6,12 @@ import { PERMISSIONS } from '@nafi/rbac-core';
 import { Button, Can, Card, CardBody, ContractStatusBadge } from '@nafi/ui-react';
 
 import { QueryBoundary } from '@/components/QueryBoundary';
-import { useContracts } from '@/hooks';
+import { SyncStatus } from '@/components/SyncStatus';
+
+import { useOfflineContracts } from '../hooks/useOfflineContracts';
 
 export function FarmContractsPage() {
-  const { data, isLoading, isError, error, refetch } = useContracts({ pageSize: 50 });
+  const { data, isLoading, isError, error, refetch } = useOfflineContracts({ pageSize: 50 });
 
   return (
     <div className="flex flex-col gap-5">
@@ -19,6 +21,7 @@ export function FarmContractsPage() {
           <p className="mt-1 text-sm text-neutral-500">
             All production contracts you are part of.
           </p>
+          <SyncStatus className="mt-2" />
         </div>
         <Can I={PERMISSIONS.CONTRACT_CREATE}>
           <Button asChild leadingIcon={<Plus className="h-4 w-4" />}>

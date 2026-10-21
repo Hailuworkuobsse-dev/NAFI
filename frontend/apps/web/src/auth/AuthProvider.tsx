@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, type ReactNode } from 'react';
 
 import { clearUser, identifyUser } from '@/observability/sentry';
+import { clearOfflineData } from '@/offline/db';
 import { authApi } from './api';
 import { useAuthStore } from './authStore';
 import { tokenStore } from './tokenStore';
@@ -153,10 +154,18 @@ export function useAuthActions() {
     },
 
     async logout() {
+      const userId = useAuthStore.getState().user?.id;
       try {
         await authApi.logout();
       } catch {
         /* best-effort */
+      }
+      if (userId) {
+        try {
+          await clearOfflineData(userId);
+        } catch {
+          /* best-effort */
+        }
       }
       tokenStore.clear();
       setUser(null);

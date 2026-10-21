@@ -120,7 +120,6 @@ export async function clearOfflineData(userId: string): Promise<void> {
     const idx = store.index('byUser');
     const keys = await idx.getAllKeys(userId);
     for (const key of keys) {
-      // @ts-expect-error — mixed key types
       await store.delete(key);
     }
   }
