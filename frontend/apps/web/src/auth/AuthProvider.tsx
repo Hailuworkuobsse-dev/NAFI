@@ -2,6 +2,7 @@ import { AuthProvider as UIAuthProvider, type AuthContextValue } from '@nafi/ui-
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, type ReactNode } from 'react';
 
+import { track } from '@/observability/analytics';
 import { clearUser, identifyUser } from '@/observability/sentry';
 import { clearOfflineData } from '@/offline/db';
 import { authApi } from './api';
@@ -143,6 +144,7 @@ export function useAuthActions() {
   return {
     async login(payload: Parameters<typeof authApi.login>[0]) {
       const result = await authApi.login(payload);
+      track({ name: 'login', props: { role: result.user.role } });
       const userWithFullName = {
         ...result.user,
         fullName: result.user.fullName ?? `${result.user.firstName ?? ''} ${result.user.lastName ?? ''}`.trim(),

@@ -36,8 +36,8 @@ import {
   Wheat,
   X,
 } from 'lucide-react';
-import { useMemo, useState, type ComponentType } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { useEffect, useMemo, useState, type ComponentType } from 'react';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import { Avatar, Button, Can, cn } from '@nafi/ui-react';
@@ -45,6 +45,7 @@ import { Avatar, Button, Can, cn } from '@nafi/ui-react';
 import { useAuth } from '@/auth/useAuth';
 import { InstallPrompt } from '@/components/InstallPrompt';
 import { OfflineBanner } from '@/components/OfflineBanner';
+import { track } from '@/observability/analytics';
 import { useAuthActions } from '@/auth/AuthProvider';
 
 import { NAV_BY_ROLE } from './navConfig';
@@ -64,6 +65,11 @@ export function DashboardLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const sections = useMemo(() => (user ? NAV_BY_ROLE[user.role] : []), [user]);
+
+  const location = useLocation();
+  useEffect(() => {
+    track({ name: 'page_view', props: { path: location.pathname } });
+  }, [location.pathname]);
 
   if (!user) return null;
 

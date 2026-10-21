@@ -9,6 +9,7 @@ import type {
 } from '@/api/types/input';
 import { useToast } from '@/components/ToastProvider';
 import { qk } from '@/lib/queryKeys';
+import { track } from '@/observability/analytics';
 
 export function useCreateInputOrder() {
   const qc = useQueryClient();
@@ -36,6 +37,7 @@ export function useVerifyDelivery() {
       void qc.invalidateQueries({ queryKey: qk.inputs.detail(vars.purchaseId) });
       void qc.invalidateQueries({ queryKey: qk.inputs.root });
       void qc.invalidateQueries({ queryKey: qk.escrows.root });
+      track({ name: 'delivery_verified', props: { offline: !navigator.onLine } });
       toast({
         title: 'Delivery verified',
         description: 'Escrow funds will be released to the supplier.',

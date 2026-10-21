@@ -5,6 +5,7 @@ import type { NormalizedApiError } from '@/api/errors';
 import type { ContractDetail, CreateContractInput, SignContractInput } from '@/api/types/contract';
 import { useToast } from '@/components/ToastProvider';
 import { qk } from '@/lib/queryKeys';
+import { track } from '@/observability/analytics';
 
 export function useCreateContract() {
   const qc = useQueryClient();
@@ -12,9 +13,10 @@ export function useCreateContract() {
 
   return useMutation<ContractDetail, NormalizedApiError, CreateContractInput>({
     mutationFn: (input) => contractsApi.create(input),
-    onSuccess: () => {
+    onSuccess: (created) => {
       void qc.invalidateQueries({ queryKey: qk.contracts.root });
       toast({ title: 'Contract created', variant: 'success' });
+      track({ name: 'contract_created', props: { crop: created.targetCrop, region: created.region } });
     },
     onError: (err) => {
       toast({ title: 'Could not create contract', description: err.message, variant: 'error' });

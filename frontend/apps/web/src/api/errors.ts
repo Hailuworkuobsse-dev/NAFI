@@ -1,5 +1,7 @@
 import { AxiosError } from 'axios';
 
+import { logger } from '@/observability/logger';
+
 export type ApiErrorKind =
   | 'network'
   | 'unauthorized'
@@ -34,6 +36,18 @@ const DEFAULT_MESSAGES: Record<ApiErrorKind, string> = {
 };
 
 export function normalizeApiError(err: unknown): NormalizedApiError {
+  const normalized = buildNormalizedError(err);
+  if (normalized.kind !== 'validation' && normalized.kind !== 'notFound') {
+    logger.warn('API error', {
+      kind: normalized.kind,
+      status: normalized.status,
+      url: err instanceof AxiosError ? err.config?.url : undefined,
+    });
+  }
+  return normalized;
+}
+
+function buildNormalizedError(err: unknown): NormalizedApiError {
   if (err instanceof AxiosError) {
     const status = err.response?.status ?? null;
     const body = err.response?.data as
