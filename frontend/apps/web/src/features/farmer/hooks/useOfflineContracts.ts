@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { contractsApi } from '@/api/domains/contracts';
+import type { NormalizedApiError } from '@/api/errors';
 import type { ListResponse } from '@/api/types/common';
 import type { ContractFilters, ContractSummary } from '@/api/types/contract';
 import { useAuth } from '@/auth/useAuth';
@@ -9,6 +10,8 @@ import { useOffline } from '@/offline/OfflineProvider';
 
 /**
  * Fetches contracts; caches them; falls back to cache when offline.
+ * Server errors while online are surfaced so pages can render error states;
+ * only offline/network failures degrade to the cached copy.
  */
 export function useOfflineContracts(filters: ContractFilters = {}) {
   const { user } = useAuth();
@@ -22,7 +25,10 @@ export function useOfflineContracts(filters: ContractFilters = {}) {
           const result = await contractsApi.list(filters);
           await cacheContracts(user.id, result.items);
           return result;
-        } catch {
+        } catch (err) {
+          const normalized = err as NormalizedApiError | null;
+          const networkish = !isOnline || normalized?.kind === 'network';
+          if (!networkish) throw err;
           // fall through to cache
         }
       }

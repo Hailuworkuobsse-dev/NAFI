@@ -20,7 +20,7 @@ export interface CurrencyInputProps {
 export const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
   function CurrencyInput(
     {
-      value = '',
+      value,
       onChange,
       currency,
       label,
@@ -33,7 +33,7 @@ export const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
     },
     ref,
   ) {
-    const [internal, setInternal] = useState(value);
+    const [internal, setInternal] = useState(value ?? '');
     const current = value ?? internal;
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

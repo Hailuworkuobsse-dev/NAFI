@@ -23,7 +23,9 @@ export function formatMoney(
     currency,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(value);
+  })
+    .format(value)
+    .replace(/\u00A0/g, ' ');
 }
 
 export function formatCompactMoney(
@@ -38,6 +40,6 @@ export function formatCompactMoney(
     style: 'currency',
     currency,
     notation: 'compact',
-    maximumFractionDigits: 1,
+    maximumFractionDigits: 2,
   }).format(value);
 }
