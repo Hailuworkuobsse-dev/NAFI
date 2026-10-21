@@ -15,6 +15,7 @@ export const mockContract: ContractSummary = {
   totalTargetYieldKg: '500000.00',
   guaranteedFloorPriceEtb: '45.50',
   contractValueEtb: '22750000.00',
+  committedAmountEtb: '12500000.00',
   status: 'ACTIVE',
   maturityDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(),
   createdAt: new Date().toISOString(),

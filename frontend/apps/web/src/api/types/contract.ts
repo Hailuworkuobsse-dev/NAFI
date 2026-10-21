@@ -12,6 +12,7 @@ export interface ContractSummary {
   totalTargetYieldKg: Decimal;
   guaranteedFloorPriceEtb: Decimal;
   contractValueEtb: Decimal;
+  committedAmountEtb: Decimal;
   status: ContractStatus;
   maturityDate: ISODate;
   createdAt: ISODate;
