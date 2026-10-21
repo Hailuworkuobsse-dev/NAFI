@@ -127,7 +127,7 @@ export function HowItWorks() {
   const sectionRef = useScrollAnimation();
   const [activeStageIndex, setActiveStageIndex] = useState(0);
 
-  const activeStage = LIFECYCLE_STAGES[activeStageIndex];
+  const activeStage = LIFECYCLE_STAGES[activeStageIndex]!;
   const ActiveIcon = activeStage.icon;
 
   return (
@@ -218,7 +218,7 @@ export function HowItWorks() {
                 </span>
                 <div className="flex flex-wrap gap-2">
                   {activeStage.partiesInvolved.map((party) => (
-                    <Badge key={party} variant="neutral" size="sm" className="bg-white border border-neutral-200 text-neutral-800">
+                    <Badge key={party} variant="outline" size="sm" className="bg-white border border-neutral-200 text-neutral-800">
                       {party}
                     </Badge>
                   ))}

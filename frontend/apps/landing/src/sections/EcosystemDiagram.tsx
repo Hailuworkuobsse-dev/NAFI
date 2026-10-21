@@ -144,7 +144,7 @@ export function EcosystemDiagram() {
     return () => clearInterval(timer);
   }, [isSimulating]);
 
-  const activeNode = ECOSYSTEM_NODES[activeNodeIndex];
+  const activeNode = ECOSYSTEM_NODES[activeNodeIndex]!;
   const ActiveIcon = activeNode.icon;
 
   return (
@@ -168,7 +168,7 @@ export function EcosystemDiagram() {
           <div className="shrink-0 flex items-center gap-3">
             <Button
               type="button"
-              variant={isSimulating ? 'outline' : 'solid'}
+              variant={isSimulating ? 'outline' : 'primary'}
               size="md"
               onClick={() => setIsSimulating(!isSimulating)}
               className="gap-2"

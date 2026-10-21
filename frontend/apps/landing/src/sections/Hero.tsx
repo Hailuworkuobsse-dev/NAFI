@@ -51,7 +51,7 @@ export function Hero() {
   const [selectedCropIndex, setSelectedCropIndex] = useState(0);
   const [investmentAmount, setInvestmentAmount] = useState(2500);
 
-  const activeCrop = HERO_CROPS[selectedCropIndex];
+  const activeCrop = HERO_CROPS[selectedCropIndex]!;
   const netEstimatedReturn = Math.round(investmentAmount * (1 + activeCrop.apy / 100));
   const estimatedProfit = netEstimatedReturn - investmentAmount;
   const hectaresFinanced = (investmentAmount / 650).toFixed(1);

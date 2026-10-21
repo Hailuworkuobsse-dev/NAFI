@@ -211,7 +211,7 @@ export function AudiencePaths() {
               </div>
 
               <div className="mt-8 pt-6 border-t border-neutral-100 flex flex-wrap items-center gap-4">
-                <Button asChild variant="solid" size="lg">
+                <Button asChild variant="primary" size="lg">
                   <Link to={selectedAudience.ctaUrl} className="gap-2">
                     <span>{selectedAudience.ctaText}</span>
                     <ArrowRight className="h-4 w-4" />

@@ -67,7 +67,8 @@ export function DashboardLayout() {
 
   if (!user) return null;
 
-  const initials = user.fullName
+  const fullName = user.fullName ?? `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim();
+  const initials = fullName
     .split(' ')
     .map((p) => p[0])
     .slice(0, 2)

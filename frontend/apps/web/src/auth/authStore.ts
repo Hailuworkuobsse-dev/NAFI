@@ -8,6 +8,8 @@ export interface AuthUser {
   nafiId: string;
   email: string;
   fullName: string;
+  firstName?: string;
+  lastName?: string;
   role: Role;
   institutionId?: string;
   institutionName?: string;

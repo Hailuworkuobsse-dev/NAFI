@@ -64,8 +64,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       try {
         const me = await authApi.me();
-        setUser(me);
-        return me;
+        const userWithFullName = {
+          ...me,
+          fullName: me.fullName ?? `${me.firstName ?? ''} ${me.lastName ?? ''}`.trim(),
+        };
+        setUser(userWithFullName);
+        return userWithFullName;
       } catch (error: any) {
         // Handle 429 specifically
         if (error?.response?.status === 429) {
@@ -138,10 +142,14 @@ export function useAuthActions() {
   return {
     async login(payload: Parameters<typeof authApi.login>[0]) {
       const result = await authApi.login(payload);
+      const userWithFullName = {
+        ...result.user,
+        fullName: result.user.fullName ?? `${result.user.firstName ?? ''} ${result.user.lastName ?? ''}`.trim(),
+      };
       tokenStore.set(result.accessToken);
-      setUser(result.user);
+      setUser(userWithFullName);
       await queryClient.invalidateQueries();
-      return result;
+      return { ...result, user: userWithFullName };
     },
 
     async logout() {
