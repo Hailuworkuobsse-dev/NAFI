@@ -1,8 +1,8 @@
 import { getDb } from './db';
 
-export async function cacheContracts(
+export async function cacheContracts<T extends { id: string }>(
   userId: string,
-  contracts: { id: string; [key: string]: unknown }[],
+  contracts: readonly T[],
 ): Promise<void> {
   const db = await getDb();
   const tx = db.transaction('cachedContracts', 'readwrite');
@@ -27,9 +27,9 @@ export async function readCachedContracts(userId: string): Promise<unknown[]> {
   return all.map((r) => r.data);
 }
 
-export async function cacheInputs(
+export async function cacheInputs<T extends { id: string }>(
   userId: string,
-  inputs: { id: string; [key: string]: unknown }[],
+  inputs: readonly T[],
 ): Promise<void> {
   const db = await getDb();
   const tx = db.transaction('cachedInputs', 'readwrite');
@@ -46,9 +46,9 @@ export async function readCachedInputs(userId: string): Promise<unknown[]> {
   return all.map((r) => r.data);
 }
 
-export async function cacheEscrows(
+export async function cacheEscrows<T extends { id: string }>(
   userId: string,
-  escrows: { id: string; [key: string]: unknown }[],
+  escrows: readonly T[],
 ): Promise<void> {
   const db = await getDb();
   const tx = db.transaction('cachedEscrows', 'readwrite');

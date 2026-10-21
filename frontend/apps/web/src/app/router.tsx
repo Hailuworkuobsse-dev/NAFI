@@ -43,16 +43,60 @@ import { AdminSettlementsPage } from '@/features/admin/pages/SettlementsPage';
 import { AdminUsersPage } from '@/features/admin/pages/UsersPage';
 import { UssdSimulatorPage } from '@/features/admin/pages/UssdSimulatorPage';
 import { DashboardLayout } from '@/layouts/DashboardLayout';
+
+// Bank (real pages — Step 7)
+import { BankOverviewPage } from '@/features/bank/pages/OverviewPage';
+import { BankEscrowsPage } from '@/features/bank/pages/EscrowsPage';
+import { BankEscrowDetailPage } from '@/features/bank/pages/EscrowDetailPage';
+import { BankLoansPage } from '@/features/bank/pages/LoansPage';
+import { BankCollateralPage } from '@/features/bank/pages/CollateralPage';
+import { BankSettlementsPage } from '@/features/bank/pages/SettlementsPage';
+import { BankNplPage } from '@/features/bank/pages/NplPage';
+
+// DBE (real pages — Step 7)
+import { DbePortfolioPage } from '@/features/dbe/pages/PortfolioPage';
+import { DbeCoFinancingPage } from '@/features/dbe/pages/CoFinancingPage';
+import { DbeOnLendingPage } from '@/features/dbe/pages/OnLendingPage';
+import { DbeTaTrackingPage } from '@/features/dbe/pages/TaTrackingPage';
+import { DbeReportsPage } from '@/features/dbe/pages/ReportsPage';
+
+// NAFA (real pages — Step 7)
+import { NafaGuaranteesPage } from '@/features/nafa/pages/GuaranteesPage';
+import { NafaClaimsPage } from '@/features/nafa/pages/ClaimsPage';
+import { NafaRiskSharingPage } from '@/features/nafa/pages/RiskSharingPage';
+import { NafaRefinancingPage } from '@/features/nafa/pages/RefinancingPage';
+import { NafaReportsPage } from '@/features/nafa/pages/ReportsPage';
+
+// Government (real pages — Step 7)
+import { GovDashboardPage } from '@/features/government/pages/DashboardPage';
+import { GovContractsPage } from '@/features/government/pages/ContractsPage';
+import { GovForexPage } from '@/features/government/pages/ForexPage';
+import { GovCreditPage } from '@/features/government/pages/CreditPage';
+import { GovInputsPage } from '@/features/government/pages/InputsPage';
+import { GovTaxPage } from '@/features/government/pages/TaxPage';
+import { GovIncentivesPage } from '@/features/government/pages/IncentivesPage';
+import { GovAuditPage } from '@/features/government/pages/AuditPage';
+import { GovReportsPage } from '@/features/government/pages/ReportsPage';
+
+// Donor (real pages — Step 7)
+import { DonorGrantsPage } from '@/features/donor/pages/GrantsPage';
+import { DonorDisbursementsPage } from '@/features/donor/pages/DisbursementsPage';
+import { DonorImpactPage } from '@/features/donor/pages/ImpactPage';
+import { DonorReportsPage } from '@/features/donor/pages/ReportsPage';
+import { DonorAuditPage } from '@/features/donor/pages/AuditPage';
+
+// Compliance (real pages — Step 7)
+import { ComplianceQueuePage } from '@/features/compliance/pages/QueuePage';
+import { ComplianceKycPage } from '@/features/compliance/pages/KycPage';
+import { ComplianceAmlPage } from '@/features/compliance/pages/AmlPage';
+import { ComplianceSarPage } from '@/features/compliance/pages/SarPage';
+
+// Arbitrator (real pages — Step 7)
+import { ArbitrationCasesPage } from '@/features/arbitrator/pages/CasesPage';
+import { ArbitrationCaseDetailPage } from '@/features/arbitrator/pages/CaseDetailPage';
+
 import {
-  ArbitrationCases,
-  BankCollateral, BankEscrows, BankLoans, BankNPL, BankOverview, BankSettlements,
   BuyerPurchases, BuyerSettlements,
-  ComplianceAml, ComplianceKyc, ComplianceQueue, ComplianceSar,
-  DbeCoFinancing, DbeOnLending, DbePortfolio, DbeReports, DbeTaTracking,
-  DonorAudit, DonorDisbursements, DonorGrants, DonorImpact, DonorReports,
-  GovAudit, GovContracts, GovCredit, GovDashboard, GovForex, GovIncentives, GovInputs,
-  GovReports, GovTax,
-  NafaClaims, NafaGuarantees, NafaRefinancing, NafaReports, NafaRiskSharing,
   NotFound, ProfilePage,
 } from '@/pages/stubs';
 
@@ -125,12 +169,13 @@ export const router = createBrowserRouter([
               />
             ),
             children: [
-              { path: '/bank/overview', element: <BankOverview /> },
-              { path: '/bank/escrows', element: <BankEscrows /> },
-              { path: '/bank/loans', element: <BankLoans /> },
-              { path: '/bank/collateral', element: <BankCollateral /> },
-              { path: '/bank/settlements', element: <BankSettlements /> },
-              { path: '/bank/npl', element: <BankNPL /> },
+              { path: '/bank/overview', element: <BankOverviewPage /> },
+              { path: '/bank/escrows', element: <BankEscrowsPage /> },
+              { path: '/bank/escrows/:id', element: <BankEscrowDetailPage /> },
+              { path: '/bank/loans', element: <BankLoansPage /> },
+              { path: '/bank/collateral', element: <BankCollateralPage /> },
+              { path: '/bank/settlements', element: <BankSettlementsPage /> },
+              { path: '/bank/npl', element: <BankNplPage /> },
             ],
           },
 
@@ -143,11 +188,11 @@ export const router = createBrowserRouter([
               />
             ),
             children: [
-              { path: '/dbe/portfolio', element: <DbePortfolio /> },
-              { path: '/dbe/co-financing', element: <DbeCoFinancing /> },
-              { path: '/dbe/on-lending', element: <DbeOnLending /> },
-              { path: '/dbe/ta-tracking', element: <DbeTaTracking /> },
-              { path: '/dbe/reports', element: <DbeReports /> },
+              { path: '/dbe/portfolio', element: <DbePortfolioPage /> },
+              { path: '/dbe/co-financing', element: <DbeCoFinancingPage /> },
+              { path: '/dbe/on-lending', element: <DbeOnLendingPage /> },
+              { path: '/dbe/ta-tracking', element: <DbeTaTrackingPage /> },
+              { path: '/dbe/reports', element: <DbeReportsPage /> },
             ],
           },
 
@@ -160,11 +205,11 @@ export const router = createBrowserRouter([
               />
             ),
             children: [
-              { path: '/nafa/guarantees', element: <NafaGuarantees /> },
-              { path: '/nafa/claims', element: <NafaClaims /> },
-              { path: '/nafa/risk-sharing', element: <NafaRiskSharing /> },
-              { path: '/nafa/refinancing', element: <NafaRefinancing /> },
-              { path: '/nafa/reports', element: <NafaReports /> },
+              { path: '/nafa/guarantees', element: <NafaGuaranteesPage /> },
+              { path: '/nafa/claims', element: <NafaClaimsPage /> },
+              { path: '/nafa/risk-sharing', element: <NafaRiskSharingPage /> },
+              { path: '/nafa/refinancing', element: <NafaRefinancingPage /> },
+              { path: '/nafa/reports', element: <NafaReportsPage /> },
             ],
           },
 
@@ -227,15 +272,15 @@ export const router = createBrowserRouter([
               />
             ),
             children: [
-              { path: '/gov/dashboard', element: <GovDashboard /> },
-              { path: '/gov/contracts', element: <GovContracts /> },
-              { path: '/gov/forex', element: <GovForex /> },
-              { path: '/gov/credit', element: <GovCredit /> },
-              { path: '/gov/inputs', element: <GovInputs /> },
-              { path: '/gov/tax', element: <GovTax /> },
-              { path: '/gov/incentives', element: <GovIncentives /> },
-              { path: '/gov/audit', element: <GovAudit /> },
-              { path: '/gov/reports', element: <GovReports /> },
+              { path: '/gov/dashboard', element: <GovDashboardPage /> },
+              { path: '/gov/contracts', element: <GovContractsPage /> },
+              { path: '/gov/forex', element: <GovForexPage /> },
+              { path: '/gov/credit', element: <GovCreditPage /> },
+              { path: '/gov/inputs', element: <GovInputsPage /> },
+              { path: '/gov/tax', element: <GovTaxPage /> },
+              { path: '/gov/incentives', element: <GovIncentivesPage /> },
+              { path: '/gov/audit', element: <GovAuditPage /> },
+              { path: '/gov/reports', element: <GovReportsPage /> },
             ],
           },
 
@@ -245,11 +290,11 @@ export const router = createBrowserRouter([
               <ProtectedRoute permission={PERMISSIONS.REPORT_READ_OWN} roles={['DONOR']} />
             ),
             children: [
-              { path: '/donor/grants', element: <DonorGrants /> },
-              { path: '/donor/disbursements', element: <DonorDisbursements /> },
-              { path: '/donor/impact', element: <DonorImpact /> },
-              { path: '/donor/reports', element: <DonorReports /> },
-              { path: '/donor/audit', element: <DonorAudit /> },
+              { path: '/donor/grants', element: <DonorGrantsPage /> },
+              { path: '/donor/disbursements', element: <DonorDisbursementsPage /> },
+              { path: '/donor/impact', element: <DonorImpactPage /> },
+              { path: '/donor/reports', element: <DonorReportsPage /> },
+              { path: '/donor/audit', element: <DonorAuditPage /> },
             ],
           },
 
@@ -284,10 +329,10 @@ export const router = createBrowserRouter([
               />
             ),
             children: [
-              { path: '/compliance/queue', element: <ComplianceQueue /> },
-              { path: '/compliance/kyc', element: <ComplianceKyc /> },
-              { path: '/compliance/aml', element: <ComplianceAml /> },
-              { path: '/compliance/sar', element: <ComplianceSar /> },
+              { path: '/compliance/queue', element: <ComplianceQueuePage /> },
+              { path: '/compliance/kyc', element: <ComplianceKycPage /> },
+              { path: '/compliance/aml', element: <ComplianceAmlPage /> },
+              { path: '/compliance/sar', element: <ComplianceSarPage /> },
             ],
           },
 
@@ -299,7 +344,10 @@ export const router = createBrowserRouter([
                 roles={['ARBITRATOR']}
               />
             ),
-            children: [{ path: '/arbitration/cases', element: <ArbitrationCases /> }],
+            children: [
+              { path: '/arbitration/cases', element: <ArbitrationCasesPage /> },
+              { path: '/arbitration/cases/:id', element: <ArbitrationCaseDetailPage /> },
+            ],
           },
 
           // -------- Shared --------

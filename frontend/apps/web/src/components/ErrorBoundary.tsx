@@ -15,15 +15,14 @@ interface ErrorBoundaryState {
 }
 
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  state: ErrorBoundaryState = { hasError: false };
+  override state: ErrorBoundaryState = { hasError: false };
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, info: ErrorInfo) {
+  override componentDidCatch(error: Error, info: ErrorInfo) {
     this.props.onError?.(error, info);
-    // eslint-disable-next-line no-console
     console.error('[NAFI ErrorBoundary]', error, info);
   }
 
@@ -31,7 +30,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     this.setState({ hasError: false, error: undefined });
   };
 
-  render() {
+  override render() {
     if (!this.state.hasError) return this.props.children;
     if (this.props.fallback && this.state.error) {
       return this.props.fallback(this.state.error, this.reset);

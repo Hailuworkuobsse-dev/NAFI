@@ -13,7 +13,7 @@ export interface OfflineMutationConfig<TData, TVariables> {
   toBody?: (vars: TVariables) => unknown;
   priority?: number;
   groupKey?: string;
-  invalidateKeys?: readonly unknown[][];
+  invalidateKeys?: readonly (readonly unknown[])[];
   onComplete?: (data: TData | null, variables: TVariables) => void;
   successToast?: string;
   queuedToast?: string;
