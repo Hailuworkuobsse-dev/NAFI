@@ -20,8 +20,8 @@
     "size": "size-limit",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
-    "clean": "npm --prefix .. run clean --workspace=@nafi/web",
-    "storybook": "npm --prefix .. run storybook --workspace=@nafi/ui-react",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "storybook": "npm run storybook --workspace=@nafi/ui-react",
     "prepare": "husky || true"
   },
   "devDependencies": {
