@@ -22,9 +22,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
     queryKey: ['auth', 'me'],
     queryFn: async () => {
       // Only attempt refresh once on initial load if no access token exists
+      // AND this browser previously held a session (otherwise the probe is
+      // guaranteed to 401 and only produces console noise).
       const hasAccessToken = tokenStore.get() !== null;
       
-      if (!hasAccessToken && !hasAttemptedRefresh.current) {
+      if (!hasAccessToken && !hasAttemptedRefresh.current && tokenStore.hasSessionMarker()) {
         hasAttemptedRefresh.current = true;
         try {
           const res = await fetch(
@@ -53,6 +55,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
               const json = (await retryRes.json()) as { data: { accessToken: string } };
               tokenStore.set(json.data.accessToken);
             }
+          } else {
+            // Refresh rejected (expired/absent cookie) — stop probing until
+            // the next successful login.
+            tokenStore.clearSessionMarker();
           }
         } catch {
           /* ignore — user just isn't logged in */
@@ -105,6 +111,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const handler = () => {
       tokenStore.clear();
+      tokenStore.clearSessionMarker();
       setUser(null);
       queryClient.clear();
       window.location.href = '/login';
@@ -150,6 +157,7 @@ export function useAuthActions() {
         fullName: result.user.fullName ?? `${result.user.firstName ?? ''} ${result.user.lastName ?? ''}`.trim(),
       };
       tokenStore.set(result.accessToken);
+      tokenStore.markSession();
       setUser(userWithFullName);
       await queryClient.invalidateQueries();
       return { ...result, user: userWithFullName };

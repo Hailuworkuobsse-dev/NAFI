@@ -88,7 +88,7 @@ export function BankEscrowDetailPage() {
               contractId={escrow.data.contractId}
               isLocked={escrow.data.isLocked}
               bankName={escrow.data.managingBankName}
-              balances={escrow.data.balances.map((b) => ({
+              balances={(escrow.data.balances ?? []).map((b) => ({
                 currency: b.currency,
                 amount: b.amount,
               }))}

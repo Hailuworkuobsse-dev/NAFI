@@ -37,7 +37,7 @@ export function FarmEscrowPage() {
               contractId={esc.contractId}
               isLocked={esc.isLocked}
               bankName={esc.managingBankName}
-              balances={esc.balances.map((b) => ({
+              balances={(esc.balances ?? []).map((b) => ({
                 currency: b.currency,
                 amount: b.amount,
               }))}
